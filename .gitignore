@@ -1,0 +1,6 @@
+.DS_Store
+.idea
+*.swp
+
+client/pixi.js
+client/client.js
