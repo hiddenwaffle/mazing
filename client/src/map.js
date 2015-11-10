@@ -41,6 +41,7 @@ Map.prototype.tryMove = function (srcx, srcy, destx, desty, width, height) {
                     finalx = (Constants.wallSize * 27) - 1; // handle wraparound
                 } else {
                     finalx = desttilex2 * Constants.wallSize; // get right edge of boundary of the blocking tile
+                    doStop = true;
                 }
 
             } else {
@@ -50,6 +51,7 @@ Map.prototype.tryMove = function (srcx, srcy, destx, desty, width, height) {
                     finalx = 1; // handle wraparound
                 } else {
                     finalx = desttilex * Constants.wallSize; // get left edge of boundary of the blocking tile
+                    doStop = true;
                 }
             }
 
@@ -60,11 +62,13 @@ Map.prototype.tryMove = function (srcx, srcy, destx, desty, width, height) {
                 // movement is upwards
                 // get bottom edge of boundary of the blocking tile
                 finaly = desttiley2 * Constants.wallSize;
+                doStop = true;
 
             } else {
                 // movement is downwards
                 // get top edge of boundary of the blocking tile
                 finaly = desttiley * Constants.wallSize;
+                doStop = true;
             }
         }
     }
