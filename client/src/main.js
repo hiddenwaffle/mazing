@@ -21,6 +21,17 @@ for (let y = 0; y < Constants.walls.length; y++) {
             wallImg.drawRect(x * Constants.wallSize, y * Constants.wallSize, Constants.wallSize, Constants.wallSize);
             wallImg.endFill();
             walls.addChild(wallImg);
+        } else if (wall === 2) {
+            let gateImg = new PIXI.Graphics();
+            gateImg.beginFill(0xffaaff);
+            gateImg.drawRect(
+                x * Constants.wallSize,
+                y * Constants.wallSize + (Constants.wallSize / 2),
+                Constants.wallSize,
+                Constants.dotSize
+            );
+            gateImg.endFill();
+            walls.addChild(gateImg);
         }
     }
 }
@@ -37,8 +48,8 @@ for (let y = 0; y < Constants.edibles.length; y++) {
                 dotImg.beginFill(0xeeeeee);
                 dotImg.drawRect(0, 0, Constants.dotSize, Constants.dotSize);
                 dotImg.endFill();
-                dotImg.x = x * Constants.wallSize + Math.floor(Constants.wallSize / 2) - (Constants.dotSize / 2);
-                dotImg.y = y * Constants.wallSize + Math.floor(Constants.wallSize / 2) - (Constants.dotSize / 2);
+                dotImg.x = x * Constants.wallSize + (Constants.wallSize / 2) - (Constants.dotSize / 2);
+                dotImg.y = y * Constants.wallSize + (Constants.wallSize / 2) - (Constants.dotSize / 2);
                 dots.addChild(dotImg);
                 break;
             default:
@@ -60,9 +71,9 @@ function animate() {
     renderer.render(stage);
 }
 
-pacmanStep();
-function pacmanStep() {
-    setTimeout(pacmanStep, 16.66);
+mainLoop();
+function mainLoop() {
+    setTimeout(mainLoop, 16.66);
 
     // https://www.reddit.com/r/todayilearned/comments/2oschi/til_every_time_pacman_eats_a_regular_dot_he_stops/
     if (collisionChecks()) {
@@ -70,7 +81,6 @@ function pacmanStep() {
     } else {
         pacman.fullstep();
     }
-
 }
 
 function collisionChecks() {

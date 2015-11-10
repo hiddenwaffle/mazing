@@ -36,13 +36,21 @@ Map.prototype.tryMove = function (srcx, srcy, destx, desty, width, height) {
 
             if (destx < srcx) {
                 // movement is to the left
-                // get right edge of boundary of the blocking tile
-                finalx = desttilex2 * Constants.wallSize;
+
+                if (desttilex === -1 && desttiley === 14) {
+                    finalx = (Constants.wallSize * 27) - 1; // handle wraparound
+                } else {
+                    finalx = desttilex2 * Constants.wallSize; // get right edge of boundary of the blocking tile
+                }
 
             } else {
                 // movement is to the right
-                // get left edge of boundary of the blocking tile
-                finalx = desttilex * Constants.wallSize;
+
+                if (desttilex2 === 28 && desttiley === 14) {
+                    finalx = 1; // handle wraparound
+                } else {
+                    finalx = desttilex * Constants.wallSize; // get left edge of boundary of the blocking tile
+                }
             }
 
         } else if (desty != srcy) { // vertical
@@ -59,11 +67,14 @@ Map.prototype.tryMove = function (srcx, srcy, destx, desty, width, height) {
                 finaly = desttiley * Constants.wallSize;
             }
         }
-
-        doStop = true;
     }
 
-    return { success: success, finalx: finalx, finaly: finaly, doStop: doStop };
+    return {
+        success: success,
+        finalx: finalx,
+        finaly: finaly,
+        doStop: doStop
+    };
 };
 
 Map.prototype.convertToTileSpace = convertToTileSpace;

@@ -18,6 +18,13 @@ function Entity (x, y, requestedDirection, speed) {
     this.lastStep = Date.now();
 }
 
+Entity.prototype.getTilePosition = function() {
+    return {
+        x: map.convertToTileSpace(pacman.graphics.x),
+        y: map.convertToTileSpace(pacman.graphics.y)
+    };
+};
+
 Entity.prototype.fullstep = function() {
     let elapsed = Date.now() - this.lastStep;
     this.lastStep = Date.now();
