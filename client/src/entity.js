@@ -1,7 +1,7 @@
 let Constants = require('./constants');
 let map = require('./map');
 
-function Entity (x, y, requestedDirection, speed) {
+function Entity (x, y, requestedDirection, speed, color) {
     this.currentDirection = this.requestedDirection = requestedDirection;
     this.speed = speed;
 
@@ -11,7 +11,7 @@ function Entity (x, y, requestedDirection, speed) {
     this.graphics = new PIXI.Graphics();
     this.graphics.x = x;
     this.graphics.y = y;
-    this.graphics.beginFill(0xffff00, 1);
+    this.graphics.beginFill(color, 1);
     this.graphics.drawRect(0, 0, this.width, this.height);
     this.graphics.endFill();
 

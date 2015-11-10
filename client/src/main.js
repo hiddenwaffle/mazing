@@ -62,6 +62,12 @@ field.addChild(dots);
 let pacman = require('./pacman');
 field.addChild(pacman.graphics);
 
+let ghosts = [];
+
+let blinky = require('./blinky');
+field.addChild(blinky.graphics);
+ghosts.push(blinky);
+
 let stage = new PIXI.Container();
 stage.addChild(field);
 
@@ -80,6 +86,10 @@ function mainLoop() {
         // TODO: Check for board clear
     } else {
         pacman.fullstep();
+    }
+
+    for (let ghost of ghosts) {
+        ghost.fullstep();
     }
 }
 
