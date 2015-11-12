@@ -1,6 +1,8 @@
 'use strict';
 
-require('./input');
+require('./input').start();
+require('./ai').start();
+
 let map = require('./map');
 
 let renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0x333333});

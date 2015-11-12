@@ -3,8 +3,9 @@
 const Util = require('./util');
 const Constants = require('./constants');
 const Entity = require('./entity');
-const pacman = require('./pacman');
 const Board = require('./board');
+
+const characters = require('./characters');
 
 class Map {
 
@@ -76,13 +77,10 @@ class Map {
         }
         this._graphics.addChild(this._dotImgs);
 
-        this._graphics.addChild(pacman.graphics);
-
-        this._ghosts = [];
-
-        let blinky = createBlinky();
-        this._graphics.addChild(blinky.graphics);
-        this._ghosts.push(blinky);
+        this._graphics.addChild(characters.pacman.graphics);
+        for (let ghost of characters.ghosts) {
+            this._graphics.addChild(ghost.graphics);
+        }
     }
 
     step() {
@@ -90,10 +88,10 @@ class Map {
         if (this._collisionChecks()) {
             // TODO: Check for board clear
         } else {
-            pacman.fullstep(this);
+            characters.pacman.fullstep(this);
         }
 
-        for (let ghost of this._ghosts) {
+        for (let ghost of characters.ghosts) {
             ghost.fullstep(this);
         }
     }
@@ -200,7 +198,7 @@ class Map {
 
         for (let idx = this._dotImgs.children.length - 1; idx >= 0; idx--) {
             let dotImg = this._dotImgs.getChildAt(idx);
-            if (pacman.overlaps(dotImg)) {
+            if (characters.pacman.overlaps(dotImg)) {
                 this._dotImgs.removeChildAt(idx);
                 collision = true;
             }
@@ -212,13 +210,3 @@ class Map {
 
 let map = new Map();
 module.exports = map;
-
-function createBlinky() {
-    return new Entity(
-        13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
-        11 * Constants.wallSize,
-        'left',
-        0.1453125, // px/ms (this is 75%)
-        0xff0000
-    );
-}
