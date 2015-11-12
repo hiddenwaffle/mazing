@@ -1,14 +1,17 @@
 const Constants = require('./constants');
 const Entity = require('./entity');
+const AI = require('./ai');
+
+const topSpeed = 0.19375;
 
 let pacman = new Entity(
     13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
     23 * Constants.wallSize,
     'left',
-    0.155, // px/ms (this is 80%, 100% is 0.19375)
-    0xffff00
+    topSpeed * 0.8,
+    0xffff00,
+    AI.doNothing
 );
-exports.pacman = pacman;
 
 let ghosts = [];
 
@@ -16,10 +19,12 @@ let blinky = new Entity(
     13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
     11 * Constants.wallSize,
     'left',
-    0.1453125, // px/ms (this is 75%)
-    0xff0000
+    topSpeed * 0.75,
+    0xff0000,
+    AI.blinky
 );
 ghosts.push(blinky);
-exports.blinky = blinky;
 
+exports.pacman = pacman;
+exports.blinky = blinky;
 exports.ghosts = ghosts;

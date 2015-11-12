@@ -3,7 +3,7 @@ let Util = require('./util');
 
 class Entity {
 
-    constructor(x, y, requestedDirection, speed, color) {
+    constructor(x, y, requestedDirection, speed, color, ai) {
         this._currentDirection = this._requestedDirection = requestedDirection;
         this._speed = speed;
 
@@ -14,7 +14,12 @@ class Entity {
         this._graphics.drawRect(0, 0, Constants.wallSize, Constants.wallSize);
         this._graphics.endFill();
 
-        this._lastStep = null;
+        this._lastStep = 0;
+
+        this._ai = ai;
+
+        // Initialize _tilex and _tiley for good measure
+        this._updateTileCoordinates();
     }
 
     /**
@@ -22,7 +27,7 @@ class Entity {
      */
     fullstep(map) {
         let elapsed;
-        if (this._lastStep === null) {
+        if (this._lastStep === 0) {
             elapsed = 1;
         } else {
             elapsed = Date.now() - this._lastStep;
@@ -49,6 +54,18 @@ class Entity {
 
     get graphics() {
         return this._graphics;
+    }
+
+    get tilex() {
+        return this._tilex;
+    }
+
+    get tiley() {
+        return this._tiley;
+    }
+
+    get currentDirection() {
+        return this._currentDirection;
     }
 
     set requestedDirection(newDirection) {
@@ -127,6 +144,23 @@ class Entity {
                 // wasn't able to change to this direction immediately
             }
         }
+
+        this._handleIfMovedToNewTile();
+    }
+
+    _handleIfMovedToNewTile() {
+        let oldtilex = this._tilex;
+        let oldtiley = this._tiley;
+        this._updateTileCoordinates();
+
+        if (oldtilex !== this._tilex || oldtiley !== this._tiley) {
+            this._ai.handleNewTile(this, oldtilex, oldtiley);
+        }
+    }
+
+    _updateTileCoordinates() {
+        this._tilex = Util.convertToTileSpace(this._graphics.x);
+        this._tiley = Util.convertToTileSpace(this._graphics.y);
     }
 }
 
