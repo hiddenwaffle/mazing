@@ -9,7 +9,7 @@ exports.start = function() {
 function loop() {
     setTimeout(loop, 500);
 
-    let dirnum = getRandomIntInclusive(0, directions.length);
+    let dirnum = getRandomIntInclusive(0, directions.length - 1);
     characters.blinky.requestedDirection = directions[dirnum];
 }
 
