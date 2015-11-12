@@ -1,5 +1,5 @@
-let Constants = require('./constants');
-let Entity = require('./entity');
+const Constants = require('./constants');
+const Entity = require('./entity');
 
 let pacman = new Entity(
     13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
