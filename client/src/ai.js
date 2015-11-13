@@ -1,7 +1,7 @@
 const characters = require('./characters');
 
 // in order of preference
-const directions = ['up', 'left', 'down', 'right'];
+//const possibleDirections = ['up', 'left', 'down', 'right'];
 
 const board = require('./board');
 
@@ -9,60 +9,92 @@ exports.start = function() {
     loop();
 };
 
+let modeNum = 0;
 function loop() {
-    // TODO: Maybe something with timing scatter and chase
-    //setTimeout(loop, 500);
+    modeNum++;
+
+    let modeFnName; // chase(), scatter(), etc...
+
+    if (modeNum >= 8) {
+        modeFnName = 'chase';
+    } else {
+        if (modeNum % 2 === 0) {
+            modeFnName = 'chase';
+            setTimeout(loop, 20000);
+        } else {
+            modeFnName = 'scatter';
+            setTimeout(loop, 7000);
+        }
+    }
+
+    for (let ghost of characters.ghosts) {
+        (ghost)[modeFnName]();
+    }
 }
 
 exports.doNothing = {
     handleNewTile() { /* Do nothing. Intended for Pac Man */ }
 };
 
+/**
+ * Blinky is the red ghost and follows Pac-Man directly.
+ */
 exports.blinky = {
     handleNewTile(entity, oldtilex, oldtiley) {
         runIfIntersection(entity, oldtilex, oldtiley, directions => {
-
-            // Chase mode -> where is Pac-Mac right now
-            let targetx = characters.pacman.tilex;
-            let targety = characters.pacman.tiley;
-
-            let distances = directions.map((direction) => {
-                let dx = 0;
-                let dy = 0;
-
-                switch (direction) {
-                    case 'up':
-                        dy = -1;
-                        break;
-                    case 'down':
-                        dy = 1;
-                        break;
-                    case 'left':
-                        dx = -1;
-                        break;
-                    case 'right':
-                        dx = 1;
-                        break;
-                }
-
-                let distance = qs(
-                    entity.tilex + dx - targetx,
-                    entity.tiley + dy - targety
-                );
-                return { direction: direction, distance: distance };
-            });
-
-            distances.sort((a, b) => {
-                return a.distance - b.distance;
-            });
-
-            entity.requestedDirection = distances[0].direction;
+            aimTowardsTargetTile(entity, oldtilex, oldtiley, characters.pacman.tilex, characters.pacman.tiley, directions);
         });
     }
 };
 
+exports.blinkyScatter = {
+    handleNewTile(entity, oldtilex, oldtiley) {
+        runIfIntersection(entity, oldtilex, oldtiley, directions => {
+            aimTowardsTargetTile(entity, oldtilex, oldtiley, 27, 1, directions); // upper right
+        });
+    }
+};
+
+function aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions) {
+    // Determine how far each open adjacent tile is from Pac-Man
+    let distances = directions.map((direction) => {
+        let dx = 0;
+        let dy = 0;
+
+        switch (direction) {
+            case 'up':
+                dy = -1;
+                break;
+            case 'down':
+                dy = 1;
+                break;
+            case 'left':
+                dx = -1;
+                break;
+            case 'right':
+                dx = 1;
+                break;
+        }
+
+        let distance = qs(
+            entity.tilex + dx - targetx,
+            entity.tiley + dy - targety
+        );
+        return { direction: direction, distance: distance };
+    });
+
+    // Sort the distances so that the shortest is first
+    distances.sort((a, b) => {
+        return a.distance - b.distance;
+    });
+
+    // Use the direction from the shortest distance
+    entity.requestedDirection = distances[0].direction;
+}
+
 /**
- * Run the given function IF the entity has arrived at an intersection
+ * Run the given function IF the entity has arrived at an intersection.
+ * Otherwise it will proceed along its path if there is only one direction to move.
  */
 function runIfIntersection(entity, oldtilex, oldtiley, ghostSpecificDecision) {
     let directions = determinePossibleDirections(entity, oldtilex, oldtiley);
@@ -102,8 +134,6 @@ function determinePossibleDirections(entity) {
         board.walls[entity.tiley][entity.tilex-1] === 0) {
         directions.push('left');
     }
-
-    console.log(directions + ' - ' + entity.currentDirection);
 
     return directions;
 }

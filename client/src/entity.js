@@ -3,7 +3,7 @@ let Util = require('./util');
 
 class Entity {
 
-    constructor(x, y, requestedDirection, speed, color, ai) {
+    constructor(x, y, requestedDirection, speed, color, chaseAi, scatterAi) {
         this._currentDirection = this._requestedDirection = requestedDirection;
         this._speed = speed;
 
@@ -16,7 +16,9 @@ class Entity {
 
         this._lastStep = 0;
 
-        this._ai = ai;
+        this._mode = 'scatter';
+        this._chaseAi = chaseAi;
+        this._scatterAi = scatterAi;
 
         // Initialize _tilex and _tiley for good measure
         this._updateTileCoordinates();
@@ -50,6 +52,14 @@ class Entity {
         let by2 = graphics.y + graphics.height;
 
         return (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1);
+    }
+
+    chase() {
+        this._mode = 'chase';
+    }
+
+    scatter() {
+        this._mode = 'scatter';
     }
 
     get graphics() {
@@ -154,13 +164,24 @@ class Entity {
         this._updateTileCoordinates();
 
         if (oldtilex !== this._tilex || oldtiley !== this._tiley) {
-            this._ai.handleNewTile(this, oldtilex, oldtiley);
+            this._runAi(oldtilex, oldtiley);
         }
     }
 
     _updateTileCoordinates() {
         this._tilex = Util.convertToTileSpace(this._graphics.x);
         this._tiley = Util.convertToTileSpace(this._graphics.y);
+    }
+
+    _runAi(oldtilex, oldtiley) {
+        switch (this._mode) {
+            case 'chase':
+                this._chaseAi.handleNewTile(this, oldtilex, oldtiley);
+                break;
+            case 'scatter':
+                this._scatterAi.handleNewTile(this, oldtilex, oldtiley);
+                break;
+        }
     }
 }
 

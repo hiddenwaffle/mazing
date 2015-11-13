@@ -8,6 +8,7 @@ let pacman = new Entity(
     'left',
     Constants.topSpeed * 0.8,
     0xffff00,
+    AI.doNothing,
     AI.doNothing
 );
 
@@ -19,7 +20,8 @@ let blinky = new Entity(
     'left',
     Constants.topSpeed * 0.75,
     0xff0000,
-    AI.blinky
+    AI.blinky,
+    AI.blinkyScatter
 );
 ghosts.push(blinky);
 
