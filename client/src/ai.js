@@ -107,36 +107,6 @@ function determinePossibleDirections(entity) {
 
     return directions;
 }
-//function determinePossibleDirections(entity, oldtilex, oldtiley) {
-//    let directions = [];
-//
-//    if (board.walls[entity.tiley - 1][entity.tilex] === 0 &&
-//        entity.tilex    !== oldtilex &&
-//        entity.tiley-1  !== oldtiley) {
-//        directions.push('up');
-//    }
-//
-//    if (board.walls[entity.tiley+1][entity.tilex] === 0 &&
-//        entity.tilex    !== oldtilex &&
-//        entity.tiley+1  !== oldtiley) {
-//        directions.push('down');
-//        console.log('here');
-//    }
-//
-//    if (board.walls[entity.tiley][entity.tilex-1] === 0 &&
-//        entity.tilex-1  !== oldtilex &&
-//        entity.tiley    !== oldtiley) {
-//        directions.push('left');
-//    }
-//
-//    if (board.walls[entity.tiley][entity.tilex+1] === 0 &&
-//        entity.tilex+1  !== oldtilex &&
-//        entity.tiley    !== oldtiley) {
-//        directions.push('right');
-//    }
-//
-//    return directions;
-//}
 
 function oppositeOfDirection(direction) {
     switch (direction) {
