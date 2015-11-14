@@ -1,14 +1,13 @@
 'use strict';
 
 require('./input').start();
-require('./ai').start();
+const gameState = require('./gamestate');
+const map = require('./map');
 
-let map = require('./map');
-
-let renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0x333333});
+const renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0x333333});
 document.body.appendChild(renderer.view);
 
-let stage = new PIXI.Container();
+const stage = new PIXI.Container();
 stage.addChild(map.graphics);
 
 animate();
@@ -20,5 +19,7 @@ function animate() {
 loop();
 function loop() {
     setTimeout(loop, 16.66);
+
+    gameState.step();
     map.step();
 }

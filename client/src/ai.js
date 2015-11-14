@@ -1,36 +1,5 @@
 const characters = require('./characters');
-
-// in order of preference
-//const possibleDirections = ['up', 'left', 'down', 'right'];
-
 const board = require('./board');
-
-exports.start = function() {
-    loop();
-};
-
-let modeNum = 0;
-function loop() {
-    modeNum++;
-
-    let modeFnName; // chase(), scatter(), etc...
-
-    if (modeNum >= 8) {
-        modeFnName = 'chase';
-    } else {
-        if (modeNum % 2 === 0) {
-            modeFnName = 'chase';
-            setTimeout(loop, 20000);
-        } else {
-            modeFnName = 'scatter';
-            setTimeout(loop, 7000);
-        }
-    }
-
-    for (let ghost of characters.ghosts) {
-        (ghost)[modeFnName]();
-    }
-}
 
 exports.doNothing = {
     handleNewTile() { /* Do nothing. Intended for Pac Man */ }

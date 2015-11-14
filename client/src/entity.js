@@ -1,3 +1,5 @@
+'use strict';
+
 let Constants = require('./constants');
 let Util = require('./util');
 
@@ -33,6 +35,9 @@ class Entity {
             elapsed = 1;
         } else {
             elapsed = Date.now() - this._lastStep;
+            if (elapsed > 1000) {
+                elapsed = 1000; // enforce speed limit
+            }
         }
         this._lastStep = Date.now();
 
@@ -54,12 +59,8 @@ class Entity {
         return (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1);
     }
 
-    chase() {
-        this._mode = 'chase';
-    }
-
-    scatter() {
-        this._mode = 'scatter';
+    set mode(newMode) {
+        this._mode = newMode;
     }
 
     get graphics() {
@@ -147,7 +148,14 @@ class Entity {
                     break;
             }
 
-            let changeDirectionResult = map.tryMove(this._graphics.x, this._graphics.y, switchx, switchy, this._graphics.width, this._graphics.height);
+            let changeDirectionResult = map.tryMove(
+                this._graphics.x,
+                this._graphics.y,
+                switchx,
+                switchy,
+                this._graphics.width,
+                this._graphics.height
+            );
             if (changeDirectionResult.success) {
                 this._currentDirection = this._requestedDirection;
             } else {
