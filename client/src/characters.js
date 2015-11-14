@@ -7,12 +7,10 @@ const AI = require('./ai');
 class CharacterManager {
 
     constructor() {
-
         this._pacman = new Entity(
             13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
             23 * Constants.wallSize,
             'left',
-            Constants.topSpeed * 0.8,
             0xffff00,
             AI.doNothing,
             AI.doNothing
@@ -24,7 +22,6 @@ class CharacterManager {
             13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
             11 * Constants.wallSize,
             'left',
-            Constants.topSpeed * 0.75,
             0xff0000,
             AI.blinky,
             AI.blinkyScatter
@@ -35,7 +32,6 @@ class CharacterManager {
             13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
             11 * Constants.wallSize,
             'left',
-            Constants.topSpeed * 0.75,
             0xffb9ff,
             AI.pinky,
             AI.pinkyScatter
@@ -46,7 +42,6 @@ class CharacterManager {
             13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
             11 * Constants.wallSize,
             'left',
-            Constants.topSpeed * 0.75,
             0x00ffff,
             AI.inky,
             AI.inkyScatter
@@ -57,12 +52,18 @@ class CharacterManager {
             13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
             11 * Constants.wallSize,
             'left',
-            Constants.topSpeed * 0.75,
             0xffb950,
             AI.clyde,
             AI.clydeScatter
         );
         this._ghosts.push(this._clyde);
+    }
+
+    changeSpeed(pacmanNormal, ghostNormal) {
+        this._pacman.speed = Constants.topSpeed * pacmanNormal;
+        for (let ghost of this._ghosts) {
+            ghost.speed = Constants.topSpeed * ghostNormal;
+        }
     }
 
     get pacman() {

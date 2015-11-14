@@ -5,9 +5,10 @@ let Util = require('./util');
 
 class Entity {
 
-    constructor(x, y, requestedDirection, speed, color, chaseAi, scatterAi) {
+    constructor(x, y, requestedDirection, color, chaseAi, scatterAi) {
         this._currentDirection = this._requestedDirection = requestedDirection;
-        this._speed = speed;
+
+        this._speed = 0;
 
         this._graphics = new PIXI.Graphics();
         this._graphics.x = x;
@@ -87,6 +88,10 @@ class Entity {
 
     set reverseNeeded(value) {
         this._reverseNeeded = value;
+    }
+
+    set speed(value) {
+        this._speed = value;
     }
 
     _step(map) {

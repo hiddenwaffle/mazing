@@ -16,6 +16,7 @@ function animate() {
     renderer.render(stage);
 }
 
+gameState.startLevel(0);
 loop();
 function loop() {
     setTimeout(loop, 16.66);

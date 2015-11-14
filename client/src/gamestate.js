@@ -111,6 +111,15 @@ class GameState {
         this._ghostModeSubConfigIndex = 0;
     }
 
+    startLevel(levelIndex) {
+        this._levelIndex = levelIndex;
+
+        let [, , speedGroup] = this._determineCurrentConfiguration();
+        characters.manager.changeSpeed(speedGroup.pacmanNormal, speedGroup.ghostNormal);
+
+        // TODO: Other start level stuff
+    }
+
     step() {
         this._stepGhostMode();
     }
@@ -119,6 +128,14 @@ class GameState {
         for (let ghost of characters.ghosts) {
             ghost.reverseNeeded = true;
         }
+    }
+
+    _determineCurrentConfiguration() {
+        let levelSpecification = this._levelSpecifications[this._levelIndex];
+        let ghostMode = this._ghostModes[levelSpecification.ghostModeIndex];
+        let speedGroup = this._speedGroups[levelSpecification.speedGroupIndex];
+
+        return [levelSpecification, ghostMode, speedGroup];
     }
 
     _stepGhostMode() {
