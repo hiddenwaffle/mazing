@@ -111,6 +111,7 @@ class Map {
         if (this._collisionChecks()) {
             characters.pacman.pauseOneFrame();
             // TODO: Check for board clear
+
         } else {
             characters.pacman.fullstep(this);
         }

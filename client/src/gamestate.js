@@ -138,6 +138,12 @@ class GameState {
         return [levelSpecification, ghostMode, speedGroup];
     }
 
+    /**
+     * TOOD: This needs to pause when ghosts are frightened and keep track of fright time
+     * Probably can do that by adding time to a elapsedGhostMode rather than calculating each time
+     *
+     * @private
+     */
     _stepGhostMode() {
         if (this._onTheFinalGhostModeSubConfig() == false) {
             let currentGhostMode = this._determineCurrentGhostMode();

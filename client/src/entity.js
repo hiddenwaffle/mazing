@@ -99,9 +99,6 @@ class Entity {
     }
 
     _step(map) {
-        let tilex = Util.convertToTileSpace(this.graphics.x);
-        let tiley = Util.convertToTileSpace(this.graphics.y);
-
         let newx = this._graphics.x;
         let newy = this._graphics.y;
 
