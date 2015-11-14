@@ -108,6 +108,7 @@ class GameState {
 
                 for (let ghost of characters.ghosts) {
                     ghost.mode = newGhostMode.mode;
+                    ghost.reverseNeeded = true;
                 }
 
                 this._currentGhostModeMark = Date.now();

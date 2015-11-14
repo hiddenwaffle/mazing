@@ -172,6 +172,10 @@ class Entity {
         this._handleIfMovedToNewTile();
     }
 
+    /**
+     * First determine if we are on a new tile. If so, see if there is a
+     * pending reversal, and handle it. Otherwise, ask the AI routine what to do.
+     */
     _handleIfMovedToNewTile() {
         let oldtilex = this._tilex;
         let oldtiley = this._tiley;
