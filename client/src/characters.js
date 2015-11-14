@@ -36,6 +36,17 @@ let pinky = new Entity(
 );
 ghosts.push(pinky);
 
+let inky = new Entity(
+    13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
+    11 * Constants.wallSize,
+    'left',
+    Constants.topSpeed * 0.75,
+    0x00ffff,
+    AI.inky,
+    AI.inkyScatter
+);
+ghosts.push(inky);
+
 let clyde = new Entity(
     13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
     11 * Constants.wallSize,

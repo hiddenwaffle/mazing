@@ -64,6 +64,55 @@ exports.pinkyScatter = {
 };
 
 /**
+ * Inky is the blue ghost and attempts to ambush Pac-Man by approaching from the opposite line of Blinky.
+ */
+exports.inky = {
+    handleNewTile(entity, oldtilex, oldtiley) {
+        runIfIntersection(entity, oldtilex, oldtiley, directions => {
+            let pacman = characters.pacman;
+
+            let firstx = pacman.tilex;
+            let firsty = pacman.tiley;
+
+            switch (pacman.currentDirection) {
+                case 'up':
+                    firsty -= 2;
+                    break;
+                case 'down':
+                    firsty += 2;
+                    break;
+                case 'left':
+                    firstx -= 2;
+                    break;
+                case 'right':
+                    firstx += 2;
+                    break;
+            }
+
+            let blinky = characters.blinky;
+
+            let diffx = firstx - blinky.tilex;
+            let diffy = firsty - blinky.tiley;
+
+            let targetx = firstx + diffx;
+            let targety = firsty + diffy;
+
+            console.log(targetx + ' ' + targety);
+
+            aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions); // lower right
+        });
+    }
+};
+
+exports.inkyScatter = {
+    handleNewTile(entity, oldtilex, oldtiley) {
+        runIfIntersection(entity, oldtilex, oldtiley, directions => {
+            aimTowardsTargetTile(entity, oldtilex, oldtiley, 27, 30, directions); // lower right
+        });
+    }
+};
+
+/**
  * Clyde is the orange ghost and tends to stay away from Pac-Man.
  */
 exports.clyde = {
