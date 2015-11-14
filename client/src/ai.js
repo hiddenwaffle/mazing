@@ -118,9 +118,10 @@ exports.clyde = {
         runIfIntersection(entity, oldtilex, oldtiley, directions => {
             let pacman = characters.pacman;
 
-            let distanceSquared =
-                Math.pow(pacman.tilex - entity.tilex, 2) +
-                Math.pow(pacman.tiley - entity.tiley, 2);
+            let distanceSquared = qs(
+                pacman.tilex - entity.tilex,
+                pacman.tiley - entity.tiley
+            );
 
             if (distanceSquared >= 64) {
                 aimTowardsTargetTile(entity, oldtilex, oldtiley, characters.pacman.tilex, characters.pacman.tiley, directions);
