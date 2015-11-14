@@ -105,7 +105,8 @@ class GameState {
 
         this._levelIndex = 0;
 
-        this._currentGhostModeMark = Date.now();
+        this._elapsedGhostMode = 0;
+        this._lastStep = Date.now();
 
         this._ghostModeConfigIndex = 0;
         this._ghostModeSubConfigIndex = 0;
@@ -139,16 +140,25 @@ class GameState {
     }
 
     /**
-     * TOOD: This needs to pause when ghosts are frightened and keep track of fright time
-     * Probably can do that by adding time to a elapsedGhostMode rather than calculating each time
-     *
      * @private
      */
     _stepGhostMode() {
+        let elapsed;
+        if (this._lastStep === 0) {
+            elapsed = 1;
+        } else {
+            elapsed = Date.now() - this._lastStep;
+            if (elapsed > 1000) {
+                elapsed = 1000; // enforce speed limit
+            }
+        }
+        this._lastStep = Date.now();
+        this._elapsedGhostMode += elapsed;
+
         if (this._onTheFinalGhostModeSubConfig() == false) {
             let currentGhostMode = this._determineCurrentGhostMode();
-            let elapsedGhostMode = Date.now() - this._currentGhostModeMark;
-            if (elapsedGhostMode >= currentGhostMode.time) {
+            
+            if (this._elapsedGhostMode >= currentGhostMode.time) {
                 this._ghostModeSubConfigIndex++;
                 let newGhostMode = this._determineCurrentGhostMode();
 
@@ -157,9 +167,26 @@ class GameState {
                     ghost.reverseNeeded = true;
                 }
 
-                this._currentGhostModeMark = Date.now();
+                this._elapsedGhostMode = 0;
             }
         }
+
+        //if (this._onTheFinalGhostModeSubConfig() == false) {
+        //    let currentGhostMode = this._determineCurrentGhostMode();
+        //    let elapsedGhostMode = Date.now() - this._currentGhostModeMark;
+        //    if (elapsedGhostMode >= currentGhostMode.time) {
+        //        this._ghostModeSubConfigIndex++;
+        //        let newGhostMode = this._determineCurrentGhostMode();
+        //
+        //        for (let ghost of characters.ghosts) {
+        //            ghost.mode = newGhostMode.mode;
+        //            ghost.reverseNeeded = true;
+        //        }
+        //
+        //        this._currentGhostModeMark = Date.now();
+        //    }
+        //}
+
     }
 
     _onTheFinalGhostModeSubConfig() {
