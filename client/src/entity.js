@@ -29,6 +29,10 @@ class Entity {
         this._updateTileCoordinates();
     }
 
+    pauseOneFrame() {
+        this._lastStep = Date.now();
+    }
+
     /**
      * @param map used by the entity to determine if it can move in the direction it wants to
      */

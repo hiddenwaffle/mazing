@@ -109,6 +109,7 @@ class Map {
     step() {
         // https://www.reddit.com/r/todayilearned/comments/2oschi/til_every_time_pacman_eats_a_regular_dot_he_stops/
         if (this._collisionChecks()) {
+            characters.pacman.pauseOneFrame();
             // TODO: Check for board clear
         } else {
             characters.pacman.fullstep(this);
