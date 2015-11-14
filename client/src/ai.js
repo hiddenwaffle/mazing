@@ -97,8 +97,6 @@ exports.inky = {
             let targetx = firstx + diffx;
             let targety = firsty + diffy;
 
-            console.log(targetx + ' ' + targety);
-
             aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions); // lower right
         });
     }
