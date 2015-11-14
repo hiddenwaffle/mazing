@@ -22,6 +22,8 @@ class Entity {
         this._chaseAi = chaseAi;
         this._scatterAi = scatterAi;
 
+        this._reverseNeeded = false;
+
         // Initialize _tilex and _tiley for good measure
         this._updateTileCoordinates();
     }
@@ -81,6 +83,10 @@ class Entity {
 
     set requestedDirection(newDirection) {
         this._requestedDirection = newDirection;
+    }
+
+    set reverseNeeded(value) {
+        this._reverseNeeded = value;
     }
 
     _step(map) {
@@ -172,7 +178,25 @@ class Entity {
         this._updateTileCoordinates();
 
         if (oldtilex !== this._tilex || oldtiley !== this._tiley) {
-            this._runAi(oldtilex, oldtiley);
+            if (this._reverseNeeded) { // go in the direction of the old tile
+                this.reverseNeeded = false;
+
+                if (oldtilex > this._tilex) {
+                    this._requestedDirection = 'right';
+
+                } else if (oldtilex < this._tilex) {
+                    this._requestedDirection = 'left';
+
+                } else if (oldtiley > this._tiley) {
+                    this._requestedDirection = 'down';
+
+                } else if (oldtiley < this._tiley) {
+                    this._requestedDirection = 'up';
+                }
+
+            } else {
+                this._runAi(oldtilex, oldtiley);  // use AI to decide which way
+            }
         }
     }
 

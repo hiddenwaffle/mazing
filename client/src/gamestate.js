@@ -93,7 +93,9 @@ class GameState {
     }
 
     signalFrightened() {
-        console.log('ghosts should become frightened and reverse direction on next tile');
+        for (let ghost of characters.ghosts) {
+            ghost.reverseNeeded = true;
+        }
     }
 
     _stepGhostMode() {
