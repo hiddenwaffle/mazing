@@ -128,7 +128,6 @@ class GameState {
             if (elapsedGhostMode >= currentGhostMode.time) {
                 this._ghostModeSubConfigIndex++;
                 let newGhostMode = this._determineCurrentGhostMode();
-                console.log('newGhostMode:' + newGhostMode.mode);
 
                 for (let ghost of characters.ghosts) {
                     ghost.mode = newGhostMode.mode;
