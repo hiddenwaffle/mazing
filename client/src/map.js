@@ -4,6 +4,7 @@ const Util = require('./util');
 const Constants = require('./constants');
 const Entity = require('./entity');
 const Board = require('./board');
+const gameState = require('./gamestate');
 
 const characters = require('./characters');
 
@@ -52,6 +53,8 @@ class Map {
 
         this._dots = Board.dots;
         this._dotImgs = new PIXI.Container();
+        this._energizerImgs = new PIXI.Container();
+
         for (let y = 0; y < this._dots.length; y++) {
             let line = this._dots[y];
             for (let x = 0; x < line.length; x++) {
@@ -64,18 +67,38 @@ class Map {
                             0, 0,
                             Constants.dotSize, Constants.dotSize
                         );
-                        let offset = (Constants.wallSize / 2) - (Constants.dotSize / 2);
-                        dotImg.x = x * Constants.wallSize + offset;
-                        dotImg.y = y * Constants.wallSize + offset;
-                        this._dotImgs.addChild(dotImg);
+                        {
+                            let offset = (Constants.wallSize / 2) - (Constants.dotSize / 2);
+                            dotImg.x = x * Constants.wallSize + offset;
+                            dotImg.y = y * Constants.wallSize + offset;
+                            this._dotImgs.addChild(dotImg);
+                        }
                         break;
+
+                    case 2:
+                        let energizerImg = new PIXI.Graphics();
+                        energizerImg.beginFill(0xeeeeee);
+                        energizerImg.drawRect(
+                            0, 0,
+                            Constants.wallSize * 0.65, Constants.wallSize * 0.65
+                        );
+                        {
+                            let offset = (Constants.wallSize * 0.175);
+                            energizerImg.x = x * Constants.wallSize + offset;
+                            energizerImg.y = y * Constants.wallSize + offset;
+                            this._energizerImgs.addChild(energizerImg);
+                        }
+                        break;
+
                     default:
                         break;
 
                 }
             }
         }
+
         this._graphics.addChild(this._dotImgs);
+        this._graphics.addChild(this._energizerImgs);
 
         this._graphics.addChild(characters.pacman.graphics);
         for (let ghost of characters.ghosts) {
@@ -200,6 +223,18 @@ class Map {
             let dotImg = this._dotImgs.getChildAt(idx);
             if (characters.pacman.overlaps(dotImg)) {
                 this._dotImgs.removeChildAt(idx);
+                collision = true;
+            }
+        }
+
+        for (let idx = this._energizerImgs.children.length - 1; idx >= 0; idx--) {
+            let energizerImg = this._energizerImgs.getChildAt(idx);
+            if (characters.pacman.overlaps(energizerImg)) {
+                this._energizerImgs.removeChildAt(idx);
+
+                // Signal the ghosts that they are now vulnerable
+                gameState.signalFrightened();
+
                 collision = true;
             }
         }

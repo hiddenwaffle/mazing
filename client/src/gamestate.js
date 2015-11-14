@@ -92,6 +92,10 @@ class GameState {
         this._stepGhostMode();
     }
 
+    signalFrightened() {
+        console.log('ghosts should become frightened and reverse direction on next tile');
+    }
+
     _stepGhostMode() {
         if (this._onTheFinalGhostModeSubConfig() == false) {
             let currentGhostMode = this._determineCurrentGhostMode();
@@ -120,26 +124,3 @@ class GameState {
 
 let gameState = new GameState();
 module.exports = gameState;
-
-//let modeNum = 0;
-//function loop() {
-//    modeNum++;
-//
-//    let modeFnName; // chase(), scatter(), etc...
-//
-//    if (modeNum >= 8) {
-//        modeFnName = 'chase';
-//    } else {
-//        if (modeNum % 2 === 0) {
-//            modeFnName = 'chase';
-//            setTimeout(loop, 20000);
-//        } else {
-//            modeFnName = 'scatter';
-//            setTimeout(loop, 7000);
-//        }
-//    }
-//
-//    for (let ghost of characters.ghosts) {
-//        (ghost)[modeFnName]();
-//    }
-//}
