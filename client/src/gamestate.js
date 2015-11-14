@@ -77,15 +77,38 @@ class GameState {
             }
         ];
 
-        this._level = 0;
+        this._levelSpecifications = [
+            // level 1
+            {
+                bonusSymbol: 'cherries',
+                bonusPoints: 100,
+                ghostModeIndex: 0, // first configuration
+                speedGroupIndex: 0, // first configuration
+                frightTime: 6000,
+                frightFlashes: 5,
+                elroy1DotsLeft: 20,
+                elroy2DotsLeft: 10
+            },
+            // level 2
+            {
+                bonusSymbol: 'strawberry',
+                bonusPoints: 300,
+                ghostModeIndex: 1, // second configuration
+                speedGroupIndex: 1, // second configuration
+                frightTime: 5000,
+                frightFlashes: 5,
+                elroy1DotsLeft: 30,
+                elroy2DotsLeft: 15
+            }
+            // TODO: More levels
+        ];
+
+        this._levelIndex = 0;
 
         this._currentGhostModeMark = Date.now();
 
         this._ghostModeConfigIndex = 0;
         this._ghostModeSubConfigIndex = 0;
-
-        this._speedGroupTimer = 0;
-        this._speedGroupIndex = 0;
     }
 
     step() {
@@ -105,6 +128,7 @@ class GameState {
             if (elapsedGhostMode >= currentGhostMode.time) {
                 this._ghostModeSubConfigIndex++;
                 let newGhostMode = this._determineCurrentGhostMode();
+                console.log('newGhostMode:' + newGhostMode.mode);
 
                 for (let ghost of characters.ghosts) {
                     ghost.mode = newGhostMode.mode;
