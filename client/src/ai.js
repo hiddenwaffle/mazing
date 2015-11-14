@@ -1,3 +1,5 @@
+'use strict';
+
 const characters = require('./characters');
 const board = require('./board');
 
@@ -11,7 +13,7 @@ exports.doNothing = {
 exports.blinky = {
     handleNewTile(entity, oldtilex, oldtiley) {
         runIfIntersection(entity, oldtilex, oldtiley, directions => {
-            aimTowardsTargetTile(entity, oldtilex, oldtiley, characters.pacman.tilex, characters.pacman.tiley, directions);
+            aimTowardsTargetTile(entity, characters.pacman.tilex, characters.pacman.tiley, directions);
         });
     }
 };
@@ -19,7 +21,7 @@ exports.blinky = {
 exports.blinkyScatter = {
     handleNewTile(entity, oldtilex, oldtiley) {
         runIfIntersection(entity, oldtilex, oldtiley, directions => {
-            aimTowardsTargetTile(entity, oldtilex, oldtiley, 27, 1, directions); // upper right
+            aimTowardsTargetTile(entity, 27, 1, directions); // upper right
         });
     }
 };
@@ -50,7 +52,7 @@ exports.pinky = {
                     break;
             }
 
-            aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions);
+            aimTowardsTargetTile(entity, targetx, targety, directions);
         });
     }
 };
@@ -58,7 +60,7 @@ exports.pinky = {
 exports.pinkyScatter = {
     handleNewTile(entity, oldtilex, oldtiley) {
         runIfIntersection(entity, oldtilex, oldtiley, directions => {
-            aimTowardsTargetTile(entity, oldtilex, oldtiley, 1, 1, directions); // upper left
+            aimTowardsTargetTile(entity, 1, 1, directions); // upper left
         });
     }
 };
@@ -97,7 +99,7 @@ exports.inky = {
             let targetx = firstx + diffx;
             let targety = firsty + diffy;
 
-            aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions); // lower right
+            aimTowardsTargetTile(entity, targetx, targety, directions); // lower right
         });
     }
 };
@@ -105,7 +107,7 @@ exports.inky = {
 exports.inkyScatter = {
     handleNewTile(entity, oldtilex, oldtiley) {
         runIfIntersection(entity, oldtilex, oldtiley, directions => {
-            aimTowardsTargetTile(entity, oldtilex, oldtiley, 27, 30, directions); // lower right
+            aimTowardsTargetTile(entity, 27, 30, directions); // lower right
         });
     }
 };
@@ -124,9 +126,9 @@ exports.clyde = {
             );
 
             if (distanceSquared >= 64) {
-                aimTowardsTargetTile(entity, oldtilex, oldtiley, characters.pacman.tilex, characters.pacman.tiley, directions);
+                aimTowardsTargetTile(entity, characters.pacman.tilex, characters.pacman.tiley, directions);
             } else {
-                aimTowardsTargetTile(entity, oldtilex, oldtiley, 1, 30, directions); // same as scatter tile
+                aimTowardsTargetTile(entity, 1, 30, directions); // same as scatter tile
             }
         });
     }
@@ -135,12 +137,12 @@ exports.clyde = {
 exports.clydeScatter = {
     handleNewTile(entity, oldtilex, oldtiley) {
         runIfIntersection(entity, oldtilex, oldtiley, directions => {
-            aimTowardsTargetTile(entity, oldtilex, oldtiley, 1, 30, directions); // lower left
+            aimTowardsTargetTile(entity, 1, 30, directions); // lower left
         });
     }
 };
 
-function aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions) {
+function aimTowardsTargetTile(entity, targetx, targety, directions) {
     // Determine how far each open adjacent tile is from Pac-Man
     let distances = directions.map((direction) => {
         let dx = 0;
