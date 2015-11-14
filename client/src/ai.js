@@ -63,6 +63,35 @@ exports.pinkyScatter = {
     }
 };
 
+/**
+ * Clyde is the orange ghost and tends to stay away from Pac-Man.
+ */
+exports.clyde = {
+    handleNewTile(entity, oldtilex, oldtiley) {
+        runIfIntersection(entity, oldtilex, oldtiley, directions => {
+            let pacman = characters.pacman;
+
+            let distanceSquared =
+                Math.pow(pacman.tilex - entity.tilex, 2) +
+                Math.pow(pacman.tiley - entity.tiley, 2);
+
+            if (distanceSquared >= 64) {
+                aimTowardsTargetTile(entity, oldtilex, oldtiley, characters.pacman.tilex, characters.pacman.tiley, directions);
+            } else {
+                aimTowardsTargetTile(entity, oldtilex, oldtiley, 1, 30, directions); // same as scatter tile
+            }
+        });
+    }
+};
+
+exports.clydeScatter = {
+    handleNewTile(entity, oldtilex, oldtiley) {
+        runIfIntersection(entity, oldtilex, oldtiley, directions => {
+            aimTowardsTargetTile(entity, oldtilex, oldtiley, 1, 30, directions); // lower left
+        });
+    }
+};
+
 function aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions) {
     // Determine how far each open adjacent tile is from Pac-Man
     let distances = directions.map((direction) => {
