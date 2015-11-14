@@ -25,6 +25,18 @@ let blinky = new Entity(
 );
 ghosts.push(blinky);
 
+let pinky = new Entity(
+    13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
+    11 * Constants.wallSize,
+    'left',
+    Constants.topSpeed * 0.75,
+    0xffb9ff,
+    AI.pinky,
+    AI.pinkyScatter
+);
+ghosts.push(pinky);
+
 exports.pacman = pacman;
 exports.blinky = blinky;
+exports.pinky = pinky;
 exports.ghosts = ghosts;

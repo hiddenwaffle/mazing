@@ -24,6 +24,45 @@ exports.blinkyScatter = {
     }
 };
 
+/**
+ * Pinky is the pink ghost and attempts to cut Pac-Man off.
+ */
+exports.pinky = {
+    handleNewTile(entity, oldtilex, oldtiley) {
+        runIfIntersection(entity, oldtilex, oldtiley, directions => {
+            let pacman = characters.pacman;
+
+            let targetx = pacman.tilex;
+            let targety = pacman.tiley;
+
+            switch (pacman.currentDirection) {
+                case 'up':
+                    targety -= 4;
+                    break;
+                case 'down':
+                    targety += 4;
+                    break;
+                case 'left':
+                    targetx -= 4;
+                    break;
+                case 'right':
+                    targetx += 4;
+                    break;
+            }
+
+            aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions);
+        });
+    }
+};
+
+exports.pinkyScatter = {
+    handleNewTile(entity, oldtilex, oldtiley) {
+        runIfIntersection(entity, oldtilex, oldtiley, directions => {
+            aimTowardsTargetTile(entity, oldtilex, oldtiley, 1, 1, directions); // upper left
+        });
+    }
+};
+
 function aimTowardsTargetTile(entity, oldtilex, oldtiley, targetx, targety, directions) {
     // Determine how far each open adjacent tile is from Pac-Man
     let distances = directions.map((direction) => {
