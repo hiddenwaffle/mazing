@@ -13,6 +13,7 @@ class CharacterManager {
             'left',
             0xffff00,
             AI.doNothing,
+            AI.doNothing,
             AI.doNothing
         );
 
@@ -24,7 +25,8 @@ class CharacterManager {
             'left',
             0xff0000,
             AI.blinky,
-            AI.blinkyScatter
+            AI.blinkyScatter,
+            AI.random
         );
         this._ghosts.push(this._blinky);
 
@@ -34,7 +36,8 @@ class CharacterManager {
             'left',
             0xffb9ff,
             AI.pinky,
-            AI.pinkyScatter
+            AI.pinkyScatter,
+            AI.random
         );
         this._ghosts.push(this._pinky);
 
@@ -44,7 +47,8 @@ class CharacterManager {
             'left',
             0x00ffff,
             AI.inky,
-            AI.inkyScatter
+            AI.inkyScatter,
+            AI.random
         );
         this._ghosts.push(this._inky);
 
@@ -54,7 +58,8 @@ class CharacterManager {
             'left',
             0xffb950,
             AI.clyde,
-            AI.clydeScatter
+            AI.clydeScatter,
+            AI.random
         );
         this._ghosts.push(this._clyde);
     }

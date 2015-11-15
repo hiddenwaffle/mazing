@@ -139,18 +139,19 @@ class GameState {
             this._stepGhostMode(elapsed);
         }
 
-        this._seeIfStillFrightened();
+        this._handleFright();
     }
 
     /**
-     * See _seeIfStillFrightened() for more information.
+     * See _handleFright() for more information.
      */
     signalFrightened() {
-        let [levelSpecification, , speedGroup] = this._determineCurrentConfiguration();
+        let [, , speedGroup] = this._determineCurrentConfiguration();
 
         for (let ghost of characters.ghosts) {
             ghost.reverseNeeded = true;
             ghost.speed = Constants.topSpeed * speedGroup.ghostFright;
+            ghost.showBlue(true);
         }
 
         characters.pacman.speed = Constants.topSpeed * speedGroup.pacmanFright;
@@ -193,9 +194,11 @@ class GameState {
 
     /**
      * Determine if the ghosts are frightened and if so, see if the fright timer has run out.
+     * Also move the blue box over the ghosts if frightened.
+     *
      * @private
      */
-    _seeIfStillFrightened() {
+    _handleFright() {
         if (this._isFrightened) {
             let elapsed = Date.now() - this._frightStartMark;
             let [levelSpecification, , speedGroup] = this._determineCurrentConfiguration();
@@ -203,6 +206,7 @@ class GameState {
             if (elapsed >= levelSpecification.frightTime) {
                 for (let ghost of characters.ghosts) {
                     ghost.speed = Constants.topSpeed * speedGroup.ghostNormal;
+                    ghost.showBlue(false);
                 }
 
                 characters.pacman.speed = Constants.topSpeed * speedGroup.pacmanNormal;

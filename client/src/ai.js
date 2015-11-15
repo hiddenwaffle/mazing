@@ -8,6 +8,18 @@ exports.doNothing = {
 };
 
 /**
+ * Pick a random direction. For frightened mode.
+ */
+exports.random = {
+    handleNewTile(entity, oldtilex, oldtiley) {
+        runIfIntersection(entity, oldtilex, oldtiley, directions => {
+            let index = getRandomIntInclusive(0, directions.length - 1);
+            entity.requestedDirection = directions[index];
+        });
+    }
+};
+
+/**
  * Blinky is the red ghost and follows Pac-Man directly.
  */
 exports.blinky = {
@@ -243,4 +255,11 @@ function oppositeOfDirection(direction) {
  */
 function qs(a, b) {
     return (a * a) + (b * b);
+}
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+ */
+function getRandomIntInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }

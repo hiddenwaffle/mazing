@@ -5,23 +5,34 @@ let Util = require('./util');
 
 class Entity {
 
-    constructor(x, y, requestedDirection, color, chaseAi, scatterAi) {
+    constructor(x, y, requestedDirection, color, chaseAi, scatterAi, frightAi) {
         this._currentDirection = this._requestedDirection = requestedDirection;
 
         this._speed = 0;
 
-        this._graphics = new PIXI.Graphics();
+        this._graphics = new PIXI.Container();
         this._graphics.x = x;
         this._graphics.y = y;
-        this._graphics.beginFill(color, 1);
-        this._graphics.drawRect(0, 0, Constants.wallSize, Constants.wallSize);
-        this._graphics.endFill();
+
+        this._primaryColor = new PIXI.Graphics();
+        this._primaryColor.beginFill(color, 1);
+        this._primaryColor.drawRect(0, 0, Constants.wallSize, Constants.wallSize);
+        this._primaryColor.endFill();
+        this._graphics.addChild(this._primaryColor);
+
+        this._blue = new PIXI.Graphics();
+        this._blue.beginFill(0x5555ff, 1);
+        this._blue.drawRect(0, 0, Constants.wallSize, Constants.wallSize);
+        this._blue.endFill();
+        this._blue.visible = false;
+        this._graphics.addChild(this._blue);
 
         this._lastStep = 0;
 
         this._mode = 'scatter';
         this._chaseAi = chaseAi;
         this._scatterAi = scatterAi;
+        this._frightAi = frightAi;
 
         this._reverseNeeded = false;
 
@@ -66,12 +77,20 @@ class Entity {
         return (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1);
     }
 
+    showBlue(visible) {
+        this._blue.visible = visible;
+    }
+
     set mode(newMode) {
         this._mode = newMode;
     }
 
     get graphics() {
         return this._graphics;
+    }
+
+    get blue() {
+        return this._blue;
     }
 
     get tilex() {
@@ -216,13 +235,18 @@ class Entity {
     }
 
     _runAi(oldtilex, oldtiley) {
-        switch (this._mode) {
-            case 'chase':
-                this._chaseAi.handleNewTile(this, oldtilex, oldtiley);
-                break;
-            case 'scatter':
-                this._scatterAi.handleNewTile(this, oldtilex, oldtiley);
-                break;
+        if (this._blue.visible) {
+            this._frightAi.handleNewTile(this, oldtilex, oldtiley);
+
+        } else {
+            switch (this._mode) {
+                case 'chase':
+                    this._chaseAi.handleNewTile(this, oldtilex, oldtiley);
+                    break;
+                case 'scatter':
+                    this._scatterAi.handleNewTile(this, oldtilex, oldtiley);
+                    break;
+            }
         }
     }
 }
