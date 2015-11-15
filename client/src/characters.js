@@ -8,8 +8,8 @@ class CharacterManager {
 
     constructor() {
         this._pacman = new Entity(
-            13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
-            23 * Constants.wallSize,
+            Constants.startpacmanx,
+            Constants.startpacmany,
             'left',
             0xffff00,
             AI.doNothing,
@@ -20,9 +20,9 @@ class CharacterManager {
         this._ghosts = [];
 
         this._blinky = new Entity(
-            13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
-            11 * Constants.wallSize,
-            'left',
+            Constants.startghostx + (3 * Constants.wallSize),
+            Constants.startghosty,
+            'right',
             0xff0000,
             AI.blinky,
             AI.blinkyScatter,
@@ -31,8 +31,8 @@ class CharacterManager {
         this._ghosts.push(this._blinky);
 
         this._pinky = new Entity(
-            13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
-            11 * Constants.wallSize,
+            Constants.startghostx - (3 * Constants.wallSize),
+            Constants.startghosty,
             'left',
             0xffb9ff,
             AI.pinky,
@@ -42,9 +42,9 @@ class CharacterManager {
         this._ghosts.push(this._pinky);
 
         this._inky = new Entity(
-            13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
-            11 * Constants.wallSize,
-            'left',
+            Constants.startghostx + (Constants.wallSize),
+            Constants.startghosty,
+            'right',
             0x00ffff,
             AI.inky,
             AI.inkyScatter,
@@ -53,8 +53,8 @@ class CharacterManager {
         this._ghosts.push(this._inky);
 
         this._clyde = new Entity(
-            13 * Constants.wallSize + Math.floor(Constants.wallSize / 2),
-            11 * Constants.wallSize,
+            Constants.startghostx - (Constants.wallSize),
+            Constants.startghosty,
             'left',
             0xffb950,
             AI.clyde,

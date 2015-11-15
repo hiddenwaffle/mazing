@@ -36,6 +36,9 @@ class Entity {
 
         this._reverseNeeded = false;
 
+        this._frightened = false;
+        this._frightStartMark = null;
+
         // Initialize _tilex and _tiley for good measure
         this._updateTileCoordinates();
     }
@@ -63,6 +66,7 @@ class Entity {
             this._step(map);
         }
     }
+
     overlaps(graphics) {
         let ax1 = this._graphics.x;
         let ay1 = this._graphics.y;
@@ -74,11 +78,33 @@ class Entity {
         let bx2 = graphics.x + graphics.width;
         let by2 = graphics.y + graphics.height;
 
-        return (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1);
+        return Util.overlap(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2);
     }
 
-    showBlue(visible) {
-        this._blue.visible = visible;
+    signalFrightened(speed) {
+        this._reverseNeeded = true;
+
+        this._frightened = true;
+        this._blue.visible = true;
+        this._frightStartMark = Date.now();
+        this._speed = speed;
+    }
+
+    stepFrightened(frightTime, normalSpeed) {
+        if (this._frightened) {
+            let elapsed = Date.now() - this._frightStartMark;
+
+            if (elapsed >= frightTime) {
+                this.removeFright(normalSpeed);
+            }
+        }
+    }
+
+    removeFright(normalSpeed) {
+        this._frightened = false;
+        this._blue.visible = false;
+        this._frightStartMark = null;
+        this._speed = normalSpeed;
     }
 
     set mode(newMode) {
@@ -87,10 +113,6 @@ class Entity {
 
     get graphics() {
         return this._graphics;
-    }
-
-    get blue() {
-        return this._blue;
     }
 
     get tilex() {
@@ -105,6 +127,10 @@ class Entity {
         return this._currentDirection;
     }
 
+    set currentDirection(value) {
+        this._currentDirection = value;
+    }
+
     set requestedDirection(newDirection) {
         this._requestedDirection = newDirection;
     }
@@ -115,6 +141,10 @@ class Entity {
 
     set speed(value) {
         this._speed = value;
+    }
+
+    get frightened() {
+        return this._frightened;
     }
 
     _step(map) {
@@ -150,7 +180,8 @@ class Entity {
         this._graphics.x = tryMoveResult.finalx;
         this._graphics.y = tryMoveResult.finaly;
 
-        // Prevent shaking when Pac-Man hits a wall
+        // Prevent shaking when Pac-Man hits a wall.
+        // This doesn't work well with ghosts, but they shouldn't hit it.
         if (tryMoveResult.doStop) {
             this._graphics.x = Math.floor(this._graphics.x);
             this._graphics.y = Math.floor(this._graphics.y);

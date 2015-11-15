@@ -241,7 +241,49 @@ class Map {
             }
         }
 
+        for (let ghost of characters.ghosts) {
+            if (characters.pacman.overlaps(ghost.graphics)) {
+                if (ghost.frightened) {
+                    this._ghostDeath(ghost);
+                } else {
+                    this._pacManDeath();
+                }
+            }
+        }
+
         return collision;
+    }
+
+    _ghostDeath(ghost) {
+        // TODO: Collision particle direction should go based on vectors
+        // TODO: get pacman's direction and speed
+        // TODO: get ghost's direction and speed
+        // TODO: determine which way the particles should go
+
+        ghost.graphics.x = Constants.startghostx;
+        ghost.graphics.y = Constants.startghosty;
+        gameState.removeFright(ghost);
+    }
+
+    _pacManDeath() {
+        let pacman = characters.pacman;
+
+        switch (pacman.currentDirection) {
+            case 'up':
+                break;
+            case 'down':
+                break;
+            case 'left':
+                break;
+            case 'right':
+                break;
+            default: // pacman was stopped
+                break;
+        }
+        // TODO: Determine new start position and direction from above variables
+
+        pacman.graphics.x = Constants.startpacmanx;
+        pacman.graphics.y = Constants.startpacmany;
     }
 }
 

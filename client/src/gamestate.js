@@ -109,9 +109,6 @@ class GameState {
         this._elapsedGhostMode = 0;
         this._lastStep = Date.now();
 
-        this._isFrightened = false;
-        this._frightStartMark = null;
-
         this._ghostModeConfigIndex = 0;
         this._ghostModeSubConfigIndex = 0;
     }
@@ -126,7 +123,7 @@ class GameState {
     }
 
     step() {
-        if (this._isFrightened == false) {
+        if (this._anyGhostsAreFrightened() == false) {
             let elapsed;
             if (this._lastStep === 0) {
                 elapsed = 1;
@@ -139,24 +136,24 @@ class GameState {
             this._stepGhostMode(elapsed);
         }
 
-        this._handleFright();
+        this._stepFrighted();
     }
 
     /**
-     * See _handleFright() for more information.
+     * See _stepFrighted() for more information.
      */
     signalFrightened() {
         let [, , speedGroup] = this._determineCurrentConfiguration();
 
         for (let ghost of characters.ghosts) {
-            ghost.reverseNeeded = true;
-            ghost.speed = Constants.topSpeed * speedGroup.ghostFright;
-            ghost.showBlue(true);
+            ghost.signalFrightened(Constants.topSpeed * speedGroup.ghostFright);
         }
-
         characters.pacman.speed = Constants.topSpeed * speedGroup.pacmanFright;
-        this._isFrightened = true;
-        this._frightStartMark = Date.now();
+    }
+
+    removeFright(ghost) {
+        let [, , speedGroup] = this._determineCurrentConfiguration();
+        ghost.removeFright(Constants.topSpeed * speedGroup.ghostNormal);
     }
 
     _determineCurrentConfiguration() {
@@ -198,22 +195,18 @@ class GameState {
      *
      * @private
      */
-    _handleFright() {
-        if (this._isFrightened) {
-            let elapsed = Date.now() - this._frightStartMark;
-            let [levelSpecification, , speedGroup] = this._determineCurrentConfiguration();
+    _stepFrighted() {
+        let [levelSpecification, , speedGroup] = this._determineCurrentConfiguration();
 
-            if (elapsed >= levelSpecification.frightTime) {
-                for (let ghost of characters.ghosts) {
-                    ghost.speed = Constants.topSpeed * speedGroup.ghostNormal;
-                    ghost.showBlue(false);
-                }
-
-                characters.pacman.speed = Constants.topSpeed * speedGroup.pacmanNormal;
-                this._isFrightened = false;
-                this._frightStartMark = null;
-
+        if (this._anyGhostsAreFrightened()) {
+            for (let ghost of characters.ghosts) {
+                ghost.stepFrightened(
+                    levelSpecification.frightTime,
+                    Constants.topSpeed * speedGroup.ghostNormal
+                );
             }
+
+            characters.pacman.speed = Constants.topSpeed * speedGroup.pacmanFright;
         }
     }
 
@@ -227,6 +220,19 @@ class GameState {
 
     _determineCurrentGhostMode() {
         return this._ghostModes[this._ghostModeConfigIndex][this._ghostModeSubConfigIndex];
+    }
+
+    _anyGhostsAreFrightened() {
+        let result = false;
+
+        for (let ghost of characters.ghosts) {
+            if (ghost.frightened) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 }
 
