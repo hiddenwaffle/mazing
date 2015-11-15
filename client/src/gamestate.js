@@ -1,5 +1,6 @@
 'use strict';
 
+const Constants = require('./constants');
 const characters = require('./characters');
 
 class GameState {
@@ -108,6 +109,9 @@ class GameState {
         this._elapsedGhostMode = 0;
         this._lastStep = Date.now();
 
+        this._isFrightened = false;
+        this._frightStartMark = null;
+
         this._ghostModeConfigIndex = 0;
         this._ghostModeSubConfigIndex = 0;
     }
@@ -122,13 +126,36 @@ class GameState {
     }
 
     step() {
-        this._stepGhostMode();
+        if (this._isFrightened == false) {
+            let elapsed;
+            if (this._lastStep === 0) {
+                elapsed = 1;
+            } else {
+                elapsed = Date.now() - this._lastStep;
+                if (elapsed > 1000) {
+                    elapsed = 1000; // enforce speed limit
+                }
+            }
+            this._stepGhostMode(elapsed);
+        }
+
+        this._seeIfStillFrightened();
     }
 
+    /**
+     * See _seeIfStillFrightened() for more information.
+     */
     signalFrightened() {
+        let [levelSpecification, , speedGroup] = this._determineCurrentConfiguration();
+
         for (let ghost of characters.ghosts) {
             ghost.reverseNeeded = true;
+            ghost.speed = Constants.topSpeed * speedGroup.ghostFright;
         }
+
+        characters.pacman.speed = Constants.topSpeed * speedGroup.pacmanFright;
+        this._isFrightened = true;
+        this._frightStartMark = Date.now();
     }
 
     _determineCurrentConfiguration() {
@@ -140,24 +167,16 @@ class GameState {
     }
 
     /**
+     * See if it is time to change the ghosts' mode from scatter <-> chase
      * @private
      */
-    _stepGhostMode() {
-        let elapsed;
-        if (this._lastStep === 0) {
-            elapsed = 1;
-        } else {
-            elapsed = Date.now() - this._lastStep;
-            if (elapsed > 1000) {
-                elapsed = 1000; // enforce speed limit
-            }
-        }
+    _stepGhostMode(elapsed) {
         this._lastStep = Date.now();
         this._elapsedGhostMode += elapsed;
 
         if (this._onTheFinalGhostModeSubConfig() == false) {
             let currentGhostMode = this._determineCurrentGhostMode();
-            
+
             if (this._elapsedGhostMode >= currentGhostMode.time) {
                 this._ghostModeSubConfigIndex++;
                 let newGhostMode = this._determineCurrentGhostMode();
@@ -170,25 +189,34 @@ class GameState {
                 this._elapsedGhostMode = 0;
             }
         }
-
-        //if (this._onTheFinalGhostModeSubConfig() == false) {
-        //    let currentGhostMode = this._determineCurrentGhostMode();
-        //    let elapsedGhostMode = Date.now() - this._currentGhostModeMark;
-        //    if (elapsedGhostMode >= currentGhostMode.time) {
-        //        this._ghostModeSubConfigIndex++;
-        //        let newGhostMode = this._determineCurrentGhostMode();
-        //
-        //        for (let ghost of characters.ghosts) {
-        //            ghost.mode = newGhostMode.mode;
-        //            ghost.reverseNeeded = true;
-        //        }
-        //
-        //        this._currentGhostModeMark = Date.now();
-        //    }
-        //}
-
     }
 
+    /**
+     * Determine if the ghosts are frightened and if so, see if the fright timer has run out.
+     * @private
+     */
+    _seeIfStillFrightened() {
+        if (this._isFrightened) {
+            let elapsed = Date.now() - this._frightStartMark;
+            let [levelSpecification, , speedGroup] = this._determineCurrentConfiguration();
+
+            if (elapsed >= levelSpecification.frightTime) {
+                for (let ghost of characters.ghosts) {
+                    ghost.speed = Constants.topSpeed * speedGroup.ghostNormal;
+                }
+
+                characters.pacman.speed = Constants.topSpeed * speedGroup.pacmanNormal;
+                this._isFrightened = false;
+                this._frightStartMark = null;
+
+            }
+        }
+    }
+
+    /**
+     * @returns {boolean} true if the current ghost mode is the last one of mode configuration
+     * @private
+     */
     _onTheFinalGhostModeSubConfig() {
         return this._ghostModeSubConfigIndex >= this._ghostModes[this._ghostModeConfigIndex].length - 1;
     }
