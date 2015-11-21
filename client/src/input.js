@@ -4,6 +4,7 @@ class Input {
 
     constructor() {
         this._requestedDirection = 'left';
+        this._userHitPauseButton = false;
     }
 
     start() {
@@ -25,9 +26,8 @@ class Input {
                     this._requestedDirection = 'down';
                     e.preventDefault();
                     break;
-                case 32: // space
-                case 27: // escape
-                    // TODO: Pause the game
+                case 13: // enter key
+                    this._userHitPauseButton = true;
                     e.preventDefault();
                     break;
                 default:
@@ -35,6 +35,12 @@ class Input {
                     break;
             }
         });
+    }
+
+    switchIfUserHitPauseButton() {
+        let value = this._userHitPauseButton;
+        this._userHitPauseButton = false;
+        return value;
     }
 
     get requestedDirection() {

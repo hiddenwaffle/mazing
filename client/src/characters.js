@@ -212,7 +212,7 @@ class Characters {
         ghost.solid = false;
         ghost.visible = false;
 
-        setTimeout(() => {
+        setTimeout(() => { // TODO: Can't do this by timeout
             ghost.solid = true;
             ghost.visible = true;
             ghost.x = config.startghostx;
@@ -224,7 +224,7 @@ class Characters {
         this._pacman.solid = false;
         this._pacman.visible = false;
 
-        setTimeout(() => {
+        setTimeout(() => { // TODO: Can't do this by timeout
             this._pacman.solid = true;
             this._pacman.visible = true;
             this._pacman.x = config.startpacmanx;
