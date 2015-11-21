@@ -1,7 +1,8 @@
-let Constants = require('./constants');
+const
+    config = require('./config');
 
 exports.convertToTileSpace = function(v) {
-    return Math.floor(v / Constants.wallSize);
+    return Math.floor(v / config.wallSize);
 };
 
 /**

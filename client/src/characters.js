@@ -1,108 +1,217 @@
 'use strict';
 
-const Constants = require('./constants');
-const Entity = require('./entity');
-const AI = require('./ai');
+const
+    Entity              = require('./entity'),
+    Animation           = require('./animation'),
+    MovementStrategy    = require('./movement-strategy'),
+    config              = require('./config'),
+    Util                = require('./util');
 
-class CharacterManager {
+class Characters {
 
-    constructor() {
+    constructor(board, parentGfx) {
+        this._board = board;
+
+        let gfx = new PIXI.Container();
+        parentGfx.addChild(gfx);
+
         this._pacman = new Entity(
-            Constants.startpacmanx,
-            Constants.startpacmany,
+            'pacman',
+            board,
+            config.startpacmanx,
+            config.startpacmany,
             'left',
-            0xffff00,
-            AI.doNothing,
-            AI.doNothing,
-            AI.doNothing
+            new Animation(gfx, 0xffff00, 0xffff00),
+            new MovementStrategy(board, 'doNothing', 'doNothing')
         );
 
         this._ghosts = [];
 
+        let randomMovementStrategy = new MovementStrategy(board, 'random');
+
         this._blinky = new Entity(
-            Constants.startghostx + (3 * Constants.wallSize),
-            Constants.startghosty,
+            'blinky',
+            board,
+            config.startghostx + (3 * config.wallSize),
+            config.startghosty,
             'right',
-            0xff0000,
-            AI.blinky,
-            AI.blinkyScatter,
-            AI.random
+            new Animation(gfx, 0xff0000, 0x5555ff),
+            new MovementStrategy(board, 'blinky', 'random', 27, 1, this._pacman),
+            randomMovementStrategy
         );
         this._ghosts.push(this._blinky);
 
         this._pinky = new Entity(
-            Constants.startghostx - (3 * Constants.wallSize),
-            Constants.startghosty,
+            'pinky',
+            board,
+            config.startghostx - (3 * config.wallSize),
+            config.startghosty,
             'left',
-            0xffb9ff,
-            AI.pinky,
-            AI.pinkyScatter,
-            AI.random
+            new Animation(gfx, 0xffb9ff, 0x5555ff),
+            new MovementStrategy(board, 'pinky', 'random', 1, 1, this._pacman),
+            randomMovementStrategy
         );
         this._ghosts.push(this._pinky);
 
         this._inky = new Entity(
-            Constants.startghostx + (Constants.wallSize),
-            Constants.startghosty,
+            'inky',
+            board,
+            config.startghostx + config.wallSize,
+            config.startghosty,
             'right',
-            0x00ffff,
-            AI.inky,
-            AI.inkyScatter,
-            AI.random
+            new Animation(gfx, 0x00ffff, 0x5555ff),
+            new MovementStrategy(board, 'inky', 'random', 27, 30, this._pacman, this._blinky),
+            randomMovementStrategy
         );
         this._ghosts.push(this._inky);
 
         this._clyde = new Entity(
-            Constants.startghostx - (Constants.wallSize),
-            Constants.startghosty,
+            'clyde',
+            board,
+            config.startghostx - config.wallSize,
+            config.startghosty,
             'left',
-            0xffb950,
-            AI.clyde,
-            AI.clydeScatter,
-            AI.random
+            new Animation(gfx, 0xffb950, 0x5555ff),
+            new MovementStrategy(board, 'clyde', 'random', 1, 30, this._pacman),
+            randomMovementStrategy
         );
         this._ghosts.push(this._clyde);
     }
 
-    changeSpeed(pacmanNormal, ghostNormal) {
-        this._pacman.speed = Constants.topSpeed * pacmanNormal;
+    start(lvlSpec) {
+        let speedGroup = lvlSpec.speedGroup;
+        let mode = lvlSpec.ghostMode[0].mode;
+
+        this._pacman.start(
+            speedGroup.pacmanNormal,
+            speedGroup.pacmanFright,
+            ''
+        );
+
+        this._blinky.start(
+            speedGroup.ghostNormal,
+            speedGroup.ghostFright,
+            mode
+        );
+
+        this._pinky.start(
+            speedGroup.ghostNormal,
+            speedGroup.ghostFright,
+            mode
+        );
+
+        this._inky.start(
+            speedGroup.ghostNormal,
+            speedGroup.ghostFright,
+            mode
+        );
+
+        this._clyde.start(
+            speedGroup.ghostNormal,
+            speedGroup.ghostFright,
+            mode
+        );
+    }
+
+    checkCollisions() {
+        let collision = false;
+
+        if (this._board.handleDotCollision(
+                this._pacman.x,
+                this._pacman.y,
+                this._pacman.width,
+                this._pacman.height)) {
+            collision = true;
+        }
+
+        let energizer = false;
+
+        if (this._board.handleEnergizerCollision(
+                this._pacman.x,
+                this._pacman.y,
+                this._pacman.width,
+                this._pacman.height)) {
+            collision = true;
+            energizer = true;
+        }
+
+        if (this._handleGhostCollision()) {
+            collision = true;
+        }
+
+        return {
+            collision: collision,
+            energizer: energizer
+        };
+    }
+
+    stepPacman(elapsed, playerRequestedDirection) {
+        this._pacman.requestedDirection = playerRequestedDirection;
+        this._pacman.step(elapsed);
+    }
+
+    stepGhosts(elapsed) {
         for (let ghost of this._ghosts) {
-            ghost.speed = Constants.topSpeed * ghostNormal;
+            ghost.step(elapsed);
         }
     }
 
-    get pacman() {
-        return this._pacman;
+    switchMode(mode) {
+        for (let ghost of this._ghosts) {
+            ghost.mode = mode;
+            ghost.reverseNeeded = true;
+        }
     }
 
-    get blinky() {
-        return this._blinky;
+    signalFright() {
+        this._pacman.signalFrightened();
+
+        for (let ghost of this._ghosts) {
+            ghost.signalFrightened();
+            ghost._reverseNeeded = true;
+        }
     }
 
-    get pinky() {
-        return this._pinky;
+    removeRemainingFright() {
+        this._pacman.removeFrightIfAny();
+
+        for (let ghost of this._ghosts) {
+            ghost.removeFrightIfAny();
+        }
     }
 
-    get inky() {
-        return this._inky;
+    _handleGhostCollision() {
+        for (let ghost of this._ghosts) {
+            if (Util.overlap(
+                    this._pacman.x,
+                    this._pacman.y,
+                    this._pacman.x + this._pacman.width,
+                    this._pacman.y + this._pacman.height,
+                    ghost.x,
+                    ghost.y,
+                    ghost.x + ghost.width,
+                    ghost.y + ghost.height)) {
+                if (ghost.frightened) {
+                    this._killGhost(ghost);
+                    return true;
+                } else {
+                    this._killPacman();
+                    return true;
+                }
+            }
+        }
     }
 
-    get clyde() {
-        return this._clyde;
+    _killGhost(ghost) {
+        ghost.removeFrightIfAny();
+        ghost.x = config.startghostx;
+        ghost.y = config.startghosty;
     }
 
-    get ghosts() {
-        return this._ghosts;
+    _killPacman() {
+        this._pacman.x = config.startpacmanx;
+        this._pacman.y = config.startpacmany;
     }
 }
 
-// Have to do these exports this way to band-aid around cyclical dependencies
-// (keep that in mind for the next project)
-const manager = new CharacterManager();
-exports.manager = manager;
-exports.pacman = manager.pacman;
-exports.blinky = manager.blinky;
-exports.pinky = manager.pinky;
-exports.inky = manager.inky;
-exports.clyde = manager.clyde;
-exports.ghosts = manager.ghosts;
+module.exports = Characters;

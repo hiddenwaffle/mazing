@@ -1,197 +1,169 @@
 'use strict';
 
-let Constants = require('./constants');
-let Util = require('./util');
+const
+    config = require('./config');
 
 class Entity {
 
-    constructor(x, y, requestedDirection, color, chaseAi, scatterAi, frightAi) {
+    constructor(name, board, x, y, requestedDirection, animation, movementStrategy) {
+        this._name = name;
+        this._board = board;
         this._currentDirection = this._requestedDirection = requestedDirection;
+        this._animation = animation;
 
-        this._speed = 0;
+        // Set using setter to delegate to the animation
+        this.x = x;
+        this.y = y;
+        this.width = config.wallSize;   // TODO: have an offset for this hit box
+        this.height = config.wallSize;
 
-        this._graphics = new PIXI.Container();
-        this._graphics.x = x;
-        this._graphics.y = y;
+        this._normalSpeed = 0.0;
+        this._frightSpeed = 0.0;
+        this._frightened = false;
+        this._mode = '';
 
-        this._primaryColor = new PIXI.Graphics();
-        this._primaryColor.beginFill(color, 1);
-        this._primaryColor.drawRect(0, 0, Constants.wallSize, Constants.wallSize);
-        this._primaryColor.endFill();
-        this._graphics.addChild(this._primaryColor);
-
-        this._blue = new PIXI.Graphics();
-        this._blue.beginFill(0x5555ff, 1);
-        this._blue.drawRect(0, 0, Constants.wallSize, Constants.wallSize);
-        this._blue.endFill();
-        this._blue.visible = false;
-        this._graphics.addChild(this._blue);
-
-        this._lastStep = 0;
-
-        this._mode = 'scatter';
-        this._chaseAi = chaseAi;
-        this._scatterAi = scatterAi;
-        this._frightAi = frightAi;
-
+        this._movementStrategy = movementStrategy;
         this._reverseNeeded = false;
 
-        this._frightened = false;
-        this._frightStartMark = null;
-
-        // Initialize _tilex and _tiley for good measure
-        this._updateTileCoordinates();
+        // Helps the AI know which tile the entity just came from.
+        this.lastTileAIx = -1;
+        this.lastTileAIy = -1;
     }
 
-    pauseOneFrame() {
-        this._lastStep = Date.now();
+    start(normalSpeed, frightSpeed, mode) {
+        this._normalSpeed = config.topSpeed * normalSpeed;
+        this._frightSpeed = config.topSpeed * frightSpeed;
+        this._mode = mode;
     }
 
-    /**
-     * @param map used by the entity to determine if it can move in the direction it wants to
-     */
-    fullstep(map) {
-        let elapsed;
-        if (this._lastStep === 0) {
-            elapsed = 1;
-        } else {
-            elapsed = Date.now() - this._lastStep;
-            if (elapsed > 1000) {
-                elapsed = 1000; // enforce speed limit
-            }
+    step(elapsed) {
+        if (this._reverseNeeded) {
+            this._reverseNeeded = false;
+
+            let newDirection = oppositeOfDirection(this._currentDirection);
+            this._currentDirection = this._requestedDirection = newDirection;
+            this.lastTileAIx = -1;
+            this.lastTileAIy = -1;
         }
-        this._lastStep = Date.now();
 
-        for (let t = 0; t < elapsed; t++) {
-            this._step(map);
-        }
-    }
-
-    overlaps(graphics) {
-        let ax1 = this._graphics.x;
-        let ay1 = this._graphics.y;
-        let ax2 = this._graphics.x + this._graphics.width;
-        let ay2 = this._graphics.y + this._graphics.height;
-
-        let bx1 = graphics.x;
-        let by1 = graphics.y;
-        let bx2 = graphics.x + graphics.width;
-        let by2 = graphics.y + graphics.height;
-
-        return Util.overlap(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2);
-    }
-
-    signalFrightened(speed) {
-        this._reverseNeeded = true;
-
-        this._frightened = true;
-        this._blue.visible = true;
-        this._frightStartMark = Date.now();
-        this._speed = speed;
-    }
-
-    stepFrightened(frightTime, normalSpeed) {
+        let speed;
         if (this._frightened) {
-            let elapsed = Date.now() - this._frightStartMark;
+            speed = this._frightSpeed;
+        } else {
+            speed = this._normalSpeed;
+        }
 
-            if (elapsed >= frightTime) {
-                this.removeFright(normalSpeed);
-            }
+        for (let v = 0; v < elapsed; v++) {
+            this._milliStep(speed);
         }
     }
 
-    removeFright(normalSpeed) {
+    signalFrightened() {
+        this._frightened = true;
+        this._animation.showBlue(true);
+    }
+
+    removeFrightIfAny() {
         this._frightened = false;
-        this._blue.visible = false;
-        this._frightStartMark = null;
-        this._speed = normalSpeed;
+        this._animation.showBlue(false);
     }
 
-    set mode(newMode) {
-        this._mode = newMode;
+    get mode() {
+        return this._mode;
     }
 
-    get graphics() {
-        return this._graphics;
-    }
-
-    get tilex() {
-        return this._tilex;
-    }
-
-    get tiley() {
-        return this._tiley;
-    }
-
-    get currentDirection() {
-        return this._currentDirection;
-    }
-
-    set currentDirection(value) {
-        this._currentDirection = value;
-    }
-
-    set requestedDirection(newDirection) {
-        this._requestedDirection = newDirection;
-    }
-
-    set reverseNeeded(value) {
-        this._reverseNeeded = value;
-    }
-
-    set speed(value) {
-        this._speed = value;
+    set mode(value) {
+        this._mode = value;
     }
 
     get frightened() {
         return this._frightened;
     }
 
-    _step(map) {
-        let newx = this._graphics.x;
-        let newy = this._graphics.y;
+    get x() {
+        return this._animation.x;
+    }
+
+    set x(value) {
+        this._animation.x = value;
+    }
+
+    get y() {
+        return this._animation.y;
+    }
+
+    set y(value) {
+        this._animation.y = value;
+    }
+
+    get currentDirection() {
+        return this._currentDirection;
+    }
+
+    set requestedDirection(value) {
+        this._requestedDirection = value;
+    }
+
+    set reverseNeeded(value) {
+        this._reverseNeeded = value;
+    }
+
+    _milliStep(speed) {
+        this._moveInCurrentDirection(speed);
+        this._runAI();
+        this._attemptTurnIfRequested();
+    }
+
+    _moveInCurrentDirection(speed) {
+        let newx = this.x;
+        let newy = this.y;
 
         switch (this._currentDirection) {
             case 'up':
-                newy -= this._speed;
+                newy -= speed;
                 break;
             case 'down':
-                newy += this._speed;
+                newy += speed;
                 break;
             case 'left':
-                newx -= this._speed;
+                newx -= speed;
                 break;
             case 'right':
-                newx += this._speed;
+                newx += speed;
                 break;
             default:
                 break;
         }
 
-        let tryMoveResult = map.tryMove(
-            this._graphics.x,
-            this._graphics.y,
+        let tryMoveResult = this._board.tryMove(
+            this.x,
+            this.y,
             newx,
             newy,
-            this._graphics.width,
-            this._graphics.height
+            this.width,
+            this.height
         );
-        // NOTE: success value is unused in this section
-        this._graphics.x = tryMoveResult.finalx;
-        this._graphics.y = tryMoveResult.finaly;
+        this.x = tryMoveResult.finalx;
+        this.y = tryMoveResult.finaly;
 
         // Prevent shaking when Pac-Man hits a wall.
         // This doesn't work well with ghosts, but they shouldn't hit it.
         if (tryMoveResult.doStop) {
-            this._graphics.x = Math.floor(this._graphics.x);
-            this._graphics.y = Math.floor(this._graphics.y);
+            this.x = Math.floor(this.x);
+            this.y = Math.floor(this.y);
             this._requestedDirection = '';
         }
+    }
 
+    _runAI() {
+        this._movementStrategy.execute(this);
+    }
+
+    _attemptTurnIfRequested() {
         if (this._requestedDirection !== this._currentDirection) {
-            let switchx = this._graphics.x;
-            let switchy = this._graphics.y;
-            let halfstep = Math.floor(Constants.wallSize / 2);
+            let switchx = this.x;
+            let switchy = this.y;
+            let halfstep = config.wallSize / 2;
 
             switch (this._requestedDirection) {
                 case 'up':
@@ -210,13 +182,13 @@ class Entity {
                     break;
             }
 
-            let changeDirectionResult = map.tryMove(
-                this._graphics.x,
-                this._graphics.y,
+            let changeDirectionResult = this._board.tryMove(
+                this.x,
+                this.y,
                 switchx,
                 switchy,
-                this._graphics.width,
-                this._graphics.height
+                this.width,
+                this.height
             );
             if (changeDirectionResult.success) {
                 this._currentDirection = this._requestedDirection;
@@ -224,62 +196,20 @@ class Entity {
                 // wasn't able to change to this direction immediately
             }
         }
-
-        this._handleIfMovedToNewTile();
-    }
-
-    /**
-     * First determine if we are on a new tile. If so, see if there is a
-     * pending reversal, and handle it. Otherwise, ask the AI routine what to do.
-     */
-    _handleIfMovedToNewTile() {
-        let oldtilex = this._tilex;
-        let oldtiley = this._tiley;
-        this._updateTileCoordinates();
-
-        if (oldtilex !== this._tilex || oldtiley !== this._tiley) {
-            if (this._reverseNeeded) { // go in the direction of the old tile
-                this.reverseNeeded = false;
-
-                if (oldtilex > this._tilex) {
-                    this._requestedDirection = 'right';
-
-                } else if (oldtilex < this._tilex) {
-                    this._requestedDirection = 'left';
-
-                } else if (oldtiley > this._tiley) {
-                    this._requestedDirection = 'down';
-
-                } else if (oldtiley < this._tiley) {
-                    this._requestedDirection = 'up';
-                }
-
-            } else {
-                this._runAi(oldtilex, oldtiley);  // use AI to decide which way
-            }
-        }
-    }
-
-    _updateTileCoordinates() {
-        this._tilex = Util.convertToTileSpace(this._graphics.x);
-        this._tiley = Util.convertToTileSpace(this._graphics.y);
-    }
-
-    _runAi(oldtilex, oldtiley) {
-        if (this._blue.visible) {
-            this._frightAi.handleNewTile(this, oldtilex, oldtiley);
-
-        } else {
-            switch (this._mode) {
-                case 'chase':
-                    this._chaseAi.handleNewTile(this, oldtilex, oldtiley);
-                    break;
-                case 'scatter':
-                    this._scatterAi.handleNewTile(this, oldtilex, oldtiley);
-                    break;
-            }
-        }
     }
 }
 
 module.exports = Entity;
+
+function oppositeOfDirection(direction) {
+    switch (direction) {
+        case 'up':
+            return 'down';
+        case 'down':
+            return 'up';
+        case 'left':
+            return 'right';
+        case 'right':
+            return 'left';
+    }
+}
