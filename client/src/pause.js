@@ -1,9 +1,6 @@
 'use strict';
 
 const
-    config = require('./config');
-
-const
     TRANSITION_TIME = 500, // ms, must be > 0
     INTENSITY       = 0.75;
 
