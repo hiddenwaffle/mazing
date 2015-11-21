@@ -20,7 +20,6 @@ class Characters {
             board,
             config.startpacmanx,
             config.startpacmany,
-            'left',
             new Animation(gfx, 0xffff00, 0xffff00),
             new MovementStrategy(board, 'doNothing', 'doNothing')
         );
@@ -34,7 +33,6 @@ class Characters {
             board,
             config.startghostx + (3 * config.wallSize),
             config.startghosty,
-            'right',
             new Animation(gfx, 0xff0000, 0x5555ff),
             new MovementStrategy(board, 'blinky', 'random', 27, 1, this._pacman),
             randomMovementStrategy
@@ -46,7 +44,6 @@ class Characters {
             board,
             config.startghostx - (3 * config.wallSize),
             config.startghosty,
-            'left',
             new Animation(gfx, 0xffb9ff, 0x5555ff),
             new MovementStrategy(board, 'pinky', 'random', 1, 1, this._pacman),
             randomMovementStrategy
@@ -58,7 +55,6 @@ class Characters {
             board,
             config.startghostx + config.wallSize,
             config.startghosty,
-            'right',
             new Animation(gfx, 0x00ffff, 0x5555ff),
             new MovementStrategy(board, 'inky', 'random', 27, 30, this._pacman, this._blinky),
             randomMovementStrategy
@@ -70,7 +66,6 @@ class Characters {
             board,
             config.startghostx - config.wallSize,
             config.startghosty,
-            'left',
             new Animation(gfx, 0xffb950, 0x5555ff),
             new MovementStrategy(board, 'clyde', 'random', 1, 30, this._pacman),
             randomMovementStrategy
@@ -85,58 +80,64 @@ class Characters {
         this._pacman.start(
             speedGroup.pacmanNormal,
             speedGroup.pacmanFright,
-            ''
+            '',
+            'left'
         );
 
         this._blinky.start(
             speedGroup.ghostNormal,
             speedGroup.ghostFright,
-            mode
+            mode,
+            randomStartDirection()
         );
 
         this._pinky.start(
             speedGroup.ghostNormal,
             speedGroup.ghostFright,
-            mode
+            mode,
+            randomStartDirection()
         );
 
         this._inky.start(
             speedGroup.ghostNormal,
             speedGroup.ghostFright,
-            mode
+            mode,
+            randomStartDirection()
         );
 
         this._clyde.start(
             speedGroup.ghostNormal,
             speedGroup.ghostFright,
-            mode
+            mode,
+            randomStartDirection()
         );
     }
 
     checkCollisions() {
         let collision = false;
-
-        if (this._board.handleDotCollision(
-                this._pacman.x,
-                this._pacman.y,
-                this._pacman.width,
-                this._pacman.height)) {
-            collision = true;
-        }
-
         let energizer = false;
 
-        if (this._board.handleEnergizerCollision(
-                this._pacman.x,
-                this._pacman.y,
-                this._pacman.width,
-                this._pacman.height)) {
-            collision = true;
-            energizer = true;
-        }
+        if (this._pacman.solid) {
+            if (this._board.handleDotCollision(
+                    this._pacman.x,
+                    this._pacman.y,
+                    this._pacman.width,
+                    this._pacman.height)) {
+                collision = true;
+            }
 
-        if (this._handleGhostCollision()) {
-            collision = true;
+            if (this._board.handleEnergizerCollision(
+                    this._pacman.x,
+                    this._pacman.y,
+                    this._pacman.width,
+                    this._pacman.height)) {
+                collision = true;
+                energizer = true;
+            }
+
+            if (this._handleGhostCollision()) {
+                collision = true;
+            }
         }
 
         return {
@@ -182,6 +183,10 @@ class Characters {
 
     _handleGhostCollision() {
         for (let ghost of this._ghosts) {
+            if (ghost.solid === false) {
+                continue;
+            }
+
             if (Util.overlap(
                     this._pacman.x,
                     this._pacman.y,
@@ -204,14 +209,34 @@ class Characters {
 
     _killGhost(ghost) {
         ghost.removeFrightIfAny();
-        ghost.x = config.startghostx;
-        ghost.y = config.startghosty;
+        ghost.solid = false;
+        ghost.visible = false;
+
+        setTimeout(() => {
+            ghost.solid = true;
+            ghost.visible = true;
+            ghost.x = config.startghostx;
+            ghost.y = config.startghosty;
+        }, 1000);
     }
 
     _killPacman() {
-        this._pacman.x = config.startpacmanx;
-        this._pacman.y = config.startpacmany;
+        this._pacman.solid = false;
+        this._pacman.visible = false;
+
+        setTimeout(() => {
+            this._pacman.solid = true;
+            this._pacman.visible = true;
+            this._pacman.x = config.startpacmanx;
+            this._pacman.y = config.startpacmany;
+        }, 1000);
     }
 }
 
 module.exports = Characters;
+
+function randomStartDirection() {
+    let directions = ['left', 'right'];
+    let index = Util.getRandomIntInclusive(0, directions.length - 1);
+    return directions[index];
+}

@@ -27,6 +27,10 @@ class Animation {
         this._blue.visible = visible;
     }
 
+    set visible(value) {
+        this._gfx.visible = value;
+    }
+
     get x() {
         return this._gfx.x;
     }

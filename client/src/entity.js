@@ -5,10 +5,9 @@ const
 
 class Entity {
 
-    constructor(name, board, x, y, requestedDirection, animation, movementStrategy) {
+    constructor(name, board, x, y, animation, movementStrategy) {
         this._name = name;
         this._board = board;
-        this._currentDirection = this._requestedDirection = requestedDirection;
         this._animation = animation;
 
         // Set using setter to delegate to the animation
@@ -28,12 +27,16 @@ class Entity {
         // Helps the AI know which tile the entity just came from.
         this.lastTileAIx = -1;
         this.lastTileAIy = -1;
+
+        // Should it be counted in collision detection
+        this.solid = true;
     }
 
-    start(normalSpeed, frightSpeed, mode) {
+    start(normalSpeed, frightSpeed, mode, requestedDirection) {
         this._normalSpeed = config.topSpeed * normalSpeed;
         this._frightSpeed = config.topSpeed * frightSpeed;
         this._mode = mode;
+        this._currentDirection = this._requestedDirection = requestedDirection;
     }
 
     step(elapsed) {
@@ -66,6 +69,10 @@ class Entity {
     removeFrightIfAny() {
         this._frightened = false;
         this._animation.showBlue(false);
+    }
+
+    set visible(value) {
+        this._animation.visible = value;
     }
 
     get mode() {

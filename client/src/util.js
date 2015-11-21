@@ -20,3 +20,10 @@ exports.convertToTileSpace = function(v) {
 exports.overlap = function(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2) {
     return (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1);
 };
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+ */
+exports.getRandomIntInclusive = function (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};

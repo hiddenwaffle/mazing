@@ -50,7 +50,7 @@ class MovementStrategy {
 
     random(entity) {
         runIfNewIntersection(entity, this._board, (directions) => {
-            let index = getRandomIntInclusive(0, directions.length - 1);
+            let index = Util.getRandomIntInclusive(0, directions.length - 1);
             entity.requestedDirection = directions[index];
         });
     }
@@ -259,11 +259,4 @@ function determinePossibleDirections(tilex, tiley, currentDirection, board) {
  */
 function qs(a, b) {
     return (a * a) + (b * b);
-}
-
-/**
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
- */
-function getRandomIntInclusive(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
