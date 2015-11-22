@@ -1,9 +1,9 @@
 'use strict';
 
 const
-    Input   = require('./input'),
-    Level   = require('./level'),
-    Pause   = require('./pause');
+    Input       = require('./input'),
+    Level       = require('./level'),
+    Pause       = require('./pause');
 
 class Game {
 
@@ -16,8 +16,6 @@ class Game {
         this._lastStep = Date.now();
 
         this._pause = new Pause(stage);
-
-        this._drawReady = false;
     }
 
     start() {
@@ -42,15 +40,10 @@ class Game {
         } else {
             this._level.step(elapsed);
         }
-
-        this._drawReady = true;
     }
 
     draw() {
-        if (this._drawReady) {
-            this._drawReady = false;
-            this._renderer.render(this._stage);
-        }
+        this._renderer.render(this._stage);
     }
 
     _stepPaused(elapsed, flipPause) {

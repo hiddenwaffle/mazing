@@ -9,8 +9,9 @@ const
 
 class Characters {
 
-    constructor(board, parentGfx) {
+    constructor(board, parentGfx, longTasks) {
         this._board = board;
+        this._longTasks = longTasks;
 
         let gfx = new PIXI.Container();
         parentGfx.addChild(gfx);
@@ -212,24 +213,30 @@ class Characters {
         ghost.solid = false;
         ghost.visible = false;
 
-        setTimeout(() => { // TODO: Can't do this by timeout
+        this._longTasks.addTimeoutTask(1000, () => {
             ghost.solid = true;
             ghost.visible = true;
             ghost.x = config.startghostx;
             ghost.y = config.startghosty;
-        }, 1000);
+        });
     }
 
     _killPacman() {
         this._pacman.solid = false;
         this._pacman.visible = false;
 
-        setTimeout(() => { // TODO: Can't do this by timeout
+        this._longTasks.addTimeoutTask(1000, () => {
             this._pacman.solid = true;
             this._pacman.visible = true;
-            this._pacman.x = config.startpacmanx;
-            this._pacman.y = config.startpacmany;
-        }, 1000);
+
+            // TODO: Determine best place to respawn
+            let { respawnx, respawny } = determineRespawn(this._pacman);
+
+            this._pacman.x = respawnx;
+            this._pacman.y = respawny;
+        });
+        
+        // TODO: also queue an animation task that runs at 16.6ms, 1000/16.6 times
     }
 }
 
@@ -239,4 +246,17 @@ function randomStartDirection() {
     let directions = ['left', 'right'];
     let index = Util.getRandomIntInclusive(0, directions.length - 1);
     return directions[index];
+}
+
+function determineRespawn(pacman) {
+
+    let respawnx = config.startpacmanx;
+    let respawny = config.startpacmany;
+
+    // TODO: Determine best spawn point based on ghost locations and remaining dot locations
+
+    return {
+        respawnx: respawnx,
+        respawny: respawny
+    }
 }

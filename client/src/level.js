@@ -3,7 +3,8 @@
 const
     Board       = require('./board'),
     config      = require('./config'),
-    Characters  = require('./characters');
+    Characters  = require('./characters'),
+    LongTasks   = require('./long-tasks');
 
 class Level {
 
@@ -17,7 +18,8 @@ class Level {
         this._board = new Board(lvlGfxContainer);
         this._input = input;
         this._stage = stage;
-        this._characters = new Characters(this._board, lvlGfxContainer);
+        this._longTasks = new LongTasks();
+        this._characters = new Characters(this._board, lvlGfxContainer, this._longTasks);
 
         this._currentGhostSubModeIndex = 0;
         this._ghostSubModeElapsed = 0;
@@ -34,8 +36,13 @@ class Level {
     }
 
     step(elapsed) {
+        this._handleLongTasks(elapsed);
         this._handleSubMode(elapsed);
         this._handleCollisionsAndSteps(elapsed);
+    }
+
+    _handleLongTasks(elapsed) {
+        this._longTasks.step(elapsed);
     }
 
     _handleSubMode(elapsed) {
