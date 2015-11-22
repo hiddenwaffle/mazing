@@ -145,7 +145,7 @@ class MovementStrategy {
             let tilex = Util.convertToTileSpace(entity.x);
             let tiley = Util.convertToTileSpace(entity.y);
 
-            let distanceSquared = qs(
+            let distanceSquared = Util.qs(
                 pacmanx - tilex,
                 pacmany - tiley
             );
@@ -211,7 +211,7 @@ function aimTowardsTargetTile(entity, targetx, targety, directions) {
         let tilex = Util.convertToTileSpace(entity.x);
         let tiley = Util.convertToTileSpace(entity.y);
 
-        let distance = qs(
+        let distance = Util.qs(
             tilex + dx - targetx,
             tiley + dy - targety
         );
@@ -252,11 +252,4 @@ function determinePossibleDirections(tilex, tiley, currentDirection, board) {
     }
 
     return directions;
-}
-
-/**
- * Does a quick sq of two numbers and returns the sum of the results
- */
-function qs(a, b) {
-    return (a * a) + (b * b);
 }
