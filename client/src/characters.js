@@ -2,7 +2,7 @@
 
 const
     Entity              = require('./entity'),
-    Animation           = require('./animation'),
+    CharacterAnimations = require('./character-animations'),
     MovementStrategy    = require('./movement-strategy'),
     Death               = require('./death'),
     config              = require('./config'),
@@ -16,14 +16,17 @@ class Characters {
         this._longTasksManager = longTasksManager;
 
         let gfx = new PIXI.Container();
+        console.log('test: ' + parentGfx.addChild);
         parentGfx.addChild(gfx);
+
+        let characterAnimations = new CharacterAnimations(gfx);
 
         this._pacman = new Entity(
             'pacman',
             board,
             config.startpacmanx,
             config.startpacmany,
-            new Animation(gfx, 0xffff00, 0xffffff),
+            characterAnimations.createPacManAnimations(),
             new MovementStrategy(board, 'doNothing', 'doNothing')
         );
 
@@ -36,7 +39,7 @@ class Characters {
             board,
             config.startghostx + (3 * config.wallSize),
             config.startghosty,
-            new Animation(gfx, 0xff0000, 0x5555ff),
+            characterAnimations.createGhostAnimations(0xff0000),
             new MovementStrategy(board, 'blinky', 'random', 27, 1, this._pacman),
             randomMovementStrategy
         );
@@ -47,7 +50,7 @@ class Characters {
             board,
             config.startghostx - (3 * config.wallSize),
             config.startghosty,
-            new Animation(gfx, 0xffb9ff, 0x5555ff),
+            characterAnimations.createGhostAnimations(0xffb9ff),
             new MovementStrategy(board, 'pinky', 'random', 1, 1, this._pacman),
             randomMovementStrategy
         );
@@ -58,7 +61,7 @@ class Characters {
             board,
             config.startghostx + config.wallSize,
             config.startghosty,
-            new Animation(gfx, 0x00ffff, 0x5555ff),
+            characterAnimations.createGhostAnimations(0x00ffff),
             new MovementStrategy(board, 'inky', 'random', 27, 30, this._pacman, this._blinky),
             randomMovementStrategy
         );
@@ -69,7 +72,7 @@ class Characters {
             board,
             config.startghostx - config.wallSize,
             config.startghosty,
-            new Animation(gfx, 0xffb950, 0x5555ff),
+            characterAnimations.createGhostAnimations(0xffb950),
             new MovementStrategy(board, 'clyde', 'random', 1, 30, this._pacman),
             randomMovementStrategy
         );

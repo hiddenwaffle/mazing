@@ -69,6 +69,9 @@ class Level {
         if (this._frightTimeLeft <= 0) {
             this._characters.removeRemainingFright();
             this._frightTimeLeft = null;
+
+        } else {
+            // TODO: Here check if flashing should start
         }
     }
 

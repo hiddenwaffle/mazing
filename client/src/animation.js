@@ -23,6 +23,10 @@ class Animation {
         this._gfx.addChild(this._blue);
     }
 
+    step(elapsed) {
+        //
+    }
+
     showBlue(visible) {
         this._blue.visible = visible;
     }

@@ -40,6 +40,8 @@ class Entity {
     }
 
     step(elapsed) {
+        this._animation.step(elapsed);
+
         if (this._reverseNeeded) {
             this._reverseNeeded = false;
 
