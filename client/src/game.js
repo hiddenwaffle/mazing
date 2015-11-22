@@ -16,6 +16,8 @@ class Game {
         this._lastStep = Date.now();
 
         this._pause = new Pause(stage);
+
+        this._drawReady = false;
     }
 
     start() {
@@ -32,7 +34,7 @@ class Game {
     step() {
         let elapsed = this._calculateElapsed();
 
-        this._stepPaused(elapsed, this._input.switchIfUserHitPauseButton());
+        this._stepPaused(elapsed, this._input.switchIfUserHitEnterButton());
 
         if (this._pause.active) {
             // TODO: count how many milliseconds paused
@@ -40,10 +42,15 @@ class Game {
         } else {
             this._level.step(elapsed);
         }
+
+        this._drawReady = true;
     }
 
     draw() {
-        this._renderer.render(this._stage);
+        if (this._drawReady) {
+            this._drawReady = false;
+            this._renderer.render(this._stage);
+        }
     }
 
     _stepPaused(elapsed, flipPause) {

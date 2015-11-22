@@ -4,7 +4,7 @@ class Input {
 
     constructor() {
         this._requestedDirection = 'left';
-        this._userHitPauseButton = false;
+        this._userHitEnterButton = false;
     }
 
     start() {
@@ -27,7 +27,7 @@ class Input {
                     e.preventDefault();
                     break;
                 case 13: // enter key
-                    this._userHitPauseButton = true;
+                    this._userHitEnterButton = true;
                     e.preventDefault();
                     break;
                 default:
@@ -37,9 +37,9 @@ class Input {
         });
     }
 
-    switchIfUserHitPauseButton() {
-        let value = this._userHitPauseButton;
-        this._userHitPauseButton = false;
+    switchIfUserHitEnterButton() {
+        let value = this._userHitEnterButton;
+        this._userHitEnterButton = false;
         return value;
     }
 
