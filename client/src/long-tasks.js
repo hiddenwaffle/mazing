@@ -12,7 +12,7 @@ class TimeoutTask {
      */
     constructor(time, obj, cb) {
         this._time = time;
-        this._obj = obj;
+        this._params = obj;
         this._cb = cb;
 
         this._totalElapsed = 0;
@@ -24,7 +24,7 @@ class TimeoutTask {
         this._totalElapsed += elapsed;
 
         if (this._totalElapsed >= this._time) {
-            this._cb(this._obj);
+            this._cb(this._params);
             this.completed = true;
         }
     }
@@ -37,12 +37,12 @@ class IntervalTask {
 
     /**
      * @param time milliseconds to wait before running cb()
-     * @param obj argument that will be passed to cb()
+     * @param params argument that will be passed to cb()
      * @param cb function to run when time is up; if cb returns false, it will stop reoccurring.
      */
-    constructor(time, obj, cb) {
+    constructor(time, params, cb) {
         this._time = time;
-        this._obj = obj;
+        this._params = params;
         this._cb = cb;
 
         this._totalElapsed = 0;
@@ -54,7 +54,7 @@ class IntervalTask {
         this._totalElapsed += elapsed;
 
         if (this._totalElapsed >= this._time) {
-            if (this._cb(this._obj) === false) {
+            if (this._cb(this._params) === false) {
                 this.completed = true;
             } else {
                 this._totalElapsed = 0;
@@ -69,13 +69,13 @@ class LongTasks {
         this._tasks = [];
     }
 
-    addTimeoutTask(time, obj, cb) {
-        let task = new TimeoutTask(time, obj, cb);
+    addTimeoutTask(time, params, cb) {
+        let task = new TimeoutTask(time, params, cb);
         this._tasks.push(task);
     }
 
-    addIntervalTask(time, obj, cb) {
-        let task = new IntervalTask(time, obj, cb);
+    addIntervalTask(time, params, cb) {
+        let task = new IntervalTask(time, params, cb);
         this._tasks.push(task);
     }
 
