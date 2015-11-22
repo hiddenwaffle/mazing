@@ -4,14 +4,16 @@ const
     Entity              = require('./entity'),
     Animation           = require('./animation'),
     MovementStrategy    = require('./movement-strategy'),
+    Death               = require('./death'),
     config              = require('./config'),
-    Util                = require('./util');
+    Util                = require('./util'),
+    LongTasks           = require('./long-tasks');
 
 class Characters {
 
-    constructor(board, parentGfx, longTasks) {
+    constructor(board, parentGfx, longTasksManager) {
         this._board = board;
-        this._longTasks = longTasks;
+        this._longTasksManager = longTasksManager;
 
         let gfx = new PIXI.Container();
         parentGfx.addChild(gfx);
@@ -21,7 +23,7 @@ class Characters {
             board,
             config.startpacmanx,
             config.startpacmany,
-            new Animation(gfx, 0xffff00, 0xffff00),
+            new Animation(gfx, 0xffff00, 0xffffff),
             new MovementStrategy(board, 'doNothing', 'doNothing')
         );
 
@@ -209,42 +211,21 @@ class Characters {
     }
 
     _killGhost(ghost) {
-        ghost.removeFrightIfAny();
-        ghost.solid = false;
-        ghost.visible = false;
+        let death = new Death.Ghost(ghost);
+        death.start();
 
-        this._longTasks.addTimeoutTask(1000, {}, () => {
-            ghost.solid = true;
-            ghost.visible = true;
-            ghost.x = config.startghostx;
-            ghost.y = config.startghosty;
-        });
+        this._longTasksManager.addTask(new LongTasks.TimeoutTask(500, () => {
+            death.respawn();
+        }));
     }
 
     _killPacman() {
-        this._pacman.solid = false;
-        this._pacman.visible = false;
+        let death = new Death.Pacman(this._pacman, this._ghosts, this._board);
+        death.start();
 
-        this._longTasks.addTimeoutTask(1000, {}, () => {
-            this._pacman.solid = true;
-            this._pacman.visible = true;
-
-            // TODO: Determine best place to respawn
-            let { respawnx, respawny } = determineRespawn(this._pacman, this._ghosts, this._board);
-
-            this._pacman.x = respawnx;
-            this._pacman.y = respawny;
-        });
-
-        //// TODO: also queue an animation task that runs at 16.6ms, 1000/16.6 times
-        //this._longTasks.addIntervalTask(250, { x: 1 }, (obj) => {
-        //    console.log(obj.x);
-        //    obj.x++;
-        //
-        //    if (obj.x > 10) {
-        //        return false;
-        //    }
-        //});
+        this._longTasksManager.addTask(new LongTasks.TimeoutTask(1000, () => {
+            death.respawn();
+        }));
     }
 }
 
@@ -254,17 +235,4 @@ function randomStartDirection() {
     let directions = ['left', 'right'];
     let index = Util.getRandomIntInclusive(0, directions.length - 1);
     return directions[index];
-}
-
-function determineRespawn(pacman, ghosts, board) {
-
-    let respawnx = config.startpacmanx;
-    let respawny = config.startpacmany;
-
-    // TODO: Determine best spawn point based on ghost locations and remaining dot locations
-
-    return {
-        respawnx: respawnx,
-        respawny: respawny
-    }
 }

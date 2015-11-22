@@ -7,12 +7,10 @@ class TimeoutTask {
 
     /**
      * @param time milliseconds to wait before running cb()
-     * @param obj argument that will be passed to cb()
      * @param cb function to run when time is up.
      */
-    constructor(time, obj, cb) {
+    constructor(time, cb) {
         this._time = time;
-        this._params = obj;
         this._cb = cb;
 
         this._totalElapsed = 0;
@@ -24,7 +22,7 @@ class TimeoutTask {
         this._totalElapsed += elapsed;
 
         if (this._totalElapsed >= this._time) {
-            this._cb(this._params);
+            this._cb();
             this.completed = true;
         }
     }
@@ -37,12 +35,10 @@ class IntervalTask {
 
     /**
      * @param time milliseconds to wait before running cb()
-     * @param params argument that will be passed to cb()
      * @param cb function to run when time is up; if cb returns false, it will stop reoccurring.
      */
-    constructor(time, params, cb) {
+    constructor(time, cb) {
         this._time = time;
-        this._params = params;
         this._cb = cb;
 
         this._totalElapsed = 0;
@@ -54,7 +50,7 @@ class IntervalTask {
         this._totalElapsed += elapsed;
 
         if (this._totalElapsed >= this._time) {
-            if (this._cb(this._params) === false) {
+            if (this._cb() === false) {
                 this.completed = true;
             } else {
                 this._totalElapsed = 0;
@@ -63,19 +59,13 @@ class IntervalTask {
     }
 }
 
-class LongTasks {
+class Manager {
 
     constructor() {
         this._tasks = [];
     }
 
-    addTimeoutTask(time, params, cb) {
-        let task = new TimeoutTask(time, params, cb);
-        this._tasks.push(task);
-    }
-
-    addIntervalTask(time, params, cb) {
-        let task = new IntervalTask(time, params, cb);
+    addTask(task) {
         this._tasks.push(task);
     }
 
@@ -92,4 +82,6 @@ class LongTasks {
     }
 }
 
-module.exports = LongTasks;
+exports.TimeoutTask = TimeoutTask;
+exports.IntervalTask = IntervalTask;
+exports.Manager = Manager;

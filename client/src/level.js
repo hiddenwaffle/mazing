@@ -18,8 +18,8 @@ class Level {
         this._board = new Board(lvlGfxContainer);
         this._input = input;
         this._stage = stage;
-        this._longTasks = new LongTasks();
-        this._characters = new Characters(this._board, lvlGfxContainer, this._longTasks);
+        this._longTasksManager = new LongTasks.Manager();
+        this._characters = new Characters(this._board, lvlGfxContainer, this._longTasksManager);
 
         this._currentGhostSubModeIndex = 0;
         this._ghostSubModeElapsed = 0;
@@ -42,7 +42,7 @@ class Level {
     }
 
     _handleLongTasks(elapsed) {
-        this._longTasks.step(elapsed);
+        this._longTasksManager.step(elapsed);
     }
 
     _handleSubMode(elapsed) {
