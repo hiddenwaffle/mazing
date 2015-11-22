@@ -3,16 +3,19 @@
 /**
  * This replaces setTimeout() so the callback can get an elapsed time from the main loop.
  */
-class LongTask {
+class TimeoutTask {
 
     /**
      * @param time milliseconds to wait before running cb()
-     * @param cb function that takes no arguments; returning false will requeue the task after running
+     * @param obj argument that will be passed to cb()
+     * @param cb function to run when time is up.
      */
-    constructor(time, cb) {
-        this.time = time;
+    constructor(time, obj, cb) {
+        this._time = time;
+        this._obj = obj;
+        this._cb = cb;
+
         this._totalElapsed = 0;
-        this.cb = cb;
 
         this.completed = false;
     }
@@ -20,9 +23,42 @@ class LongTask {
     step(elapsed) {
         this._totalElapsed += elapsed;
 
-        if (this._totalElapsed >= this.time) {
-            this.cb();
+        if (this._totalElapsed >= this._time) {
+            this._cb(this._obj);
             this.completed = true;
+        }
+    }
+}
+
+/**
+ * This replaces setInterval() so the callback can get an elapsed time from the main loop.
+ */
+class IntervalTask {
+
+    /**
+     * @param time milliseconds to wait before running cb()
+     * @param obj argument that will be passed to cb()
+     * @param cb function to run when time is up; if cb returns false, it will stop reoccurring.
+     */
+    constructor(time, obj, cb) {
+        this._time = time;
+        this._obj = obj;
+        this._cb = cb;
+
+        this._totalElapsed = 0;
+
+        this.completed = false
+    }
+
+    step(elapsed) {
+        this._totalElapsed += elapsed;
+
+        if (this._totalElapsed >= this._time) {
+            if (this._cb(this._obj) === false) {
+                this.completed = true;
+            } else {
+                this._totalElapsed = 0;
+            }
         }
     }
 }
@@ -33,8 +69,13 @@ class LongTasks {
         this._tasks = [];
     }
 
-    addTimeoutTask(time, cb) {
-        let task = new LongTask(time, cb);
+    addTimeoutTask(time, obj, cb) {
+        let task = new TimeoutTask(time, obj, cb);
+        this._tasks.push(task);
+    }
+
+    addIntervalTask(time, obj, cb) {
+        let task = new IntervalTask(time, obj, cb);
         this._tasks.push(task);
     }
 
