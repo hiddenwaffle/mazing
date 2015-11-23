@@ -194,6 +194,10 @@ class Board {
         return this._handleCollision(x, y, width, height, this._energizerImgs);
     }
 
+    dotsLeft() {
+        return (this._dotImgs.children.length > 0) || (this._energizerImgs.children.length > 0)
+    }
+
     _handleCollision(x, y, width, height, imgs) {
         let collision = false;
 

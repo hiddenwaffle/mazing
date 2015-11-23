@@ -40,6 +40,10 @@ class Game {
         } else {
             this._level.step(elapsed);
         }
+
+        if (this._level.checkForEndLevelCondition()) {
+            console.log('end of level');
+        }
     }
 
     draw() {

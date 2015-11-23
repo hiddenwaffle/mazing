@@ -41,6 +41,10 @@ class Level {
         this._handleCollisionsAndSteps(elapsed);
     }
 
+    checkForEndLevelCondition() {
+        return this._board.dotsLeft();
+    }
+
     _handleLongTasks(elapsed) {
         this._longTasksManager.step(elapsed);
     }
