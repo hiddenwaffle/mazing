@@ -32,11 +32,13 @@ class Entity {
         this.solid = true;
     }
 
-    start(normalSpeed, frightSpeed, mode, requestedDirection) {
+    start(normalSpeed, frightSpeed, mode, requestedDirection, frightTime, frightFlashes) {
         this._normalSpeed = config.topSpeed * normalSpeed;
         this._frightSpeed = config.topSpeed * frightSpeed;
         this._mode = mode;
         this._currentDirection = this._requestedDirection = requestedDirection;
+
+        this._animation.start(frightTime, frightFlashes);
     }
 
     step(elapsed) {

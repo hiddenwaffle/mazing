@@ -5,7 +5,7 @@ const
 
 const
     pacmanNormalColor       = 0xffff00,
-    pacmanFrightenedColor   = 0xffffff,
+    pacmanFrighteningColor  = 0xffffff,
     ghostFrightenedColor    = 0x5555ff;
 
 class CharacterAnimations {
@@ -15,7 +15,7 @@ class CharacterAnimations {
     }
 
     createPacManAnimations() {
-        return new Animation(this._gfx, pacmanNormalColor, pacmanFrightenedColor);
+        return new Animation(this._gfx, pacmanNormalColor, pacmanFrighteningColor);
     }
 
     createGhostAnimations(ghostNormalColor) {

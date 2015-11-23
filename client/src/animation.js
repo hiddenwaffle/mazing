@@ -9,18 +9,20 @@ class Animation {
         this._gfx = new PIXI.Container();
         parentGfx.addChild(this._gfx);
 
-        this._primaryColor = new PIXI.Graphics();
-        this._primaryColor.beginFill(color, 1);
-        this._primaryColor.drawRect(0, 0, config.wallSize, config.wallSize);
-        this._primaryColor.endFill();
-        this._gfx.addChild(this._primaryColor);
+        this._color = color;
+        this._frightColor = frightColor;
 
-        this._blue = new PIXI.Graphics();
-        this._blue.beginFill(frightColor, 1);
-        this._blue.drawRect(0, 0, config.wallSize, config.wallSize);
-        this._blue.endFill();
-        this._blue.visible = false;
-        this._gfx.addChild(this._blue);
+        let primaryColor = new PIXI.Graphics();
+        primaryColor.beginFill(color, 1);
+        primaryColor.drawRect(0, 0, config.wallSize, config.wallSize);
+        primaryColor.endFill();
+        //let primaryTexture = primaryColor.generateTexture();
+        this._gfx.addChild(primaryColor);
+    }
+
+    start(frightTime, frightFlashes) {
+        // TODO: Create up, down, left, right textures
+        this._generateBlue(frightTime, frightFlashes);
     }
 
     step(elapsed) {
@@ -28,6 +30,12 @@ class Animation {
     }
 
     showBlue(visible) {
+        if (visible) {
+            this._blue.gotoAndPlay(0);
+        } else {
+            this._blue.stop();
+        }
+
         this._blue.visible = visible;
     }
 
@@ -49,6 +57,45 @@ class Animation {
 
     set y(value) {
         this._gfx.y = value;
+    }
+
+    _generateBlue(frightTime, frightFlashes) {
+        //let testAnim = new PIXI.Graphics();
+        //testAnim.beginFill(0xffffff, 1);
+        //testAnim.drawRect(0, 0, config.wallSize, config.wallSize);
+        //primaryColor.endFill();
+        //let testTexture = testAnim.generateTexture();
+        //
+        //let textureArray = [
+        //    { texture: primaryTexture,  time: config.flashSpeed },
+        //    { texture: testTexture,     time: config.flashSpeed }
+        //];
+        //let primaryMovie = new PIXI.extras.MovieClip(textureArray);
+        //primaryMovie.play();
+        //
+        //this._gfx.addChild(primaryMovie);
+
+        let blueGraphics = new PIXI.Graphics();
+        blueGraphics.beginFill(this._frightColor, 1);
+        blueGraphics.drawRect(0, 0, config.wallSize, config.wallSize);
+        blueGraphics.endFill();
+        let blueTexture = blueGraphics.generateTexture();
+
+        let solidBlueTime = frightTime - ((frightFlashes - 1) * 500);
+
+        let blueTextureArray = [
+            { texture: blueTexture,         time: solidBlueTime }
+        ];
+        for (let count = 0; count < frightFlashes - 1; count++) {
+            blueTextureArray.push({ texture: PIXI.Texture.EMPTY,  time: config.flashSpeed });
+            blueTextureArray.push({ texture: blueTexture,         time: config.flashSpeed });
+        }
+
+        this._blue = new PIXI.extras.MovieClip(blueTextureArray);
+        this._blue.loop = false;
+
+        this._gfx.addChild(this._blue);
+        this._blue.visible = false;
     }
 }
 

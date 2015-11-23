@@ -14,6 +14,8 @@ class Config {
 
         this.topSpeed = 0.16;
 
+        this.flashSpeed = 250; // ms wait for each frame
+
         this.ghostModes = [
             // first configuration (first level)
             [

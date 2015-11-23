@@ -16,7 +16,6 @@ class Characters {
         this._longTasksManager = longTasksManager;
 
         let gfx = new PIXI.Container();
-        console.log('test: ' + parentGfx.addChild);
         parentGfx.addChild(gfx);
 
         let characterAnimations = new CharacterAnimations(gfx);
@@ -87,35 +86,45 @@ class Characters {
             speedGroup.pacmanNormal,
             speedGroup.pacmanFright,
             '',
-            'left'
+            'left',
+            lvlSpec.frightTime,
+            lvlSpec.frightFlashes
         );
 
         this._blinky.start(
             speedGroup.ghostNormal,
             speedGroup.ghostFright,
             mode,
-            randomStartDirection()
+            randomStartDirection(),
+            lvlSpec.frightTime,
+            lvlSpec.frightFlashes
         );
 
         this._pinky.start(
             speedGroup.ghostNormal,
             speedGroup.ghostFright,
             mode,
-            randomStartDirection()
+            randomStartDirection(),
+            lvlSpec.frightTime,
+            lvlSpec.frightFlashes
         );
 
         this._inky.start(
             speedGroup.ghostNormal,
             speedGroup.ghostFright,
             mode,
-            randomStartDirection()
+            randomStartDirection(),
+            lvlSpec.frightTime,
+            lvlSpec.frightFlashes
         );
 
         this._clyde.start(
             speedGroup.ghostNormal,
             speedGroup.ghostFright,
             mode,
-            randomStartDirection()
+            randomStartDirection(),
+            lvlSpec.frightTime,
+            lvlSpec.frightFlashes
         );
     }
 
