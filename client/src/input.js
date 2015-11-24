@@ -10,6 +10,7 @@ class Input {
 
     start() {
         window.addEventListener('keydown', (e) => {
+
             this.anyKeyPressed = true;
 
             switch (e.keyCode) {
@@ -33,6 +34,22 @@ class Input {
                     this.enterPressed = true;
                     e.preventDefault();
                     break;
+
+                // do not count certain keys as being 'any key'
+                case 18:    // alt
+                case 224:   // apple command (firefox)
+                case 17:    // apple command (opera)
+                case 91:    // apple command, left (safari/chrome)
+                case 93:    // apple command, right (safari/chrome)
+                    this.anyKeyPressed = false;
+                    break;
+
+                // prevent losing focus via tab
+                case 9:
+                    this.anyKeyPressed = false;
+                    e.preventDefault();
+                    break;
+
                 default:
                     // do nothing
                     break;
