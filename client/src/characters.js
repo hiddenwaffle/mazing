@@ -130,6 +130,10 @@ class Characters {
         );
     }
 
+    stop() {
+        this._characterAnimations.stop();
+    }
+
     checkCollisions() {
         let collision = false;
         let energizer = false;

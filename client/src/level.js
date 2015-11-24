@@ -44,6 +44,10 @@ class Level {
         this._characters.start(this._lvlSpec);
     }
 
+    stop() {
+        this._characters.stop();
+    }
+
     step(elapsed) {
         if (this._pause.active) {
             // TODO: Count how long paused

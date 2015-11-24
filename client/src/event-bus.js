@@ -23,6 +23,20 @@ class EventBus {
         handlers.push(handler);
     }
 
+    unregister(name, handler) {
+        if (this._handlersMap.has(name)) {
+            let handlers = this._handlersMap.get(name);
+            let idx = handlers.indexOf(handler);
+            if (idx !== -1) {
+                handlers.splice(idx, 1);
+            } else {
+                console.warn('Attempted to remove unregistered handler for event: ' + name);
+            }
+        } else {
+            console.warn('Attempted to remove handler for unregistered event: ' + name);
+        }
+    }
+
     /**
      * @param event an object with structure: { name: 'eventname', args: [1,2,3,4] }
      */

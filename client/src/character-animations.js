@@ -17,17 +17,24 @@ class CharacterAnimations {
     }
 
     start() {
-        eventBus.register('event.pause.begin', () => {
+        this._handlePause = () => {
             for (let animation of this._animations) {
                 animation.pause();
             }
-        });
+        };
+        eventBus.register('event.pause.begin', this._handlePause);
 
-        eventBus.register('event.pause.end', () => {
+        this._handleResume = () => {
             for (let animation of this._animations) {
                 animation.resume();
             }
-        })
+        };
+        eventBus.register('event.pause.end', this._handleResume);
+    }
+
+    stop() {
+        eventBus.unregister('event.pause.begin', this._handlePause);
+        eventBus.unregister('event.pause.end', this._handleResume);
     }
 
     createPacManAnimations() {

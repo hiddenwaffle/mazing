@@ -25,6 +25,10 @@ class Game {
         this._level.start();
     }
 
+    stop() {
+        this._level.stop();
+    }
+
     step() {
         let elapsed = this._calculateElapsed();
 
