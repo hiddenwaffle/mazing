@@ -14,21 +14,22 @@ class CharacterAnimations {
     constructor(gfx) {
         this._gfx = gfx;
         this._animations = [];
-    }
 
-    start() {
         this._handlePause = () => {
             for (let animation of this._animations) {
                 animation.pause();
             }
         };
-        eventBus.register('event.pause.begin', this._handlePause);
 
         this._handleResume = () => {
             for (let animation of this._animations) {
                 animation.resume();
             }
         };
+    }
+
+    start() {
+        eventBus.register('event.pause.begin', this._handlePause);
         eventBus.register('event.pause.end', this._handleResume);
     }
 
