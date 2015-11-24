@@ -4,11 +4,14 @@ class Input {
 
     constructor() {
         this._requestedDirection = 'left';
-        this._userHitEnterButton = false;
+        this.enterPressed = false;
+        this.anyKeyPressed = false;
     }
 
     start() {
         window.addEventListener('keydown', (e) => {
+            this.anyKeyPressed = true;
+
             switch (e.keyCode) {
                 case 37: // left
                     this._requestedDirection = 'left';
@@ -27,7 +30,7 @@ class Input {
                     e.preventDefault();
                     break;
                 case 13: // enter key
-                    this._userHitEnterButton = true;
+                    this.enterPressed = true;
                     e.preventDefault();
                     break;
                 default:
@@ -35,12 +38,6 @@ class Input {
                     break;
             }
         });
-    }
-
-    switchIfUserHitEnterButton() {
-        let value = this._userHitEnterButton;
-        this._userHitEnterButton = false;
-        return value;
     }
 
     get requestedDirection() {

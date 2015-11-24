@@ -9,15 +9,21 @@ const
 
 class Level {
 
+    /**
+     * @param number Level number
+     * @param input
+     * @param stage
+     */
     constructor(number, input, stage) {
+        this._number = number;
+        this._input = input;
+
         let lvlGfxContainer = new PIXI.Container();
         lvlGfxContainer.x = 32;
         lvlGfxContainer.y = 32;
         stage.addChild(lvlGfxContainer);
 
-        this._number = number;
         this._board = new Board(lvlGfxContainer);
-        this._input = input;
         this._stage = stage;
         this._longTasksManager = new LongTasks.Manager();
         this._characters = new Characters(this._board, lvlGfxContainer, this._longTasksManager);
@@ -29,7 +35,7 @@ class Level {
 
         this._lvlSpec = null;
 
-        this._pause = new Pause(stage);
+        this._pause = new Pause(stage, input);
     }
 
     start() {
@@ -39,27 +45,23 @@ class Level {
     }
 
     step(elapsed) {
-        this._stepPaused(elapsed, this._input.switchIfUserHitEnterButton());
-
         if (this._pause.active) {
-            // TODO: count how many milliseconds paused
+            // TODO: Count how long paused
 
         } else {
             this._handleLongTasks(elapsed);
             this._handleSubMode(elapsed);
             this._handleCollisionsAndSteps(elapsed);
         }
+
+        this._stepPaused(elapsed);
     }
 
     checkForEndLevelCondition() {
         return this._board.dotsLeft() == false;
     }
 
-    _stepPaused(elapsed, flipPause) {
-        if (flipPause) {
-            this._pause.flip();
-        }
-
+    _stepPaused(elapsed) {
         this._pause.step(elapsed);
     }
 
