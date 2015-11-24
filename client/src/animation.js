@@ -26,7 +26,7 @@ class Animation {
     }
 
     step(elapsed) {
-        //
+        // TODO: Necessary? MovieClips use the requestAnimationFrame timer.
     }
 
     showBlue(visible) {
@@ -37,6 +37,20 @@ class Animation {
         }
 
         this._blue.visible = visible;
+    }
+
+    pause() {
+        if (this._blue.playing) {
+            this._blue.stop();
+            this._blue.paused = true;
+        }
+    }
+
+    resume() {
+        if (this._blue.paused) {
+            this._blue.play();
+            this._blue.paused = false;
+        }
     }
 
     set visible(value) {
@@ -92,6 +106,7 @@ class Animation {
         }
 
         this._blue = new PIXI.extras.MovieClip(blueTextureArray);
+        this.paused = true; // TODO: Not sure of a better way to attach a custom property
         this._blue.loop = false;
 
         this._gfx.addChild(this._blue);

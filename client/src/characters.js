@@ -18,14 +18,14 @@ class Characters {
         let gfx = new PIXI.Container();
         parentGfx.addChild(gfx);
 
-        let characterAnimations = new CharacterAnimations(gfx);
+        this._characterAnimations = new CharacterAnimations(gfx);
 
         this._pacman = new Entity(
             'pacman',
             board,
             config.startpacmanx,
             config.startpacmany,
-            characterAnimations.createPacManAnimations(),
+            this._characterAnimations.createPacManAnimations(),
             new MovementStrategy(board, 'doNothing', 'doNothing')
         );
 
@@ -38,7 +38,7 @@ class Characters {
             board,
             config.startghostx + (3 * config.wallSize),
             config.startghosty,
-            characterAnimations.createGhostAnimations(0xff0000),
+            this._characterAnimations.createGhostAnimations(0xff0000),
             new MovementStrategy(board, 'blinky', 'random', 27, 1, this._pacman),
             randomMovementStrategy
         );
@@ -49,7 +49,7 @@ class Characters {
             board,
             config.startghostx - (3 * config.wallSize),
             config.startghosty,
-            characterAnimations.createGhostAnimations(0xffb9ff),
+            this._characterAnimations.createGhostAnimations(0xffb9ff),
             new MovementStrategy(board, 'pinky', 'random', 1, 1, this._pacman),
             randomMovementStrategy
         );
@@ -60,7 +60,7 @@ class Characters {
             board,
             config.startghostx + config.wallSize,
             config.startghosty,
-            characterAnimations.createGhostAnimations(0x00ffff),
+            this._characterAnimations.createGhostAnimations(0x00ffff),
             new MovementStrategy(board, 'inky', 'random', 27, 30, this._pacman, this._blinky),
             randomMovementStrategy
         );
@@ -71,7 +71,7 @@ class Characters {
             board,
             config.startghostx - config.wallSize,
             config.startghosty,
-            characterAnimations.createGhostAnimations(0xffb950),
+            this._characterAnimations.createGhostAnimations(0xffb950),
             new MovementStrategy(board, 'clyde', 'random', 1, 30, this._pacman),
             randomMovementStrategy
         );
@@ -79,6 +79,8 @@ class Characters {
     }
 
     start(lvlSpec) {
+        this._characterAnimations.start();
+
         let speedGroup = lvlSpec.speedGroup;
         let mode = lvlSpec.ghostMode[0].mode;
 

@@ -1,7 +1,8 @@
 'use strict';
 
 const
-    Animation = require('./animation');
+    Animation   = require('./animation'),
+    eventBus    = require('./event-bus');
 
 const
     pacmanNormalColor       = 0xffff00,
@@ -12,14 +13,33 @@ class CharacterAnimations {
 
     constructor(gfx) {
         this._gfx = gfx;
+        this._animations = [];
+    }
+
+    start() {
+        eventBus.register('event.pause.begin', () => {
+            for (let animation of this._animations) {
+                animation.pause();
+            }
+        });
+
+        eventBus.register('event.pause.end', () => {
+            for (let animation of this._animations) {
+                animation.resume();
+            }
+        })
     }
 
     createPacManAnimations() {
-        return new Animation(this._gfx, pacmanNormalColor, pacmanFrighteningColor);
+        let animation = new Animation(this._gfx, pacmanNormalColor, pacmanFrighteningColor);
+        this._animations.push(animation);
+        return animation;
     }
 
     createGhostAnimations(ghostNormalColor) {
-        return new Animation(this._gfx, ghostNormalColor, ghostFrightenedColor);
+        let animation = new Animation(this._gfx, ghostNormalColor, ghostFrightenedColor);
+        this._animations.push(animation);
+        return animation;
     }
 }
 

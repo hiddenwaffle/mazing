@@ -1,6 +1,9 @@
 'use strict';
 
 const
+    eventBus = require('./event-bus');
+
+const
     TRANSITION_TIME = 500, // ms, must be > 0
     INTENSITY       = 0.75;
 
@@ -31,10 +34,8 @@ class Pause {
         this._transitionTimeLeft = 0;
     }
 
-    /**
-     * This arcane mix of method pauses immediately (no transition effect)
-     */
     start() {
+        // This arcane mix of 3 methods forces immediatel pause (no transition effect)
         this.active = false;
         this._flip();
         this.step(1000, true); // 1000 elapsed = immediate
@@ -63,6 +64,12 @@ class Pause {
     _flip() {
         this.active = !this.active;
         this._beginTransition();
+
+        if (this.active) {
+            eventBus.fire({ name: 'event.pause.begin' });
+        } else {
+            eventBus.fire({ name: 'event.pause.end' });
+        }
     }
 
     _beginTransition() {
