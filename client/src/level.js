@@ -4,7 +4,8 @@ const
     Board       = require('./board'),
     config      = require('./config'),
     Characters  = require('./characters'),
-    LongTasks   = require('./long-tasks');
+    LongTasks   = require('./long-tasks'),
+    Pause       = require('./pause');
 
 class Level {
 
@@ -27,22 +28,39 @@ class Level {
         this._frightTimeLeft = null;
 
         this._lvlSpec = null;
+
+        this._pause = new Pause(stage);
     }
 
     start() {
-        // Setup the level
+        this._pause.start();
         this._lvlSpec = config.levelSpecifications[this._number];
         this._characters.start(this._lvlSpec);
     }
 
     step(elapsed) {
-        this._handleLongTasks(elapsed);
-        this._handleSubMode(elapsed);
-        this._handleCollisionsAndSteps(elapsed);
+        this._stepPaused(elapsed, this._input.switchIfUserHitEnterButton());
+
+        if (this._pause.active) {
+            // TODO: count how many milliseconds paused
+
+        } else {
+            this._handleLongTasks(elapsed);
+            this._handleSubMode(elapsed);
+            this._handleCollisionsAndSteps(elapsed);
+        }
     }
 
     checkForEndLevelCondition() {
-        return this._board.dotsLeft();
+        return this._board.dotsLeft() == false;
+    }
+
+    _stepPaused(elapsed, flipPause) {
+        if (flipPause) {
+            this._pause.flip();
+        }
+
+        this._pause.step(elapsed);
     }
 
     _handleLongTasks(elapsed) {

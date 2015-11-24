@@ -2,8 +2,7 @@
 
 const
     Input       = require('./input'),
-    Level       = require('./level'),
-    Pause       = require('./pause');
+    Level       = require('./level');
 
 class Game {
 
@@ -14,15 +13,12 @@ class Game {
         this._level = null;
 
         this._lastStep = Date.now();
-
-        this._pause = new Pause(stage);
     }
 
     start() {
         document.body.appendChild(this._renderer.view);
 
         this._input.start();
-        this._pause.start();
 
         // Prepare the first level
         this._level = new Level(0, this._input, this._stage);
@@ -32,14 +28,7 @@ class Game {
     step() {
         let elapsed = this._calculateElapsed();
 
-        this._stepPaused(elapsed, this._input.switchIfUserHitEnterButton());
-
-        if (this._pause.active) {
-            // TODO: count how many milliseconds paused
-
-        } else {
-            this._level.step(elapsed);
-        }
+        this._level.step(elapsed);
 
         if (this._level.checkForEndLevelCondition()) {
             console.log('end of level');
@@ -48,14 +37,6 @@ class Game {
 
     draw() {
         this._renderer.render(this._stage);
-    }
-
-    _stepPaused(elapsed, flipPause) {
-        if (flipPause) {
-            this._pause.flip();
-        }
-
-        this._pause.step(elapsed);
     }
 
     _calculateElapsed() {
