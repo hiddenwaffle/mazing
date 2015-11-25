@@ -18,7 +18,7 @@ class Board {
 
                 if (wall === 1) {
                     let wallImg = new PIXI.Graphics();
-                    wallImg.beginFill(0x0077ff);
+                    wallImg.beginFill(0x0055dd);
                     wallImg.drawRect(
                         x * config.wallSize,
                         y * config.wallSize,
