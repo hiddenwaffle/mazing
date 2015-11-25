@@ -8,6 +8,11 @@ class Input {
         this.anyKeyPressed = false;
     }
 
+    reset() {
+        this.enterPressed = false;
+        this.anyKeyPressed = false;
+    }
+
     start() {
         window.addEventListener('keydown', (e) => {
 

@@ -10,6 +10,7 @@ const
 class Pause {
 
     constructor(stage, input) {
+        this._stage = stage;
         this._input = input;
 
         this.active = false;
@@ -25,20 +26,25 @@ class Pause {
         this._instructions.x = 520;
         this._instructions.y = 150;
         this._instructions.visible = false;
-        stage.addChild(this._instructions);
 
         this.filter= new PIXI.filters.SepiaFilter;
         this.filter.sepia = INTENSITY; // initially at full value
-        stage.filters = [this.filter];
 
         this._transitionTimeLeft = 0;
     }
 
     start() {
+        this._stage.addChild(this._instructions);
+        this._stage.filters = [this.filter];
+
         // This arcane mix of 3 methods forces immediatel pause (no transition effect)
         this.active = false;
         this._flip();
         this.step(1000, true); // 1000 elapsed = immediate
+    }
+
+    stop() {
+        //
     }
 
     step(elapsed) {

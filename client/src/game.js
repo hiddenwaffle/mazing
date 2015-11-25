@@ -2,7 +2,11 @@
 
 const
     Input       = require('./input'),
-    Level       = require('./level');
+    Level       = require('./level'),
+    StartScreen = require('./start-screen');
+
+const
+    eventBus    = require('./event-bus');
 
 class Game {
 
@@ -10,9 +14,13 @@ class Game {
         this._stage = stage;
         this._renderer = renderer;
         this._input = new Input();
+        this._startScreen = new StartScreen(stage, this._input);
+
         this._level = null;
 
         this._lastStep = Date.now();
+
+        this._state = 'initialized';
     }
 
     start() {
@@ -20,27 +28,65 @@ class Game {
 
         this._input.start();
 
-        // Prepare the first level
-        this._level = new Level(0, this._input, this._stage);
-        this._level.start();
+        eventBus.register('event.startscreen.end', () => {
+            this._switchState('level-in-session');
+        });
+
+        this._switchState('startscreen-active');
     }
 
     stop() {
         this._level.stop();
     }
 
+    draw() {
+        this._renderer.render(this._stage);
+    }
+
     step() {
         let elapsed = this._calculateElapsed();
 
-        this._level.step(elapsed);
+        switch (this._state) {
+            case 'initialized':
+                break;
 
-        if (this._level.checkForEndLevelCondition()) {
-            console.log('end of level');
+            case 'startscreen-active':
+                this._startScreen.step(elapsed);
+                break;
+
+            case 'level-in-session':
+                this._level.step(elapsed);
+                if (this._level.checkForEndLevelCondition()) {
+                    console.log('end of level');
+                }
+                break;
         }
     }
 
-    draw() {
-        this._renderer.render(this._stage);
+    _switchState(state) {
+        this._state = state;
+
+        switch (state) {
+            case 'initialized':
+                // Do nothing
+                break;
+
+            case 'startscreen-active':
+                this._startScreen.start();
+                break;
+
+            case 'level-in-session':
+                this._levelNumber += 1;
+                let currentLevel = this._level;
+                if (currentLevel !== null && currentLevel !== undefined) {
+                    this._levelNumber = currentLevel.number + 1;
+                } else {
+                    this._levelNumber = 0;
+                }
+                this._level = new Level(this._levelNumber, this._input, this._stage);
+                this._level.start();
+                break;
+        }
     }
 
     _calculateElapsed() {

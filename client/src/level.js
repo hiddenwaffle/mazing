@@ -15,7 +15,7 @@ class Level {
      * @param stage
      */
     constructor(number, input, stage) {
-        this._number = number;
+        this.number = number;
         this._input = input;
 
         let lvlGfxContainer = new PIXI.Container();
@@ -39,8 +39,10 @@ class Level {
     }
 
     start() {
+        this._input.reset();
+
         this._pause.start();
-        this._lvlSpec = config.levelSpecifications[this._number];
+        this._lvlSpec = config.levelSpecifications[this.number];
         this._characters.start(this._lvlSpec);
     }
 
