@@ -9,6 +9,8 @@ const
 const
     eventBus    = require('./event-bus');
 
+Window.meow = () => { eventBus.fire({ name: 'event.level.end' }); };
+
 class Game {
 
     constructor(stage, renderer) {
@@ -16,7 +18,7 @@ class Game {
         this._renderer = renderer;
         this._input = new Input();
         this._startScreen = new StartScreen(stage, this._input);
-        this._levelEnding = new LevelEnding();
+        this._levelEnding = new LevelEnding(stage, renderer);
 
         this._level = null;
 
@@ -102,8 +104,8 @@ class Game {
                 break;
 
             case 'level-ending':
-                this._level.stop();
                 this._levelEnding.start();
+                this._level.stop();
                 break;
 
         }

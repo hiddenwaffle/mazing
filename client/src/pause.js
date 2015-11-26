@@ -27,7 +27,7 @@ class Pause {
         this._instructions.y = 150;
         this._instructions.visible = false;
 
-        this.filter= new PIXI.filters.SepiaFilter;
+        this.filter = new PIXI.filters.SepiaFilter();
         this.filter.sepia = INTENSITY; // initially at full value
 
         this._transitionTimeLeft = 0;
@@ -35,7 +35,6 @@ class Pause {
 
     start() {
         this._stage.addChild(this._instructions);
-        this._stage.filters = [this.filter];
 
         // This arcane mix of 3 methods forces immediatel pause (no transition effect)
         this.active = false;
@@ -79,6 +78,8 @@ class Pause {
     }
 
     _beginTransition() {
+        this._stage.filters = [this.filter];
+
         // Handle if this is in mid-transition, and start there for reversal.
         // Otherwise, start the full transition time.
         if (this._transitionTimeLeft !== 0) {
@@ -114,6 +115,7 @@ class Pause {
             this._instructions.visible = true;
         } else {
             this.filter.sepia = 0;
+            this._stage.filters = null;
         }
     }
 }
