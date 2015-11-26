@@ -4,8 +4,8 @@ const
     eventBus = require('./event-bus');
 
 const
-    totalTime = 3000, // ms
-    intensity = 0.75;
+    TOTAL_GRAY_TRANSITION_TIME = 500, // ms
+    GRAY_INTENSITY = 0.75;
 
 class LevelEnding {
 
@@ -24,10 +24,11 @@ class LevelEnding {
         this._thingy = new PIXI.Sprite(snapshotTexture);
         this._stage.addChild(this._thingy);
 
-        let grayFilter = new PIXI.filters.GrayFilter();
-        this._thingy.filters = [ grayFilter ];
+        this._grayFilter = new PIXI.filters.GrayFilter();
+        this._grayFilter.gray = 0;
+        this._thingy.filters = [ this._grayFilter ];
 
-        this._timeLeft = totalTime;
+        this._timeLeft = TOTAL_GRAY_TRANSITION_TIME;
     }
 
     step(elapsed) {
@@ -40,6 +41,9 @@ class LevelEnding {
             this._stage.removeChildAt(idx);
 
             eventBus.fire({name: 'event.level.ending.readyfornext'});
+
+        } else {
+            this._grayFilter.gray = GRAY_INTENSITY - (this._timeLeft / TOTAL_GRAY_TRANSITION_TIME);
         }
     }
 }
