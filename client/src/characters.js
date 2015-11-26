@@ -15,10 +15,10 @@ class Characters {
         this._board = board;
         this._longTasksManager = longTasksManager;
 
-        let gfx = new PIXI.Container();
-        parentGfx.addChild(gfx);
+        this._gfx = new PIXI.Container();
+        parentGfx.addChild(this._gfx);
 
-        this._characterAnimations = new CharacterAnimations(gfx);
+        this._characterAnimations = new CharacterAnimations(this._gfx);
 
         this._pacman = new Entity(
             'pacman',

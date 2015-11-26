@@ -3,7 +3,8 @@
 const
     Input       = require('./input'),
     Level       = require('./level'),
-    StartScreen = require('./start-screen');
+    StartScreen = require('./start-screen'),
+    LevelEnding = require('./level-ending');
 
 const
     eventBus    = require('./event-bus');
@@ -15,6 +16,7 @@ class Game {
         this._renderer = renderer;
         this._input = new Input();
         this._startScreen = new StartScreen(stage, this._input);
+        this._levelEnding = new LevelEnding();
 
         this._level = null;
 
@@ -29,7 +31,15 @@ class Game {
         this._input.start();
 
         eventBus.register('event.startscreen.end', () => {
-            this._switchState('level-in-session');
+            this._switchState('level-starting');
+        });
+
+        eventBus.register('event.level.end', () => {
+            this._switchState('level-ending');
+        });
+
+        eventBus.register('event.level.ending.readyfornext', () => {
+            this._switchState('level-starting');
         });
 
         this._switchState('startscreen-active');
@@ -54,11 +64,15 @@ class Game {
                 this._startScreen.step(elapsed);
                 break;
 
-            case 'level-in-session':
+            case 'level-starting':
                 this._level.step(elapsed);
                 if (this._level.checkForEndLevelCondition()) {
-                    console.log('end of level');
+                    eventBus.fire({ name: 'event.level.end' });
                 }
+                break;
+
+            case 'level-ending':
+                this._levelEnding.step(elapsed);
                 break;
         }
     }
@@ -75,8 +89,8 @@ class Game {
                 this._startScreen.start();
                 break;
 
-            case 'level-in-session':
-                this._levelNumber += 1;
+            case 'level-starting':
+                // TODO: Determine if that was the final level
                 let currentLevel = this._level;
                 if (currentLevel !== null && currentLevel !== undefined) {
                     this._levelNumber = currentLevel.number + 1;
@@ -86,6 +100,12 @@ class Game {
                 this._level = new Level(this._levelNumber, this._input, this._stage);
                 this._level.start();
                 break;
+
+            case 'level-ending':
+                this._level.stop();
+                this._levelEnding.start();
+                break;
+
         }
     }
 

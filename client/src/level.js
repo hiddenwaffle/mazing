@@ -17,16 +17,16 @@ class Level {
     constructor(number, input, stage) {
         this.number = number;
         this._input = input;
-
-        let lvlGfxContainer = new PIXI.Container();
-        lvlGfxContainer.x = 32;
-        lvlGfxContainer.y = 32;
-        stage.addChild(lvlGfxContainer);
-
-        this._board = new Board(lvlGfxContainer);
         this._stage = stage;
+
+        this._gfx = new PIXI.Container();
+        this._gfx.x = 32;
+        this._gfx.y = 32;
+        this._stage.addChild(this._gfx);
+
+        this._board = new Board(this._gfx);
         this._longTasksManager = new LongTasks.Manager();
-        this._characters = new Characters(this._board, lvlGfxContainer, this._longTasksManager);
+        this._characters = new Characters(this._board, this._gfx, this._longTasksManager);
 
         this._currentGhostSubModeIndex = 0;
         this._ghostSubModeElapsed = 0;
@@ -48,6 +48,11 @@ class Level {
 
     stop() {
         this._characters.stop();
+
+        // TODO: In next game, make this more encapsulated
+        let idx = this._stage.getChildIndex(this._gfx);
+        this._stage.removeChildAt(idx);
+        this._gfx.destroy(true);
     }
 
     step(elapsed) {
