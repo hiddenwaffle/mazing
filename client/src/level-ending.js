@@ -1,7 +1,8 @@
 'use strict';
 
 const
-    eventBus = require('./event-bus');
+    eventBus    = require('./event-bus'),
+    config      = require('./config');
 
 const
     TOTAL_BLUR_TRANSITION_TIME = 1000, // ms
@@ -32,7 +33,9 @@ class LevelEnding {
         this._statsWindow.addChild(title);
     }
 
-    start() {
+    start(levelNumber) {
+        this._levelNumber = levelNumber;
+
         // The last frame of the level should still be visible
         let snapshotTexture = new PIXI.RenderTexture(this._renderer, this._renderer.width, this._renderer.height);
         snapshotTexture.render(this._stage);
@@ -82,7 +85,15 @@ class LevelEnding {
         let idx = this._stage.getChildIndex(this._thingy);
         this._stage.removeChildAt(idx);
 
-        eventBus.fire({ name: 'event.level.ending.readyfornext' });
+        if (this._isFinalLevel()) {
+            eventBus.fire({ name: 'event.level.ending.lastlevel' });
+        } else {
+            eventBus.fire({ name: 'event.level.ending.readyfornext' });
+        }
+    }
+
+    _isFinalLevel() {
+        return this._levelNumber === config.lastLevelIndex();
     }
 }
 

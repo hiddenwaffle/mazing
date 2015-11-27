@@ -4,7 +4,8 @@ const
     Input       = require('./input'),
     Level       = require('./level'),
     StartScreen = require('./start-screen'),
-    LevelEnding = require('./level-ending');
+    LevelEnding = require('./level-ending'),
+    GameEnding  = require('./game-ending');
 
 const
     eventBus    = require('./event-bus');
@@ -19,8 +20,10 @@ class Game {
         this._input = new Input();
         this._startScreen = new StartScreen(stage, this._input);
         this._levelEnding = new LevelEnding(stage, renderer, this._input);
+        this._gameEnding = new GameEnding(stage);
 
         this._level = null;
+        this._levelNumber = 0;
 
         this._lastStep = Date.now();
 
@@ -42,6 +45,10 @@ class Game {
 
         eventBus.register('event.level.ending.readyfornext', () => {
             this._switchState('level-starting');
+        });
+
+        eventBus.register('event.level.ending.lastlevel', () => {
+            this._switchState('game-ending');
         });
 
         this._switchState('startscreen-active');
@@ -76,6 +83,10 @@ class Game {
             case 'level-ending':
                 this._levelEnding.step(elapsed);
                 break;
+
+            case 'game-ending':
+                this._gameEnding.step(elapsed);
+                break;
         }
 
         this._resortStageChildren();
@@ -106,10 +117,13 @@ class Game {
                 break;
 
             case 'level-ending':
-                this._levelEnding.start();
+                this._levelEnding.start(this._levelNumber);
                 this._level.stop();
                 break;
 
+            case 'game-ending':
+                this._gameEnding.start();
+                break;
         }
     }
 

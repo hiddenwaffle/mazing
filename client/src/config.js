@@ -145,6 +145,10 @@ class Config {
             }
         ];
     }
+
+    lastLevelIndex() {
+        return this.levelSpecifications.length - 1;
+    }
 }
 
 let config = new Config();
