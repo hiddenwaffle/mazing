@@ -4,5 +4,6 @@
 
 client/pixi.js
 client/client.js
+client/assets/
 
 node_modules/
