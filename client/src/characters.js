@@ -168,7 +168,10 @@ class Characters {
     }
 
     stepPacman(elapsed, playerRequestedDirection) {
-        this._pacman.requestedDirection = playerRequestedDirection;
+        if (playerRequestedDirection !== null) {
+            this._pacman.requestedDirection = playerRequestedDirection;
+        }
+
         this._pacman.step(elapsed);
     }
 

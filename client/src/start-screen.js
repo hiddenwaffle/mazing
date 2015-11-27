@@ -33,15 +33,11 @@ class StartScreen {
         this._blurTransitionTimeLeft = totalTime;
     }
 
-    stop() {
-        this._input.reset();
-    }
-
     step(elapsed) {
 
         // Kinda bad to do it this way, but will proably be replaced at some point.
         let pctDone = this._blurTransitionTimeLeft / totalTime;
-        if (this._input.anyKeyPressed && pctDone > 0.2) {
+        if (this._input.isAnyKeyDownAndUnhandled() && pctDone > 0.2) {
             this._blurTransitionTimeLeft = totalTime * 0.2;
         }
 

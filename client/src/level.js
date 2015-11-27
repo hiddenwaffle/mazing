@@ -40,8 +40,6 @@ class Level {
     }
 
     start() {
-        this._input.reset();
-
         this._pause.start();
         this._lvlSpec = config.levelSpecifications[this.number];
         this._characters.start(this._lvlSpec);
@@ -113,17 +111,37 @@ class Level {
 
     _handleCollisionsAndSteps(elapsed) {
         let result = this._characters.checkCollisions();
+        let requestedDirection = this._determineRequestedDirection();
 
         if (result.collision) {
-            this._characters.stepPacman(0, this._input.requestedDirection); // 0 means stopped one frame
+            this._characters.stepPacman(0, requestedDirection); // 0 means stopped one frame
         } else {
-            this._characters.stepPacman(elapsed, this._input.requestedDirection);
+            this._characters.stepPacman(elapsed, requestedDirection);
         }
         this._characters.stepGhosts(elapsed);
 
         if (result.energizer) {
             this._characters.signalFright();
             this._frightTimeLeft = this._lvlSpec.frightTime;
+        }
+    }
+
+    _determineRequestedDirection() {
+        if (this._input.isDownAndUnhandled('up')) {
+            return 'up';
+
+        } else if (this._input.isDownAndUnhandled('down')) {
+            return 'down';
+
+        } else if (this._input.isDownAndUnhandled('left')) {
+            return 'left';
+
+        } else if (this._input.isDownAndUnhandled('right')) {
+            return 'right';
+
+        } else {
+            // null means no new requested direction; stay the course
+            return null;
         }
     }
 }

@@ -55,15 +55,15 @@ class Pause {
      * User presses Enter to pause the game. Then presses any key to unpause.
      */
     _handleInput() {
-        if (this.active == false && this._input.enterPressed) {
-            this._flip();
-
-        } else if (this.active && this._input.anyKeyPressed) {
-            this._flip();
+        if (this.active) {
+            if (this._input.isAnyKeyDownAndUnhandled()) {
+                this._flip();
+            }
+        } else {
+            if (this._input.isDownAndUnhandled('enter')) {
+                this._flip();
+            }
         }
-
-        this._input.enterPressed = false;
-        this._input.anyKeyPressed = false;
     }
 
     _flip() {

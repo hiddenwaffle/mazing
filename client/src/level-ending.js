@@ -70,7 +70,7 @@ class LevelEnding {
 
     _stepStatsWindow(elapsed) {
         if (this._statsWindow.visible) {
-            if (this._input.anyKeyPressed) {
+            if (this._input.isAnyKeyDownAndUnhandled()) {
                 this._stop();
             }
         }
@@ -78,7 +78,6 @@ class LevelEnding {
 
     _stop() {
         this._statsWindow.visible = false;
-        this._input.reset();
 
         this._thingy.filters = null;
 
