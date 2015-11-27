@@ -18,7 +18,7 @@ class Game {
         this._renderer = renderer;
         this._input = new Input();
         this._startScreen = new StartScreen(stage, this._input);
-        this._levelEnding = new LevelEnding(stage, renderer);
+        this._levelEnding = new LevelEnding(stage, renderer, this._input);
 
         this._level = null;
 
@@ -77,6 +77,8 @@ class Game {
                 this._levelEnding.step(elapsed);
                 break;
         }
+
+        this._resortStageChildren();
     }
 
     _switchState(state) {
@@ -119,6 +121,24 @@ class Game {
 
         this._lastStep = Date.now();
         return elapsed;
+    }
+
+    /**
+     * Re-sort the stage children to their z-order, if any.
+     * @private
+     */
+    _resortStageChildren() {
+        this._stage.children.sort((a, b) => {
+            if (a.z === undefined || a.z === null) {
+                return -1;
+
+            } else if (b.z === undefined || b.z === null) {
+                return 1;
+
+            } else {
+                return b.z - a.z;
+            }
+        });
     }
 }
 

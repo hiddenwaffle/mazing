@@ -20,6 +20,7 @@ class Level {
         this._stage = stage;
 
         this._gfx = new PIXI.Container();
+        this._gfx.z = 1; // custom property
         this._gfx.x = 32;
         this._gfx.y = 32;
         this._stage.addChild(this._gfx);
