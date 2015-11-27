@@ -30,6 +30,9 @@ class Entity {
 
         // Should it be counted in collision detection
         this.solid = true;
+
+        // When Pac-Man hits a wall, save the direction he was going (used by respawn algorithm).
+        this._requestedDirectionAtStop = '';
     }
 
     start(normalSpeed, frightSpeed, mode, requestedDirection, frightTime, frightFlashes) {
@@ -73,6 +76,15 @@ class Entity {
     removeFrightIfAny() {
         this._frightened = false;
         this._animation.showBlue(false);
+    }
+
+    /**
+     * Called by respawn algorithm to ensure that Pac-Man is always moving
+     */
+    ensureRequestedDirectionActive() {
+        if (this._requestedDirection === '' || this._requestedDirection === null || this._requestedDirection === undefined) {
+            this._requestedDirection = this._requestedDirectionAtStop;
+        }
     }
 
     set visible(value) {
@@ -162,6 +174,7 @@ class Entity {
         if (tryMoveResult.doStop) {
             this.x = Math.floor(this.x);
             this.y = Math.floor(this.y);
+            this._requestedDirectionAtStop = this._requestedDirection;
             this._requestedDirection = '';
         }
     }
@@ -223,4 +236,6 @@ function oppositeOfDirection(direction) {
         case 'right':
             return 'left';
     }
+
+    // TODO: Does this need a default return case?
 }

@@ -48,9 +48,6 @@ class PacmanDeath {
         this._pacman.solid = true;
         this._pacman.visible = true;
 
-        let respawnx = config.startpacmanx;
-        let respawny = config.startpacmany;
-
         let spawnPoint = determineSpawnPointViability(
             this._ghosts,
             this._deathx,
@@ -59,6 +56,8 @@ class PacmanDeath {
 
         this._pacman.x = spawnPoint.x * config.wallSize;
         this._pacman.y = spawnPoint.y * config.wallSize;
+
+        this._pacman.ensureRequestedDirectionActive();
     }
 }
 
