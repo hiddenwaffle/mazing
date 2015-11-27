@@ -109,8 +109,40 @@ class Config {
                 frightFlashes: 5,
                 elroy1DotsLeft: 30,
                 elroy2DotsLeft: 15
+            },
+            // level 3
+            {
+                bonusSymbol: 'peach',
+                bonusPoints: 500,
+                ghostMode: this.ghostModes[1],      // second configuration
+                speedGroup: this.speedGroups[1],    // second configuration
+                frightTime: 4000,
+                frightFlashes: 5,
+                elroy1DotsLeft: 40,
+                elroy2DotsLeft: 20
+            },
+            // level 4
+            {
+                bonusSymbol: 'peach',
+                bonusPoints: 500,
+                ghostMode: this.ghostModes[1],      // second configuration
+                speedGroup: this.speedGroups[1],    // second configuration
+                frightTime: 3000,
+                frightFlashes: 5,
+                elroy1DotsLeft: 40,
+                elroy2DotsLeft: 20
+            },
+            // level 5
+            {
+                bonusSymbol: 'apple',
+                bonusPoints: 700,
+                ghostMode: this.ghostModes[2],      // third configuration
+                speedGroup: this.speedGroups[2],    // third configuration
+                frightTime: 2000,
+                frightFlashes: 5,
+                elroy1DotsLeft: 40,
+                elroy2DotsLeft: 20
             }
-            // TODO: More levels
         ];
     }
 }
