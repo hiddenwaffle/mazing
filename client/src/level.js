@@ -127,16 +127,16 @@ class Level {
     }
 
     _determineRequestedDirection() {
-        if (this._input.isDownAndUnhandled('up')) {
+        if (this._input.isDown('up')) {
             return 'up';
 
-        } else if (this._input.isDownAndUnhandled('down')) {
+        } else if (this._input.isDown('down')) {
             return 'down';
 
-        } else if (this._input.isDownAndUnhandled('left')) {
+        } else if (this._input.isDown('left')) {
             return 'left';
 
-        } else if (this._input.isDownAndUnhandled('right')) {
+        } else if (this._input.isDown('right')) {
             return 'right';
 
         } else {

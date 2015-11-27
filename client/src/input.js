@@ -24,13 +24,30 @@ class Input {
     // TODO: Maybe a reset() method?
 
     /**
+     * Return if given key is 'down'.
+     */
+    isDown(key) {
+        return this._keyState.get(key) === 'down';
+    }
+
+    /**
      * Return if given key is 'down'. Also sets the key from 'down' to 'handling'.
      */
     isDownAndUnhandled(key) {
-        if (this._keyState.get(key) === 'down') {
+        if (this.isDown(key)) {
             this._keyState.set(key, 'handling');
             return true;
         }
+    }
+
+    /**
+     * Return if any arrow key is 'down'.
+     */
+    isArrowKeyDown() {
+        return (this._keyState.get('up') === 'down' ||
+                this._keyState.get('down') === 'down' ||
+                this._keyState.get('left') === 'down' ||
+                this._keyState.get('right') === 'down');
     }
 
     /**
