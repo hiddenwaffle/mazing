@@ -38,7 +38,7 @@ class Characters {
             board,
             config.startghostx + (3 * config.wallSize),
             config.startghosty,
-            this._characterAnimations.createGhostAnimations(0xff0000),
+            this._characterAnimations.createGhostAnimations('red'),
             new MovementStrategy(board, 'blinky', 'random', 27, 1, this._pacman),
             randomMovementStrategy
         );
@@ -49,7 +49,7 @@ class Characters {
             board,
             config.startghostx - (3 * config.wallSize),
             config.startghosty,
-            this._characterAnimations.createGhostAnimations(0xffb9ff),
+            this._characterAnimations.createGhostAnimations('pink'),
             new MovementStrategy(board, 'pinky', 'random', 1, 1, this._pacman),
             randomMovementStrategy
         );
@@ -60,7 +60,7 @@ class Characters {
             board,
             config.startghostx + config.wallSize,
             config.startghosty,
-            this._characterAnimations.createGhostAnimations(0x00ffff),
+            this._characterAnimations.createGhostAnimations('blue'),
             new MovementStrategy(board, 'inky', 'random', 27, 30, this._pacman, this._blinky),
             randomMovementStrategy
         );
@@ -71,7 +71,7 @@ class Characters {
             board,
             config.startghostx - config.wallSize,
             config.startghosty,
-            this._characterAnimations.createGhostAnimations(0xffb950),
+            this._characterAnimations.createGhostAnimations('orange'),
             new MovementStrategy(board, 'clyde', 'random', 1, 30, this._pacman),
             randomMovementStrategy
         );

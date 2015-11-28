@@ -77,13 +77,17 @@ class CharacterAnimations {
         return animation;
     }
 
-    createGhostAnimations(ghostNormalColor) {
+    createGhostAnimations(color) {
+        let colorMatrix = new PIXI.filters.ColorMatrixFilter();
+        colorMatrix.matrix = generateColorMatrixValue(color);
+
         let upFrames = [];
         for (let filename of ['ghost-green-up1.png', 'ghost-green-up2.png', 'ghost-green-up3.png']) {
             upFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
         }
 
         let up = new PIXI.extras.MovieClip(upFrames);
+        up.filters = [colorMatrix];
         centerClip(up);
 
         let downFrames = [];
@@ -92,6 +96,7 @@ class CharacterAnimations {
         }
 
         let down = new PIXI.extras.MovieClip(downFrames);
+        down.filters = [colorMatrix];
         centerClip(down);
 
         let rightFrames = [];
@@ -100,10 +105,12 @@ class CharacterAnimations {
         }
 
         let left = new PIXI.extras.MovieClip(rightFrames);
+        left.filters = [colorMatrix];
         centerClip(left);
         left.scale.x = -1;
 
         let right = new PIXI.extras.MovieClip(rightFrames);
+        right.filters = [colorMatrix];
         centerClip(right);
 
         let frightenedFrames = [];
@@ -150,4 +157,55 @@ function centerClip(clip) {
     clip.anchor.y = 0.5;
     clip.position.x = config.characterAnimationOffset;
     clip.position.y = config.characterAnimationOffset;
+}
+
+/**
+ * Matrices are keyed off of the pure green of the green ghost.
+ */
+function generateColorMatrixValue(input) {
+
+    if (input === 'red') {
+        // red      0xff0000
+        return [
+            0, 1, 0, 0,   0,
+            0, 0, 0, 0,   0,
+            0, 0, 0, 0,   0,
+            0, 0, 0, 0.5, 0
+        ];
+
+    } else if (input === 'pink') {
+        // pink     0xffb9ff
+        return [
+            0, 1,    0, 0,   0,
+            0, 0.72, 0, 0,   0,
+            0, 1,    0, 0,   0,
+            0, 0,    0, 0.5, 0
+        ];
+
+    } else if (input === 'blue') {
+        // blue     0x00ffff
+        return [
+            0, 0, 0,   0, 0,
+            0, 1, 0,   0, 0,
+            0, 1, 0,   0, 0,
+            0, 0, 0, 0.5, 0
+        ]
+
+    } else if (input === 'orange') {
+        // orange   0xffb950
+        return [
+            0, 1,    0, 0,   0,
+            0, 0.73, 0, 0,   0,
+            0, 0.31, 0, 0,   0,
+            0, 0,    0, 0.5, 0
+        ];
+
+    } else { // lower only the alpha
+        return [
+            1, 0, 0,   0, 0,
+            0, 1, 0,   0, 0,
+            0, 0, 1,   0, 0,
+            0, 0, 0, 0.5, 0
+        ];
+    }
 }
