@@ -13,7 +13,7 @@ class Entity {
         // Set using setter to delegate to the animation
         this.x = x;
         this.y = y;
-        this.width = config.wallSize;   // TODO: have an offset for this hit box
+        this.width = config.wallSize;   // TODO: have an offset for this hit box TODO: Maybe not? Seems like it works ok
         this.height = config.wallSize;
 
         this._normalSpeed = 0.0;

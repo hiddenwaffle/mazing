@@ -1,27 +1,44 @@
 'use strict';
 
-const
-    config = require('./config');
+//const
+    //config = require('./config');
 
 class EntityAnimation {
 
     constructor(parentGfx, up, down, left, right, frightened, flashing) {
         this._parentGfx = parentGfx;
+        this._gfx = new PIXI.Container();
+        parentGfx.addChild(this._gfx);
 
         this._up = up;
+        this._gfx.addChild(up);
+
         this._down = down;
+        this._gfx.addChild(down);
+
         this._left = left;
+        this._gfx.addChild(left);
+
         this._right = right;
+        this._gfx.addChild(right);
+
         this._frightened = frightened;
+        this._gfx.addChild(frightened);
+
         this._flashing = flashing;
+        this._gfx.addChild(flashing);
 
         this._directionals  = [up, down, left, right];
         this._allclips      = [up, down, left, right, frightened, flashing];
 
-        this._gfx = new PIXI.Container();
-        parentGfx.addChild(this._gfx);
-
         this._frightTimeLeft = 0;
+
+        //// For debugging the hitbox
+        //let primaryColor = new PIXI.Graphics();
+        //primaryColor.beginFill(0xffffff, 1);
+        //primaryColor.drawRect(0, 0, config.wallSize, config.wallSize);
+        //primaryColor.endFill();
+        //this._gfx.addChild(primaryColor);
     }
 
     start(frightTime, frightFlashes) {
@@ -69,37 +86,48 @@ class EntityAnimation {
     }
 
     changeDirection(direction) {
-        if (this._frightened !== null &&
-            this._flashing !== null &&
-            this._frightTimeLeft != 0) {
-            // Do not show a directional animation if frightened/flashing.
-
-        } else {
+        // Handle stopped.
+        if (direction === '') {
             for (let directional of this._directionals) {
-                directional.visible = false;
-                directional.stop();
+                if (directional.playing) {
+                    directional.stop();
+                    break;
+                }
             }
 
-            switch (direction) {
-                case 'up':
-                    this._up.visible = true;
-                    this._up.play();
-                    break;
-                case 'down':
-                    this._down.visible = true;
-                    this._down.play();
-                    break;
-                case 'left':
-                    this._left.visible = true;
-                    this._left.play();
-                    break;
-                case 'right':
-                    this._right.visible = true;
-                    this._right.play();
-                    break;
-                default:
-                    // Just let whatever is playing play
-                    break;
+        // Otherwise start the correct clip.
+        } else {
+            if (this._frightened !== null &&
+                this._flashing !== null &&
+                this._frightTimeLeft != 0) {
+                // Do not show a directional animation if frightened/flashing.
+
+            } else {
+                for (let directional of this._directionals) {
+                    directional.visible = false;
+                    directional.stop();
+                }
+
+                switch (direction) {
+                    case 'up':
+                        this._up.visible = true;
+                        this._up.play();
+                        break;
+                    case 'down':
+                        this._down.visible = true;
+                        this._down.play();
+                        break;
+                    case 'left':
+                        this._left.visible = true;
+                        this._left.play();
+                        break;
+                    case 'right':
+                        this._right.visible = true;
+                        this._right.play();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
