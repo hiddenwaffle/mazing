@@ -89,6 +89,10 @@ class EntityAnimation {
 
         this._frightened.visible = true;
         this._frightened.gotoAndPlay(0);
+
+        // Reset flashing just in case it is going for some ghosts.
+        this._flashing.visible = false;
+        this._flashing.stop();
     }
 
     stopFrightened() {
