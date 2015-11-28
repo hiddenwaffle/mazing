@@ -1,7 +1,6 @@
 'use strict';
 
 const
-    Animation       = require('./animation'),
     EntityAnimation = require('./entity-animation'),
     eventBus        = require('./event-bus'),
     config          = require('./config');
