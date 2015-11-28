@@ -58,7 +58,7 @@ class LevelEnding {
         if (this._blurTransitionTimeLeft > 0) {
             this._blurTransitionTimeLeft -= elapsed;
 
-            if (this._blurTransitionTimeLeft < 0) {
+            if (this._blurTransitionTimeLeft <= 0) {
                 this._blurTransitionTimeLeft = 0;
                 this._statsWindow.visible = true;
 

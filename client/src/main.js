@@ -1,21 +1,25 @@
 'use strict';
 
-const Game = require('./game');
+PIXI.loader.add('./assets/pac-test.json').load(afterLoadComplete);
 
-let stage = new PIXI.Container();
-let renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0x333333});
+function afterLoadComplete() {
+    const Game = require('./game');
 
-let game = new Game(stage, renderer);
-game.start();
+    let stage = new PIXI.Container();
+    let renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0x333333});
 
-loop();
-function loop() {
-    setTimeout(loop, 16.66);
-    game.step();
-}
+    let game = new Game(stage, renderer);
+    game.start();
 
-animate();
-function animate() {
-    requestAnimationFrame(animate);
-    game.draw();
+    loop();
+    function loop() {
+        setTimeout(loop, 16.66);
+        game.step();
+    }
+
+    animate();
+    function animate() {
+        requestAnimationFrame(animate);
+        game.draw();
+    }
 }
