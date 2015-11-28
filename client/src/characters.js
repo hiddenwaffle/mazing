@@ -26,12 +26,11 @@ class Characters {
             config.startpacmanx,
             config.startpacmany,
             this._characterAnimations.createPacManAnimations(),
-            new MovementStrategy(board, 'doNothing', 'doNothing')
+            new MovementStrategy(board, 'doNothing', 'doNothing'),
+            true
         );
 
         this._ghosts = [];
-
-        let randomMovementStrategy = new MovementStrategy(board, 'random');
 
         this._blinky = new Entity(
             'blinky',
@@ -40,7 +39,7 @@ class Characters {
             config.startghosty,
             this._characterAnimations.createGhostAnimations('red'),
             new MovementStrategy(board, 'blinky', 'random', 27, 1, this._pacman),
-            randomMovementStrategy
+            false
         );
         this._ghosts.push(this._blinky);
 
@@ -51,7 +50,7 @@ class Characters {
             config.startghosty,
             this._characterAnimations.createGhostAnimations('pink'),
             new MovementStrategy(board, 'pinky', 'random', 1, 1, this._pacman),
-            randomMovementStrategy
+            false
         );
         this._ghosts.push(this._pinky);
 
@@ -62,7 +61,7 @@ class Characters {
             config.startghosty,
             this._characterAnimations.createGhostAnimations('blue'),
             new MovementStrategy(board, 'inky', 'random', 27, 30, this._pacman, this._blinky),
-            randomMovementStrategy
+            false
         );
         this._ghosts.push(this._inky);
 
@@ -73,7 +72,7 @@ class Characters {
             config.startghosty,
             this._characterAnimations.createGhostAnimations('orange'),
             new MovementStrategy(board, 'clyde', 'random', 1, 30, this._pacman),
-            randomMovementStrategy
+            false
         );
         this._ghosts.push(this._clyde);
     }

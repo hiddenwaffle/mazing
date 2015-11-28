@@ -5,10 +5,13 @@ const
 
 class Entity {
 
-    constructor(name, board, x, y, animation, movementStrategy) {
+    constructor(name, board, x, y, animation, movementStrategy, turnAcceleration) {
         this._name = name;
         this._board = board;
         this._animation = animation;
+
+        this._turnAcceleration = turnAcceleration;
+        this._turnAccelerationTimeLeft = 0;
 
         // Set using setter to delegate to the animation
         this.x = x;
@@ -65,6 +68,11 @@ class Entity {
             speed = this._frightSpeed;
         } else {
             speed = this._normalSpeed;
+        }
+
+        if (this._turnAccelerationTimeLeft > 0) {
+            this._turnAccelerationTimeLeft -= elapsed;
+            speed = speed * config.pacmanTurnSpeedIncrease;
         }
 
         for (let v = 0; v < elapsed; v++) {
@@ -227,6 +235,12 @@ class Entity {
     }
 
     _switchCurrentDirection(direction) {
+
+        let previousDirection = this._currentDirection;
+        if (this._turnAcceleration && isTurn(previousDirection, direction)) {
+            this._turnAccelerationTimeLeft = config.pacmanTurnSpeedLength;
+        }
+
         this._animation.changeDirection(direction);
         this._currentDirection = direction;
     }
@@ -247,4 +261,11 @@ function oppositeOfDirection(direction) {
     }
 
     // TODO: Does this need a default return case?
+}
+
+/**
+ * Returns true if going from d1 to d2 is not a reversal of direction.
+ */
+function isTurn(d1, d2) {
+    return d2 !== oppositeOfDirection(d1);
 }

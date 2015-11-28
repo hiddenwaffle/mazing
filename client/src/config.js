@@ -13,7 +13,9 @@ class Config {
         this.startghostx = 13 * this.wallSize + (this.wallSize / 2);
         this.startghosty = 11 * this.wallSize;
 
-        this.topSpeed = 0.16;
+        this.topSpeed = 0.16;               // px/ms
+        this.pacmanTurnSpeedIncrease = 2;   // double speed
+        this.pacmanTurnSpeedLength = 50;    // ms; this is about 3 frames
 
         this.flashSpeed = 250; // ms wait for each frame
 
