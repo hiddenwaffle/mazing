@@ -29,14 +29,18 @@ class Animation {
         // TODO: Necessary? MovieClips use the requestAnimationFrame timer.
     }
 
-    showBlue(visible) {
-        if (visible) {
-            this._blue.gotoAndPlay(0);
-        } else {
-            this._blue.stop();
-        }
+    changeDirection() {
+        // FIXME: Do nothing
+    }
 
-        this._blue.visible = visible;
+    startFrightened() {
+        this._blue.gotoAndPlay(0);
+        this._blue.visible = true;
+    }
+
+    stopFrightened() {
+        this._blue.stop();
+        this._blue.visible = false;
     }
 
     pause() {

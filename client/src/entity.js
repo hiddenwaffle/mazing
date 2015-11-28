@@ -39,7 +39,9 @@ class Entity {
         this._normalSpeed = config.topSpeed * normalSpeed;
         this._frightSpeed = config.topSpeed * frightSpeed;
         this._mode = mode;
-        this._currentDirection = this._requestedDirection = requestedDirection;
+
+        this._requestedDirection = requestedDirection;
+        this._switchCurrentDirection(requestedDirection);
 
         this._animation.start(frightTime, frightFlashes);
     }
@@ -51,7 +53,9 @@ class Entity {
             this._reverseNeeded = false;
 
             let newDirection = oppositeOfDirection(this._currentDirection);
-            this._currentDirection = this._requestedDirection = newDirection;
+            this._requestedDirection = newDirection;
+            this._switchCurrentDirection(newDirection);
+
             this.lastTileAIx = -1;
             this.lastTileAIy = -1;
         }
@@ -70,12 +74,12 @@ class Entity {
 
     signalFrightened() {
         this._frightened = true;
-        this._animation.showBlue(true);
+        this._animation.startFrightened();
     }
 
     removeFrightIfAny() {
         this._frightened = false;
-        this._animation.showBlue(false);
+        this._animation.stopFrightened();
     }
 
     /**
@@ -215,11 +219,16 @@ class Entity {
                 this.height
             );
             if (changeDirectionResult.success) {
-                this._currentDirection = this._requestedDirection;
+                this._switchCurrentDirection(this._requestedDirection);
             } else {
                 // wasn't able to change to this direction immediately
             }
         }
+    }
+
+    _switchCurrentDirection(direction) {
+        this._animation.changeDirection(direction);
+        this._currentDirection = direction;
     }
 }
 

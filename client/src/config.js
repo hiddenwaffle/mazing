@@ -5,7 +5,7 @@ class Config {
     constructor() {
         this.wallSize   = 16;   // must be even
         this.dotSize    = 4;    // must be even
-        this.characterAnimationOffset = -7; // how far left and up the top-left of the animation is ((30 - 16) / 2)
+        this.characterAnimationOffset = 7; // how far left and up the top-left of the animation is ((30 - 16) / 2)
 
         this.startpacmanx = 13 * this.wallSize + (this.wallSize / 2);
         this.startpacmany = 23 * this.wallSize;
