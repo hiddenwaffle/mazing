@@ -5,7 +5,7 @@
 
 class EntityAnimation {
 
-    constructor(parentGfx, up, down, left, right, frightened, flashing) {
+    constructor(parentGfx, up, down, left, right, frightened, flashing, neverShowFright=false) {
         this._parentGfx = parentGfx;
         this._gfx = new PIXI.Container();
         parentGfx.addChild(this._gfx);
@@ -31,23 +31,35 @@ class EntityAnimation {
         this._directionals  = [up, down, left, right];
         this._allclips      = [up, down, left, right, frightened, flashing];
 
+        this._neverShowFright = neverShowFright;
+        this._frightTime = 0;
+        this._frightFlashes = 0;
         this._frightTimeLeft = 0;
-
-        //// For debugging the hitbox
-        //let primaryColor = new PIXI.Graphics();
-        //primaryColor.beginFill(0xffffff, 1);
-        //primaryColor.drawRect(0, 0, config.wallSize, config.wallSize);
-        //primaryColor.endFill();
-        //this._gfx.addChild(primaryColor);
     }
 
     start(frightTime, frightFlashes) {
+        this.stopFrightened(); // hide the fright clips when starting
+
         this._frightTime = frightTime;
         this._frightFlashes = frightFlashes;
     }
 
+    /**
+     * Needed to see if the ghost is frightened and needs to start flashing.
+     */
     step(elapsed) {
-        // TODO: See if frightened needs to transition to flashing or flashing needs to stop
+        if (this._frightTimeLeft > 0) {
+            this._frightTimeLeft -= elapsed;
+
+            let solidBlueTime = this._frightFlashes * 500;
+            if (this._frightTimeLeft <= solidBlueTime && this._flashing.visible == false) {
+                this._frightened.visible = false;
+                this._frightened.stop();
+
+                this._flashing.visible = true;
+                this._flashing.gotoAndPlay(0);
+            }
+        }
     }
 
     stop() {
@@ -73,11 +85,15 @@ class EntityAnimation {
     }
 
     startFrightened() {
+        this._frightTimeLeft = this._frightTime;
+
         this._frightened.visible = true;
         this._frightened.gotoAndPlay(0);
     }
 
     stopFrightened() {
+        this._frightTimeLeft = 0;
+
         this._frightened.visible = false;
         this._frightened.stop();
 
@@ -97,10 +113,8 @@ class EntityAnimation {
 
         // Otherwise start the correct clip.
         } else {
-            if (this._frightened !== null &&
-                this._flashing !== null &&
-                this._frightTimeLeft != 0) {
-                // Do not show a directional animation if frightened/flashing.
+            if (this._frightTimeLeft != 0 && this._neverShowFright === false) {
+                // Do not show a directional animation if frightened/flashing unless this is pacman
 
             } else {
                 for (let directional of this._directionals) {

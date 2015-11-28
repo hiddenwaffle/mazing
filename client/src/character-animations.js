@@ -45,34 +45,88 @@ class CharacterAnimations {
         }
 
         let up = new PIXI.extras.MovieClip(frames);
-        up.anchor.x = 0.5;
-        up.anchor.y = 0.5;
-        up.position.x = config.characterAnimationOffset;
-        up.position.y = config.characterAnimationOffset;
+        centerClip(up);
         up.rotation = Math.PI * (3/2);
 
         let down = new PIXI.extras.MovieClip(frames);
-        down.anchor.x = 0.5;
-        down.anchor.y = 0.5;
-        down.position.x = config.characterAnimationOffset;
-        down.position.y = config.characterAnimationOffset;
+        centerClip(down);
         down.rotation = Math.PI / 2;
 
         let left = new PIXI.extras.MovieClip(frames);
-        left.anchor.x = 0.5;
-        left.anchor.y = 0.5;
-        left.position.x = config.characterAnimationOffset;
-        left.position.y = config.characterAnimationOffset;
+        centerClip(left);
         left.scale.x = -1;
 
         let right = new PIXI.extras.MovieClip(frames);
-        right.anchor.x = 0.5;
-        right.anchor.y = 0.5;
-        right.position.x = config.characterAnimationOffset;
-        right.position.y = config.characterAnimationOffset;
+        centerClip(right);
 
         let frightened = new PIXI.extras.MovieClip([PIXI.Texture.EMPTY]);
         let flashing = new PIXI.extras.MovieClip([PIXI.Texture.EMPTY]);
+
+        let animation = new EntityAnimation(
+            this._gfx,
+            up,
+            down,
+            left,
+            right,
+            frightened,
+            flashing,
+            true
+        );
+
+        this._animations.push(animation);
+        return animation;
+    }
+
+    createGhostAnimations(ghostNormalColor) {
+        let upFrames = [];
+        for (let filename of ['ghost-green-up1.png', 'ghost-green-up2.png', 'ghost-green-up3.png']) {
+            upFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
+        }
+
+        let up = new PIXI.extras.MovieClip(upFrames);
+        centerClip(up);
+
+        let downFrames = [];
+        for (let filename of ['ghost-green-down1.png', 'ghost-green-down2.png', 'ghost-green-down3.png']) {
+            downFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
+        }
+
+        let down = new PIXI.extras.MovieClip(downFrames);
+        centerClip(down);
+
+        let rightFrames = [];
+        for (let filename of ['ghost-green-right1.png', 'ghost-green-right2.png', 'ghost-green-right3.png']) {
+            rightFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
+        }
+
+        let left = new PIXI.extras.MovieClip(rightFrames);
+        centerClip(left);
+        left.scale.x = -1;
+
+        let right = new PIXI.extras.MovieClip(rightFrames);
+        centerClip(right);
+
+        let frightenedFrames = [];
+        for (let filename of ['ghost-frightened1.png', 'ghost-frightened2.png', 'ghost-frightened3.png']) {
+            frightenedFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
+        }
+
+        let frightened = new PIXI.extras.MovieClip(frightenedFrames);
+        centerClip(frightened);
+
+        let flashingFrames = [];
+        for (let filename of [
+            'ghost-frightened1.png',
+            'ghost-frightened2.png',
+            'ghost-frightened3.png',
+            'ghost-flash1.png',
+            'ghost-flash2.png',
+            'ghost-flash3.png']) {
+            flashingFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 83.34 });
+        }
+
+        let flashing = new PIXI.extras.MovieClip(flashingFrames);
+        centerClip(flashing);
 
         let animation = new EntityAnimation(
             this._gfx,
@@ -87,12 +141,13 @@ class CharacterAnimations {
         this._animations.push(animation);
         return animation;
     }
-
-    createGhostAnimations(ghostNormalColor) {
-        let animation = new Animation(this._gfx, ghostNormalColor, ghostFrightenedColor);
-        this._animations.push(animation);
-        return animation;
-    }
 }
 
 module.exports = CharacterAnimations;
+
+function centerClip(clip) {
+    clip.anchor.x = 0.5;
+    clip.anchor.y = 0.5;
+    clip.position.x = config.characterAnimationOffset;
+    clip.position.y = config.characterAnimationOffset;
+}
