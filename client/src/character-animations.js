@@ -165,46 +165,42 @@ function centerClip(clip) {
 function generateColorMatrixValue(input) {
 
     if (input === 'red') {
-        // red      0xff0000
         return [
-            0, 1, 0, 0,   0,
+            1, 1, 0, 0,   0,
             0, 0, 0, 0,   0,
-            0, 0, 0, 0,   0,
+            0, 0, 1, 0,   0,
             0, 0, 0, 0.5, 0
         ];
 
     } else if (input === 'pink') {
-        // pink     0xffb9ff
         return [
-            0, 1,    0, 0,   0,
+            1, 1,    0, 0,   0,
             0, 0.72, 0, 0,   0,
-            0, 1,    0, 0,   0,
+            0, 1,    1, 0,   0,
             0, 0,    0, 0.5, 0
         ];
 
     } else if (input === 'blue') {
-        // blue     0x00ffff
         return [
-            0, 0, 0,   0, 0,
-            0, 1, 0,   0, 0,
-            0, 1, 0,   0, 0,
+            1, 0, 0, 0,   0,
+            0, 1, 0, 0,   0,
+            0, 1, 1, 0,   0,
             0, 0, 0, 0.5, 0
         ]
 
     } else if (input === 'orange') {
-        // orange   0xffb950
         return [
-            0, 1,    0, 0,   0,
+            1, 1,    0, 0,   0,
             0, 0.73, 0, 0,   0,
-            0, 0.31, 0, 0,   0,
+            0, 0.31, 1, 0,   0,
             0, 0,    0, 0.5, 0
         ];
 
     } else { // lower only the alpha
         return [
-            1, 0, 0,   0, 0,
-            0, 1, 0,   0, 0,
-            0, 0, 1,   0, 0,
+            1, 0, 0, 0,   0,
+            0, 1, 0, 0,   0,
+            0, 0, 1, 0,   0,
             0, 0, 0, 0.5, 0
         ];
     }
