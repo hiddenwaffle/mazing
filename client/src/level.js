@@ -40,9 +40,9 @@ class Level {
     }
 
     start() {
-        this._pause.start();
         this._lvlSpec = config.levelSpecifications[this.number];
         this._characters.start(this._lvlSpec);
+        this._pause.start();
     }
 
     stop() {
