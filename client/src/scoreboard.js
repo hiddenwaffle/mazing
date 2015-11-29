@@ -185,7 +185,9 @@ class Row {
 
     _updateRatioGfx() {
         let ratio = this.ratio;
-        if (ratio !== Number.MAX_SAFE_INTEGER) { // means zero deaths
+        if (ratio === Number.MAX_SAFE_INTEGER) { // means zero deaths
+            this._ratioGfx.text = "*";
+        } else {
             this._ratioGfx.text = ratio.toFixed(2);
         }
     }
