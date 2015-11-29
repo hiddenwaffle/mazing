@@ -3,7 +3,8 @@
 const
     EntityAnimation = require('./entity-animation'),
     eventBus        = require('./event-bus'),
-    config          = require('./config');
+    config          = require('./config'),
+    Util            = require('./util');
 
 const
     ghostFrightenedColor    = 0x5555ff;
@@ -78,7 +79,7 @@ class CharacterAnimations {
 
     createGhostAnimations(color) {
         let colorMatrix = new PIXI.filters.ColorMatrixFilter();
-        colorMatrix.matrix = generateColorMatrixValue(color);
+        colorMatrix.matrix = Util.generateColorMatrixValue(color);
 
         let upFrames = [];
         for (let filename of ['ghost-green-up1.png', 'ghost-green-up2.png', 'ghost-green-up3.png']) {
@@ -156,51 +157,4 @@ function centerClip(clip) {
     clip.anchor.y = 0.5;
     clip.position.x = config.characterAnimationOffset;
     clip.position.y = config.characterAnimationOffset;
-}
-
-/**
- * Matrices are keyed off of the pure green of the green ghost.
- */
-function generateColorMatrixValue(input) {
-
-    if (input === 'red') {
-        return [
-            1, 1, 0, 0,   0,
-            0, 0, 0, 0,   0,
-            0, 0, 1, 0,   0,
-            0, 0, 0, 0.5, 0
-        ];
-
-    } else if (input === 'pink') {
-        return [
-            1, 1,    0, 0,   0,
-            0, 0.72, 0, 0,   0,
-            0, 1,    1, 0,   0,
-            0, 0,    0, 0.5, 0
-        ];
-
-    } else if (input === 'blue') {
-        return [
-            1, 0, 0, 0,   0,
-            0, 1, 0, 0,   0,
-            0, 1, 1, 0,   0,
-            0, 0, 0, 0.5, 0
-        ]
-
-    } else if (input === 'orange') {
-        return [
-            1, 1,    0, 0,   0,
-            0, 0.73, 0, 0,   0,
-            0, 0.31, 1, 0,   0,
-            0, 0,    0, 0.5, 0
-        ];
-
-    } else { // lower only the alpha
-        return [
-            1, 0, 0, 0,   0,
-            0, 1, 0, 0,   0,
-            0, 0, 1, 0,   0,
-            0, 0, 0, 0.5, 0
-        ];
-    }
 }

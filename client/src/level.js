@@ -5,7 +5,8 @@ const
     config      = require('./config'),
     Characters  = require('./characters'),
     LongTasks   = require('./long-tasks'),
-    Pause       = require('./pause');
+    Pause       = require('./pause'),
+    Scoreboard  = require('./scoreboard');
 
 class Level {
 
@@ -37,12 +38,14 @@ class Level {
         this._lvlSpec = null;
 
         this._pause = new Pause(stage, input);
+        this._scoreboard = new Scoreboard(stage);
     }
 
     start() {
         this._lvlSpec = config.levelSpecifications[this.number];
         this._characters.start(this._lvlSpec);
         this._pause.start();
+        this._scoreboard.start();
     }
 
     stop() {

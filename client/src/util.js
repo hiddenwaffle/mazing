@@ -35,3 +35,50 @@ exports.getRandomIntInclusive = function (min, max) {
 exports.qs = function (a, b) {
     return (a * a) + (b * b);
 };
+
+/**
+ * Matrices are keyed off of the pure green of the green ghost.
+ */
+exports.generateColorMatrixValue = function (input) {
+
+    if (input === 'red') {
+        return [
+            1, 1, 0, 0,   0,
+            0, 0, 0, 0,   0,
+            0, 0, 1, 0,   0,
+            0, 0, 0, 0.5, 0
+        ];
+
+    } else if (input === 'pink') {
+        return [
+            1, 1,    0, 0,   0,
+            0, 0.72, 0, 0,   0,
+            0, 1,    1, 0,   0,
+            0, 0,    0, 0.5, 0
+        ];
+
+    } else if (input === 'blue') {
+        return [
+            1, 0, 0, 0,   0,
+            0, 1, 0, 0,   0,
+            0, 1, 1, 0,   0,
+            0, 0, 0, 0.5, 0
+        ]
+
+    } else if (input === 'orange') {
+        return [
+            1, 1,    0, 0,   0,
+            0, 0.73, 0, 0,   0,
+            0, 0.31, 1, 0,   0,
+            0, 0,    0, 0.5, 0
+        ];
+
+    } else { // lower only the alpha
+        return [
+            1, 0, 0, 0,   0,
+            0, 1, 0, 0,   0,
+            0, 0, 1, 0,   0,
+            0, 0, 0, 0.5, 0
+        ];
+    }
+}

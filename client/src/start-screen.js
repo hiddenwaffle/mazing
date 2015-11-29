@@ -12,7 +12,7 @@ class StartScreen {
         this._stage = stage;
         this._input = input;
 
-        this._blurTransitionTimeLeft = 0;
+        this._pixelateTransitionTimeLeft = 0;
 
         this._logo = new PIXI.Container();
         stage.addChild(this._logo);
@@ -30,25 +30,25 @@ class StartScreen {
     }
 
     start() {
-        this._blurTransitionTimeLeft = totalTime;
+        this._pixelateTransitionTimeLeft = totalTime;
     }
 
     step(elapsed) {
 
         // Kinda bad to do it this way, but will proably be replaced at some point.
-        let pctDone = this._blurTransitionTimeLeft / totalTime;
+        let pctDone = this._pixelateTransitionTimeLeft / totalTime;
         if (this._input.isAnyKeyDownAndUnhandled() && pctDone > 0.2) {
-            this._blurTransitionTimeLeft = totalTime * 0.2;
+            this._pixelateTransitionTimeLeft = totalTime * 0.2;
         }
 
-        this._blurTransitionTimeLeft -= elapsed;
-        if (this._blurTransitionTimeLeft <= 0) {
+        this._pixelateTransitionTimeLeft -= elapsed;
+        if (this._pixelateTransitionTimeLeft <= 0) {
             let idx = this._stage.getChildIndex(this._logo);
             this._stage.removeChildAt(idx);
             eventBus.fire({ name: 'event.startscreen.end' });
 
         } else {
-            this._logo.alpha = calculateAlpha(this._blurTransitionTimeLeft, totalTime);
+            this._logo.alpha = calculateAlpha(this._pixelateTransitionTimeLeft, totalTime);
         }
     }
 }

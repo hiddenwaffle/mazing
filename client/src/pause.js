@@ -24,7 +24,7 @@ class Pause {
         };
         this._instructions = new PIXI.Text('Paused\n\nPress any key to continue', style);
         this._instructions.x = 520;
-        this._instructions.y = 150;
+        this._instructions.y = 100;
         this._instructions.visible = false;
 
         this.filter = new PIXI.filters.SepiaFilter();
@@ -43,7 +43,7 @@ class Pause {
     }
 
     stop() {
-        //
+        // TODO: Remove and destroy graphics?
     }
 
     step(elapsed) {
