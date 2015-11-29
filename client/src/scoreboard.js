@@ -1,7 +1,8 @@
 'use strict';
 
 const
-    Util = require('./util');
+    eventBus    = require('./event-bus'),
+    Util        = require('./util');
 
 const
     HEADER_Y = 10,
@@ -50,10 +51,22 @@ class Scoreboard {
     }
 
     start() {
-        //
+        this._pacmanDeathListener = (args) => {
+            this._handlePacmanDeath(args.ghostName);
+        };
+        eventBus.register('event.action.death.pacman', this._pacmanDeathListener);
+
+        this._ghostDeathListener = (args) => {
+            this._handleGhostDeath(args.ghostName);
+        };
+        eventBus.register('event.action.death.ghost', this._ghostDeathListener);
     }
 
     stop() {
+        eventBus.unregister('event.action.death.pacman', this._pacmanDeathListener);
+        eventBus.unregister('event.action.death.ghost', this._ghostDeathListener);
+
+        // Clean up after graphics
         let idx = this._stage.getChildIndex(this._gfx);
         this._stage.removeChildAt(idx);
         this._gfx.destroy();
@@ -62,6 +75,30 @@ class Scoreboard {
     _createRow(idx, name, icon) {
         let row = new Row(name, this._gfx, this._textStyle, icon);
         row.y = HEADER_Y + ((idx + 1) * ROW_Y_OFFSET);
+
+        return row;
+    }
+
+    _handlePacmanDeath(ghostName) {
+        for (let row of this._rows) {
+            if (row.name === 'pacman') {
+                row.incrementDeaths();
+
+            } else if (row.name === ghostName) {
+                row.incrementKills();
+            }
+        }
+    }
+
+    _handleGhostDeath(ghostName) {
+        for (let row of this._rows) {
+            if (row.name === 'pacman') {
+                row.incrementKills();
+
+            } else if (row.name === ghostName) {
+                row.incrementDeaths();
+            }
+        }
     }
 }
 
@@ -102,11 +139,13 @@ class Row {
     incrementKills() {
         this._kills += 1;
         this._killsGfx.text = this._kills;
+        this._updateRatioGfx();
     }
 
-    decrementKills() {
+    incrementDeaths() {
         this._deaths += 1;
         this._deathsGfx.text = this._deaths;
+        this._updateRatioGfx();
     }
 
     get name() {
@@ -126,6 +165,13 @@ class Row {
 
     set y(value) {
         this._gfx.y = value;
+    }
+
+    _updateRatioGfx() {
+        let ratio = this.ratio;
+        if (ratio !== -1) { // -1 means zero deaths
+            this._ratioGfx.text = ratio.toFixed(2);
+        }
     }
 }
 

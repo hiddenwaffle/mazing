@@ -143,6 +143,10 @@ class Entity {
         this._reverseNeeded = value;
     }
 
+    get name() {
+        return this._name;
+    }
+
     _milliStep(speed) {
         this._moveInCurrentDirection(speed);
         this._runAI();

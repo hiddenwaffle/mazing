@@ -7,7 +7,8 @@ const
     Death               = require('./death'),
     config              = require('./config'),
     Util                = require('./util'),
-    LongTasks           = require('./long-tasks');
+    LongTasks           = require('./long-tasks'),
+    eventBus            = require('./event-bus');
 
 class Characters {
 
@@ -223,7 +224,7 @@ class Characters {
                     this._killGhost(ghost);
                     return true;
                 } else {
-                    this._killPacman();
+                    this._killPacman(ghost);
                     return true;
                 }
             }
@@ -237,15 +238,19 @@ class Characters {
         this._longTasksManager.addTask(new LongTasks.TimeoutTask(500, () => {
             death.respawn();
         }));
+
+        eventBus.fire({ name: 'event.action.death.ghost', args: { ghostName: ghost.name } });
     }
 
-    _killPacman() {
+    _killPacman(ghost) {
         let death = new Death.Pacman(this._pacman, this._ghosts, this._board);
         death.start();
 
         this._longTasksManager.addTask(new LongTasks.TimeoutTask(1000, () => {
             death.respawn();
         }));
+
+        eventBus.fire({ name: 'event.action.death.pacman', args: { ghostName: ghost.name } });
     }
 }
 

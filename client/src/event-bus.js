@@ -41,7 +41,7 @@ class EventBus {
      * @param event an object with structure: { name: 'eventname', args: [1,2,3,4] }
      */
     fire(event) {
-        let {name, args} = event;
+        let { name, args } = event;
 
         if (this._handlersMap.has(name)) {
             let handlers = this._handlersMap.get(name);
