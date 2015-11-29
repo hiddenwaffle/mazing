@@ -54,7 +54,9 @@ class Scoreboard {
     }
 
     stop() {
-        // TODO: Remove and destroy graphics?
+        let idx = this._stage.getChildIndex(this._gfx);
+        this._stage.removeChildAt(idx);
+        this._gfx.destroy();
     }
 
     _createRow(idx, name, icon) {
