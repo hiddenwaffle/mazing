@@ -50,6 +50,8 @@ class Level {
 
     stop() {
         this._characters.stop();
+        this._pause.stop();
+        this._scoreboard.stop();
 
         // TODO: In next game, make this more encapsulated
         let idx = this._stage.getChildIndex(this._gfx);

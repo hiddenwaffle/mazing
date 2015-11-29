@@ -43,7 +43,9 @@ class Pause {
     }
 
     stop() {
-        // TODO: Remove and destroy graphics?
+        let idx = this._stage.getChildIndex(this._instructions);
+        this._stage.removeChildAt(idx);
+        this._instructions.destroy();
     }
 
     step(elapsed) {
