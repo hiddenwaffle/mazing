@@ -6,7 +6,7 @@ const
 
 const
     TOTAL_BLUR_TRANSITION_TIME = 1000, // ms
-    BLUR_INTENSITY = 14;
+    BLUR_INTENSITY = 100;
 
 class LevelEnding {
 
