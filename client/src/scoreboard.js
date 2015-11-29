@@ -74,7 +74,7 @@ class Scoreboard {
 
     _createRow(idx, name, icon) {
         let row = new Row(name, this._gfx, this._textStyle, icon);
-        row.y = HEADER_Y + ((idx + 1) * ROW_Y_OFFSET);
+        row.y = calculateRowY(idx);
 
         return row;
     }
@@ -88,6 +88,8 @@ class Scoreboard {
                 row.incrementKills();
             }
         }
+
+        this._resortRows();
     }
 
     _handleGhostDeath(ghostName) {
@@ -99,8 +101,22 @@ class Scoreboard {
                 row.incrementDeaths();
             }
         }
+
+        this._resortRows();
+    }
+
+    _resortRows() {
+        this._rows.sort(sortByStanding);
+
+        // TODO: Animate this
+        for (let idx = 0; idx < this._rows.length; idx++) {
+            let row = this._rows[idx];
+            row.y = calculateRowY(idx);
+        }
     }
 }
+
+module.exports = Scoreboard;
 
 class Row {
 
@@ -128,14 +144,6 @@ class Row {
         this._gfx.addChild(icon);
     }
 
-    reset() {
-        this._kills = 0;
-        this._killsGfx.text = '';
-
-        this._deaths = 0;
-        this._deathsGfx.text = '';
-    }
-
     incrementKills() {
         this._kills += 1;
         this._killsGfx.text = this._kills;
@@ -153,14 +161,22 @@ class Row {
     }
 
     /**
-     * @returns {number} K/D, -1 means zero deaths
+     * @returns {number} K/D, Number.MAX_SAFE_INTEGER means zero deaths
      */
     get ratio() {
         if (this._deaths !== 0) {
             return this._kills / this._deaths;
         } else {
-            return -1;
+            return Number.MAX_SAFE_INTEGER;
         }
+    }
+
+    get kills() {
+        return this._kills;
+    }
+
+    get deaths() {
+        return this._deaths;
     }
 
     set y(value) {
@@ -169,13 +185,11 @@ class Row {
 
     _updateRatioGfx() {
         let ratio = this.ratio;
-        if (ratio !== -1) { // -1 means zero deaths
+        if (ratio !== Number.MAX_SAFE_INTEGER) { // means zero deaths
             this._ratioGfx.text = ratio.toFixed(2);
         }
     }
 }
-
-module.exports = Scoreboard;
 
 function createPacmanIcon() {
     let texture = PIXI.Texture.fromFrame('pacman2.png');
@@ -197,4 +211,54 @@ function createGhostIcon(color) {
     ghostIcon.filters = [colorMatrix];
 
     return ghostIcon;
+}
+
+function calculateRowY(idx) {
+    return HEADER_Y + ((idx + 1) * ROW_Y_OFFSET);
+}
+
+Window.testThing = function() {
+    let array = [
+        { name: 'pacman',  ratio:                       0, kills: 0, deaths:  1 },
+        { name: 'blinky',  ratio: Number.MAX_SAFE_INTEGER, kills: 2, deaths:  0 },
+        { name: 'inky  ',  ratio: Number.MAX_SAFE_INTEGER, kills: 0, deaths:  0 },
+        { name: 'clyde ',  ratio: Number.MAX_SAFE_INTEGER, kills: 0, deaths:  0 },
+        { name: 'pinky ',  ratio: Number.MAX_SAFE_INTEGER, kills: 1, deaths:  0 },
+    ];
+
+    array.sort(sortByStanding);
+
+    for (let e of array) {
+        console.log(e.name + ' ' + e.ratio + ' ' + e.kills + ' ' + e.deaths);
+    }
+};
+
+/**
+ * Sort by highest ratio first, most kills second, fewest deaths last.
+ * Any rows without Ks or Ds should appear last.
+ */
+function sortByStanding(a, b) {
+    let aRatio, bRatio;
+
+    if (a.kills === 0 && a.deaths === 0) {
+        aRatio = -1;
+    } else {
+        aRatio = a.ratio;
+    }
+
+    if (b.kills === 0 && b.deaths === 0) {
+        bRatio = -1;
+    } else {
+        bRatio = b.ratio;
+    }
+
+    if (aRatio !== bRatio) {
+        return bRatio - aRatio;
+    } else {
+        if (a.kills !== b.kills) {
+            return b.kills - a.kills;
+        } else {
+            return a.deaths - b.deaths;
+        }
+    }
 }
