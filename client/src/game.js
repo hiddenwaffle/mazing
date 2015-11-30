@@ -112,7 +112,7 @@ class Game {
                 } else {
                     this._levelNumber = 0;
                 }
-                this._level = new Level(this._levelNumber, this._input, this._stage);
+                this._level = new Level(this._levelNumber, this._input, this._stage, this._levelEnding);
                 this._level.start();
                 break;
 

@@ -18,7 +18,7 @@ class Scoreboard {
 
         this._gfx = new PIXI.Container();
         this._gfx.x = 540;
-        this._gfx.y = 350;
+        this._gfx.y = 390;
         stage.addChild(this._gfx);
 
         this._textStyle = {
@@ -70,6 +70,10 @@ class Scoreboard {
         let idx = this._stage.getChildIndex(this._gfx);
         this._stage.removeChildAt(idx);
         this._gfx.destroy();
+    }
+
+    get gfx() {
+        return this._gfx; // for level ending
     }
 
     _createRow(idx, name, icon) {

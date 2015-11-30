@@ -15,7 +15,7 @@ class Level {
      * @param input
      * @param stage
      */
-    constructor(number, input, stage) {
+    constructor(number, input, stage, levelEnding) {
         this.number = number;
         this._input = input;
         this._stage = stage;
@@ -39,6 +39,7 @@ class Level {
 
         this._pause = new Pause(stage, input);
         this._scoreboard = new Scoreboard(stage);
+        levelEnding.scoreboard = this._scoreboard;
     }
 
     start() {
