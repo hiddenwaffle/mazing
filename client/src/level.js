@@ -8,6 +8,9 @@ const
     Pause       = require('./pause'),
     Scoreboard  = require('./scoreboard');
 
+const
+    eventBus    = require('./event-bus');
+
 class Level {
 
     /**
@@ -47,6 +50,8 @@ class Level {
         this._characters.start(this._lvlSpec);
         this._pause.start();
         this._scoreboard.start();
+
+        eventBus.fire({ name: 'event.level.start', args: { levelNumber: this.number } });
     }
 
     stop() {

@@ -8,9 +8,13 @@ const
     GameEnding  = require('./game-ending');
 
 const
+    stats       = require('./stats'),
     eventBus    = require('./event-bus');
 
-Window.meow = () => { eventBus.fire({ name: 'event.level.end' }); };
+Window.meow = () => {
+    eventBus.fire({ name: 'event.level.end' });
+    eventBus.fire({ name: 'event.level.ending.lastlevel' });
+};
 
 class Game {
 
@@ -34,6 +38,7 @@ class Game {
         document.body.appendChild(this._renderer.view);
 
         this._input.start();
+        stats.start();
 
         eventBus.register('event.startscreen.end', () => {
             this._switchState('level-starting');
