@@ -17,17 +17,17 @@ class LevelEnding {
 
         this._blurTransitionTimeLeft = 0;
 
-        this._statsWindow = new PIXI.Container();
-        this._statsWindow.z = 10; // custom property
-        this._statsWindow.x = 220;
-        this._statsWindow.y = 96;
-        this._statsWindow.visible = false;
-        this._stage.addChild(this._statsWindow);
+        this._gfx = new PIXI.Container();
+        this._gfx.z = 10; // custom property
+        this._gfx.x = 220;
+        this._gfx.y = 96;
+        this._gfx.visible = false;
+        this._stage.addChild(this._gfx);
 
         let background = new PIXI.Graphics();
         background.beginFill(0x333333, 0.95);
         background.drawRect(0, 0, 390, 320);
-        this._statsWindow.addChild(background);
+        this._gfx.addChild(background);
 
         let style = {
             font: '36px Arial',
@@ -37,7 +37,7 @@ class LevelEnding {
         this._title = new PIXI.Text('', style);
         this._title.x = 36;
         this._title.y = 48;
-        this._statsWindow.addChild(this._title);
+        this._gfx.addChild(this._title);
 
         this._scoreboard = null;
     }
@@ -64,7 +64,7 @@ class LevelEnding {
         this._scoreboardSnapshot = new PIXI.Sprite(scoreboardTexture);
         this._scoreboardSnapshot.x = 90;
         this._scoreboardSnapshot.y = 110;
-        this._statsWindow.addChild(this._scoreboardSnapshot);
+        this._gfx.addChild(this._scoreboardSnapshot);
     }
 
     step(elapsed) {
@@ -82,7 +82,7 @@ class LevelEnding {
 
             if (this._blurTransitionTimeLeft <= 0) {
                 this._blurTransitionTimeLeft = 0;
-                this._statsWindow.visible = true;
+                this._gfx.visible = true;
 
             } else {
                 this._blurFilter.blur = BLUR_INTENSITY - ((this._blurTransitionTimeLeft / TOTAL_BLUR_TRANSITION_TIME) * BLUR_INTENSITY);
@@ -91,7 +91,7 @@ class LevelEnding {
     }
 
     _stepStatsWindow(elapsed) {
-        if (this._statsWindow.visible) {
+        if (this._gfx.visible) {
             if (this._input.isAnyKeyDownAndUnhandled()) {
                 this._stop();
             }
@@ -99,15 +99,15 @@ class LevelEnding {
     }
 
     _stop() {
-        this._statsWindow.visible = false;
+        this._gfx.visible = false;
 
         this._snapshotSprite.filters = null;
 
         let idx = this._stage.getChildIndex(this._snapshotSprite);
         this._stage.removeChildAt(idx);
 
-        let idx2 = this._statsWindow.getChildIndex(this._scoreboardSnapshot);
-        this._statsWindow.removeChildAt(idx2);
+        let idx2 = this._gfx.getChildIndex(this._scoreboardSnapshot);
+        this._gfx.removeChildAt(idx2);
 
         // TODO: destroy graphics?
 

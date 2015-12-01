@@ -43,11 +43,11 @@ class Scoreboard {
         this._gfx.addChild(this._headerDeaths);
 
         this._rows = [];
-        this._rows.push(this._createRow(0, 'pacman',    createPacmanIcon()));
-        this._rows.push(this._createRow(1, 'blinky',    createGhostIcon('red')));
-        this._rows.push(this._createRow(2, 'pinky',     createGhostIcon('pink')));
-        this._rows.push(this._createRow(3, 'inky',      createGhostIcon('blue')));
-        this._rows.push(this._createRow(4, 'clyde',     createGhostIcon('orange')));
+        this._rows.push(this._createRow(0, 'pacman',    Util.createPacmanIcon(0.5)));
+        this._rows.push(this._createRow(1, 'blinky',    Util.createGhostIcon('red', 0.5)));
+        this._rows.push(this._createRow(2, 'pinky',     Util.createGhostIcon('pink', 0.5)));
+        this._rows.push(this._createRow(3, 'inky',      Util.createGhostIcon('blue', 0.5)));
+        this._rows.push(this._createRow(4, 'clyde',     Util.createGhostIcon('orange', 0.5)));
     }
 
     start() {
@@ -197,47 +197,25 @@ class Row {
     }
 }
 
-function createPacmanIcon() {
-    let texture = PIXI.Texture.fromFrame('pacman2.png');
-    let pacmanIcon = new PIXI.Sprite(texture);
-    pacmanIcon.scale.x = 0.5;
-    pacmanIcon.scale.y = 0.5;
-
-    return pacmanIcon;
-}
-
-function createGhostIcon(color) {
-    let texture = PIXI.Texture.fromFrame('ghost-green-right1.png');
-    let ghostIcon = new PIXI.Sprite(texture);
-    ghostIcon.scale.x = 0.5;
-    ghostIcon.scale.y = 0.5;
-
-    let colorMatrix = new PIXI.filters.ColorMatrixFilter();
-    colorMatrix.matrix = Util.generateColorMatrixValue(color);
-    ghostIcon.filters = [colorMatrix];
-
-    return ghostIcon;
-}
-
 function calculateRowY(idx) {
     return HEADER_Y + ((idx + 1) * ROW_Y_OFFSET);
 }
 
-Window.testThing = function() {
-    let array = [
-        { name: 'pacman',  ratio:                       0, kills: 0, deaths:  1 },
-        { name: 'blinky',  ratio: Number.MAX_SAFE_INTEGER, kills: 2, deaths:  0 },
-        { name: 'inky  ',  ratio: Number.MAX_SAFE_INTEGER, kills: 0, deaths:  0 },
-        { name: 'clyde ',  ratio: Number.MAX_SAFE_INTEGER, kills: 0, deaths:  0 },
-        { name: 'pinky ',  ratio: Number.MAX_SAFE_INTEGER, kills: 1, deaths:  0 },
-    ];
-
-    array.sort(sortByStanding);
-
-    for (let e of array) {
-        console.log(e.name + ' ' + e.ratio + ' ' + e.kills + ' ' + e.deaths);
-    }
-};
+//Window.testThing = function() {
+//    let array = [
+//        { name: 'pacman',  ratio:                       0, kills: 0, deaths:  1 },
+//        { name: 'blinky',  ratio: Number.MAX_SAFE_INTEGER, kills: 2, deaths:  0 },
+//        { name: 'inky  ',  ratio: Number.MAX_SAFE_INTEGER, kills: 0, deaths:  0 },
+//        { name: 'clyde ',  ratio: Number.MAX_SAFE_INTEGER, kills: 0, deaths:  0 },
+//        { name: 'pinky ',  ratio: Number.MAX_SAFE_INTEGER, kills: 1, deaths:  0 }
+//    ];
+//
+//    array.sort(sortByStanding);
+//
+//    for (let e of array) {
+//        console.log(e.name + ' ' + e.ratio + ' ' + e.kills + ' ' + e.deaths);
+//    }
+//};
 
 /**
  * Sort by highest ratio first, most kills second, fewest deaths last.

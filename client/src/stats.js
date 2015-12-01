@@ -5,24 +5,52 @@ const
 
 class EntityStats {
 
-    constructor() {
-        this.round = [];
+    constructor(name) {
+        this._name = name;
+        this._rounds = [];
 
         for (let idx = 0; idx < 5; idx++) { // TODO: Magic number 5
             let stats = {
                 kills: 0,
                 deaths: 0
             };
-            this.round.push(stats);
+            this._rounds.push(stats);
         }
     }
 
     incrementKills(roundNumber) {
-        this.round[roundNumber].kills += 1;
+        this._rounds[roundNumber].kills += 1;
     }
 
     incrementDeaths(roundNumber) {
-        this.round[roundNumber].deaths += 1;
+        this._rounds[roundNumber].deaths += 1;
+    }
+
+    calculateTotalRatio() {
+        let totalKills = this.calculateTotalKills();
+        let totalDeaths = this.calculateTotalDeaths();
+
+        if (totalDeaths === 0) {
+            totalDeaths = 0.00001; // good enough
+        }
+
+        return totalKills / totalDeaths;
+    }
+
+    calculateTotalKills() {
+        return this._rounds.reduce((acc, stats) => {
+            return acc + stats.kills;
+        }, 0);
+    }
+
+    calculateTotalDeaths() {
+        return this._rounds.reduce((acc, stats) => {
+            return acc + stats.deaths;
+        }, 0);
+    }
+
+    get name() {
+        return this._name;
     }
 }
 
@@ -32,11 +60,11 @@ class Stats {
         eventBus.register('event.action.death.ghost', this._ghostDeathListener);
 
         this.entityStats = new Map();
-        this.entityStats.set('pacman', new EntityStats());
-        this.entityStats.set('blinky', new EntityStats());
-        this.entityStats.set('pinky', new EntityStats());
-        this.entityStats.set('inky', new EntityStats());
-        this.entityStats.set('clyde', new EntityStats());
+        this.entityStats.set('pacman', new EntityStats('pacman'));
+        this.entityStats.set('blinky', new EntityStats('blinky'));
+        this.entityStats.set('pinky', new EntityStats('pinky'));
+        this.entityStats.set('inky', new EntityStats('inky'));
+        this.entityStats.set('clyde', new EntityStats('clyde'));
 
         this._currentRound = 0;
     }
@@ -60,6 +88,62 @@ class Stats {
 
     stop() {
         // TODO: unregister events listeners
+    }
+
+    calculateHighestRatio() {
+        let stats = this._entityStatsToArray();
+        let highest = stats.reduce((prev, curr) => {
+            if (prev.calculateTotalRatio() > curr.calculateTotalRatio()) {
+                return prev;
+            } else {
+                return curr;
+            }
+        }, stats[0]);
+
+        return {
+            name: highest.name,
+            ratio: highest.calculateTotalRatio()
+        };
+    }
+
+    calculateHighestKills() {
+        let stats = this._entityStatsToArray();
+        let highest = stats.reduce((prev, curr) => {
+            if (prev.calculateTotalKills() > curr.calculateTotalKills()) {
+                return prev;
+            } else {
+                return curr;
+            }
+        }, stats[0]);
+
+        return {
+            name: highest.name,
+            kills: highest.calculateTotalKills()
+        };
+    }
+
+    calculateHighestDeaths() {
+        let stats = this._entityStatsToArray();
+        let highest = stats.reduce((prev, curr) => {
+            if (prev.calculateTotalDeaths() > curr.calculateTotalDeaths()) {
+                return prev;
+            } else {
+                return curr;
+            }
+        }, stats[0]);
+
+        return {
+            name: highest.name,
+            deaths: highest.calculateTotalDeaths()
+        }
+    }
+
+    _entityStatsToArray() {
+        let values = [];
+        for (let value of this.entityStats.values()) {
+            values.push(value);
+        }
+        return values;
     }
 
     _handlePacmanDeath(ghostName) {

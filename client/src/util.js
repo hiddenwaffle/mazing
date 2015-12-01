@@ -39,7 +39,7 @@ exports.qs = function (a, b) {
 /**
  * Matrices are keyed off of the pure green of the green ghost.
  */
-exports.generateColorMatrixValue = function (input) {
+function generateColorMatrixValue(input) {
 
     if (input === 'red') {
         return [
@@ -82,3 +82,24 @@ exports.generateColorMatrixValue = function (input) {
         ];
     }
 }
+exports.generateColorMatrixValue = generateColorMatrixValue;
+
+exports.createPacmanIcon = function (scale) {
+    let texture = PIXI.Texture.fromFrame('pacman2.png');
+    let pacmanIcon = new PIXI.Sprite(texture);
+    pacmanIcon.scale.x = pacmanIcon.scale.y = scale;
+
+    return pacmanIcon;
+};
+
+exports.createGhostIcon = function (color, scale) {
+    let texture = PIXI.Texture.fromFrame('ghost-green-right1.png');
+    let ghostIcon = new PIXI.Sprite(texture);
+    ghostIcon.scale.x = ghostIcon.scale.y = scale;
+
+    let colorMatrix = new PIXI.filters.ColorMatrixFilter();
+    colorMatrix.matrix = generateColorMatrixValue(color);
+    ghostIcon.filters = [colorMatrix];
+
+    return ghostIcon;
+};
