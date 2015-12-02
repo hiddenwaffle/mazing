@@ -57,8 +57,6 @@ class EntityStats {
 class Stats {
 
     constructor() {
-        eventBus.register('event.action.death.ghost', this._ghostDeathListener);
-
         this.entityStats = new Map();
         this.entityStats.set('pacman', new EntityStats('pacman'));
         this.entityStats.set('blinky', new EntityStats('blinky'));
