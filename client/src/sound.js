@@ -7,10 +7,14 @@ const
     eventBus = require('./event-bus');
 
 const
-    ICON_TRANSPARENCY = 0.4;
+    ICON_TRANSPARENCY = 0.4,
+    MUTE_KEY = '183461283-sound-mute';
 
 class Sound {
 
+    /**
+     * TOOD: Clean this up by breaking into small objects.
+     */
     constructor(parentGfx) {
         this.parentGfx = parentGfx;
         this._gfx = new PIXI.Container();
@@ -32,7 +36,9 @@ class Sound {
             this._soundOnIcon.visible = false;
             this._soundOffIcon.visible = true;
             Howler.mute();
+            sessionStorage.setItem(MUTE_KEY, 'on');
         });
+        this._soundOnIcon.visible = false;
         this._gfx.addChild(this._soundOnIcon);
 
         let soundOffTexture = PIXI.Texture.fromFrame('sound-off.png');
@@ -48,6 +54,7 @@ class Sound {
             this._soundOffIcon.visible = false;
             this._soundOnIcon.visible = true;
             Howler.unmute();
+            sessionStorage.setItem(MUTE_KEY, 'off');
         });
         this._soundOffIcon.alpha = ICON_TRANSPARENCY;
         this._soundOffIcon.visible = false;
@@ -77,6 +84,16 @@ class Sound {
             this._punch.play();
         };
         eventBus.register('event.action.death.ghost', this._playPunch);
+
+        // Determine if the user had muted during this session
+        let mute = sessionStorage.getItem(MUTE_KEY);
+        if (mute === 'on') {
+            this._soundOffIcon.visible = true;
+            Howler.mute();
+        } else {
+            this._soundOnIcon.visible = true;
+            Howler.unmute();
+        }
     }
 
     stop() {
