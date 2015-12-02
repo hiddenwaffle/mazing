@@ -3,6 +3,7 @@
 *.swp
 
 client/pixi.js
+client/howler.js
 client/client.js
 client/assets/
 
