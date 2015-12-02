@@ -5,12 +5,12 @@ const
     Level       = require('./level'),
     StartScreen = require('./start-screen'),
     LevelEnding = require('./level-ending'),
-    GameEnding  = require('./game-ending');
+    GameEnding  = require('./game-ending'),
+    Sound       = require('./sound');
 
 const
     stats       = require('./stats'),
-    eventBus    = require('./event-bus'),
-    sound       = require('./sound');
+    eventBus    = require('./event-bus');
 
 Window.meow = () => {
     eventBus.fire({ name: 'event.level.end' });
@@ -26,6 +26,7 @@ class Game {
         this._startScreen = new StartScreen(stage, this._input);
         this._levelEnding = new LevelEnding(stage, renderer, this._input);
         this._gameEnding = new GameEnding(stage);
+        this._sound = new Sound(this._stage);
 
         this._level = null;
         this._levelNumber = 0;
@@ -40,7 +41,7 @@ class Game {
 
         this._input.start();
         stats.start();
-        sound.start();
+        this._sound.start();
 
         eventBus.register('event.startscreen.end', () => {
             this._switchState('level-starting');
@@ -64,7 +65,7 @@ class Game {
     stop() {
         this._level.stop();
         stats.stop();
-        sound.stop();
+        this._sound.stop();
     }
 
     draw() {
