@@ -240,6 +240,7 @@ class Characters {
         }));
 
         eventBus.fire({ name: 'event.action.death.ghost', args: { ghostName: ghost.name } });
+        eventBus.fire({ name: 'event.screenshake.start' });
     }
 
     _killPacman(ghost) {
@@ -251,6 +252,7 @@ class Characters {
         }));
 
         eventBus.fire({ name: 'event.action.death.pacman', args: { ghostName: ghost.name } });
+        eventBus.fire({ name: 'event.screenshake.start' });
     }
 }
 

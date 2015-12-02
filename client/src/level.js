@@ -9,7 +9,8 @@ const
     Scoreboard  = require('./scoreboard');
 
 const
-    eventBus    = require('./event-bus');
+    eventBus    = require('./event-bus'),
+    screenShake = require('./screen-shake');
 
 class Level {
 
@@ -50,6 +51,7 @@ class Level {
         this._characters.start(this._lvlSpec);
         this._pause.start();
         this._scoreboard.start();
+        screenShake.start(this._gfx);
 
         eventBus.fire({ name: 'event.level.start', args: { levelNumber: this.number } });
     }
@@ -58,6 +60,7 @@ class Level {
         this._characters.stop();
         this._pause.stop();
         this._scoreboard.stop();
+        screenShake.stop();
 
         // TODO: In next game, make this more encapsulated
         let idx = this._stage.getChildIndex(this._gfx);
@@ -73,6 +76,7 @@ class Level {
             this._handleLongTasks(elapsed);
             this._handleSubMode(elapsed);
             this._handleCollisionsAndSteps(elapsed);
+            screenShake.step(elapsed);
         }
 
         this._stepPaused(elapsed);
