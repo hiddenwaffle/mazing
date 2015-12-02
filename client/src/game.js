@@ -9,7 +9,8 @@ const
 
 const
     stats       = require('./stats'),
-    eventBus    = require('./event-bus');
+    eventBus    = require('./event-bus'),
+    sound       = require('./sound');
 
 Window.meow = () => {
     eventBus.fire({ name: 'event.level.end' });
@@ -39,6 +40,7 @@ class Game {
 
         this._input.start();
         stats.start();
+        sound.start();
 
         eventBus.register('event.startscreen.end', () => {
             this._switchState('level-starting');
@@ -61,6 +63,8 @@ class Game {
 
     stop() {
         this._level.stop();
+        stats.stop();
+        sound.stop();
     }
 
     draw() {
