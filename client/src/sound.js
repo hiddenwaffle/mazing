@@ -68,9 +68,9 @@ class Sound {
         });
 
         this._whams = [
-            new Howl({ urls: ['assets/wham1.m4a'], volume: 0.5 }),
-            new Howl({ urls: ['assets/wham2.m4a'], volume: 0.5 }),
-            new Howl({ urls: ['assets/wham3.m4a'], volume: 0.5 })
+            new Howl({ urls: ['assets/wham1.m4a'], volume: 0.25 }),
+            new Howl({ urls: ['assets/wham2.m4a'], volume: 0.25 }),
+            new Howl({ urls: ['assets/wham3.m4a'], volume: 0.25 })
         ];
 
         this._energizer = new Howl({
