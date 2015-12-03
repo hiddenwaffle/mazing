@@ -44,9 +44,19 @@ class Board {
         }
         this._gfx.addChild(this._wallImgs);
 
+        let energizerFrames = [];
+        for (let idx = 1; idx <= 5; idx++) {
+            let filename = 'energizer' + idx + '.png';
+            energizerFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
+        }
+        for (let idx = 4; idx >= 2; idx--) {
+            let filename = 'energizer' + idx + '.png';
+            energizerFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
+        }
+
         this._dotGrid = this._initDots();
         this._dotImgs = new PIXI.Container();
-        this._energizerImgs = new PIXI.Container();
+        this._energizerClips = new PIXI.Container();
         for (let y = 0; y < this._dotGrid.length; y++) {
             let line = this._dotGrid[y];
             for (let x = 0; x < line.length; x++) {
@@ -59,27 +69,21 @@ class Board {
                             0, 0,
                             config.dotSize, config.dotSize
                         );
-                    {
-                        let offset = (config.wallSize / 2) - (config.dotSize / 2);
-                        dotImg.x = x * config.wallSize + offset;
-                        dotImg.y = y * config.wallSize + offset;
-                        this._dotImgs.addChild(dotImg);
-                    }
+                        {
+                            let offset = (config.wallSize / 2) - (config.dotSize / 2);
+                            dotImg.x = x * config.wallSize + offset;
+                            dotImg.y = y * config.wallSize + offset;
+                            this._dotImgs.addChild(dotImg);
+                        }
                         break;
 
                     case 2:
-                        let energizerImg = new PIXI.Graphics();
-                        energizerImg.beginFill(0xeeeeee);
-                        energizerImg.drawRect(
-                            0, 0,
-                            config.wallSize * 0.65, config.wallSize * 0.65
-                        );
-                    {
-                        let offset = (config.wallSize * 0.175);
-                        energizerImg.x = x * config.wallSize + offset;
-                        energizerImg.y = y * config.wallSize + offset;
-                        this._energizerImgs.addChild(energizerImg);
-                    }
+                        let energizerClip = new PIXI.extras.MovieClip(energizerFrames);
+                        let offset = 1;
+                        energizerClip.x = x * config.wallSize + offset;
+                        energizerClip.y = y * config.wallSize + offset;
+                        energizerClip.play();
+                        this._energizerClips.addChild(energizerClip);
                         break;
 
                     default:
@@ -88,7 +92,7 @@ class Board {
             }
         }
         this._gfx.addChild(this._dotImgs);
-        this._gfx.addChild(this._energizerImgs);
+        this._gfx.addChild(this._energizerClips);
 
         stage.addChild(this._gfx);
     }
@@ -191,11 +195,11 @@ class Board {
     }
 
     handleEnergizerCollision(x, y, width, height) {
-        return this._handleCollision(x, y, width, height, this._energizerImgs);
+        return this._handleCollision(x, y, width, height, this._energizerClips);
     }
 
     dotsLeft() {
-        return (this._dotImgs.children.length > 0) || (this._energizerImgs.children.length > 0)
+        return (this._dotImgs.children.length > 0) || (this._energizerClips.children.length > 0)
     }
 
     _handleCollision(x, y, width, height, imgs) {
