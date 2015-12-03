@@ -138,6 +138,7 @@ class Level {
         if (result.energizer) {
             this._characters.signalFright();
             this._frightTimeLeft = this._lvlSpec.frightTime;
+            eventBus.fire({ name: 'event.action.energizer' });
         }
     }
 

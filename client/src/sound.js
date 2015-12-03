@@ -7,7 +7,7 @@ const
     eventBus = require('./event-bus');
 
 const
-    ICON_TRANSPARENCY = 0.4,
+    ICON_TRANSPARENCY = 0.70,
     MUTE_KEY = '183461283-sound-mute';
 
 class Sound {
@@ -60,6 +60,8 @@ class Sound {
         this._soundOffIcon.visible = false;
         this._gfx.addChild(this._soundOffIcon);
 
+        // Load sound files
+
         this._punch = new Howl({
             urls: ['assets/punch.m4a']
         });
@@ -69,6 +71,10 @@ class Sound {
             new Howl({ urls: ['assets/wham2.m4a'] }),
             new Howl({ urls: ['assets/wham3.m4a'] })
         ];
+
+        this._energizer = new Howl({
+            urls: ['assets/energizer.m4a']
+        });
 
         Howler.volume(0.5);
     }
@@ -85,6 +91,11 @@ class Sound {
         };
         eventBus.register('event.action.death.ghost', this._playPunch);
 
+        this._playEnergizer = () => {
+            this._energizer.play();
+        };
+        eventBus.register('event.action.energizer', this._playEnergizer);
+
         // Determine if the user had muted during this session
         let mute = sessionStorage.getItem(MUTE_KEY);
         if (mute === 'on') {
@@ -99,6 +110,7 @@ class Sound {
     stop() {
         eventBus.unregister('event.action.death.ghost', this._playWham);
         eventBus.unregister('event.action.death.ghost', this._playPunch);
+        eventBus.unregister('event.action.energizer', this._playEnergizer);
     }
 }
 
