@@ -80,6 +80,9 @@ class Input {
             case 40: // down
                 this._setState('down', state);
                 break;
+            case 32: // space   (reroutes to enter)
+            case 80: // 'p'     (reroutes to enter)
+            case 27: // esc     (reroutes to enter)
             case 13: // enter key
                 this._setState('enter', state);
                 break;
