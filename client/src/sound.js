@@ -63,23 +63,63 @@ class Sound {
         // Load sound files
 
         this._punch = new Howl({
-            urls: ['assets/punch.m4a']
+            urls: ['assets/punch.m4a'],
+            volume: 0.5
         });
 
         this._whams = [
-            new Howl({ urls: ['assets/wham1.m4a'] }),
-            new Howl({ urls: ['assets/wham2.m4a'] }),
-            new Howl({ urls: ['assets/wham3.m4a'] })
+            new Howl({ urls: ['assets/wham1.m4a'], volume: 0.5 }),
+            new Howl({ urls: ['assets/wham2.m4a'], volume: 0.5 }),
+            new Howl({ urls: ['assets/wham3.m4a'], volume: 0.5 })
         ];
 
         this._energizer = new Howl({
-            urls: ['assets/energizer.m4a']
+            urls: ['assets/energizer.m4a'],
+            volume: 0.5
         });
 
-        Howler.volume(0.5);
+        this._levelBackgrounds = [
+            new Howl({ urls: ['assets/cool-journey.m4a'], volume: 0.9, loop: true }),
+            new Howl({ urls: ['assets/happy-energy.m4a'], volume: 0.9, loop: true })
+        ];
+        this._currentBackground = 0;
+
+        this._levelEnd = new Howl({
+            urls: ['assets/atari-st-beat-11.m4a'],
+            volume: 0.4,
+            loop: true
+        });
+
+        Howler.volume(0.9);
     }
 
     start() {
+        this._pauseBackgroundMusic = () => {
+            this._levelBackgrounds[this._currentBackground].pause();
+        };
+        eventBus.register('event.pause.begin', this._pauseBackgroundMusic);
+
+        this._playBackgroundMusic = () => {
+            this._levelBackgrounds[this._currentBackground].play();
+        };
+        eventBus.register('event.pause.end', this._playBackgroundMusic);
+
+        this._playLevelEndMusic = () => {
+            this._stopAllMusic();
+            this._levelEnd.play();
+        };
+        eventBus.register('event.level.end', this._playLevelEndMusic);
+
+        this._stopLevelEndMusic = () => {
+            this._levelEnd.stop();
+
+            this._currentBackground += 1;
+            if (this._currentBackground >= this._levelBackgrounds.length) {
+                this._currentBackground = 0;
+            }
+        };
+        eventBus.register('event.level.ending.readyfornext', this._stopLevelEndMusic);
+
         this._playWham = () => {
             let idx = Util.getRandomIntInclusive(0, this._whams.length - 1);
             this._whams[idx].play();
@@ -111,6 +151,14 @@ class Sound {
         eventBus.unregister('event.action.death.ghost', this._playWham);
         eventBus.unregister('event.action.death.ghost', this._playPunch);
         eventBus.unregister('event.action.energizer', this._playEnergizer);
+    }
+
+    _stopAllMusic() {
+        for (let music of this._levelBackgrounds) {
+            music.stop();
+        }
+
+        this._levelEnd.stop();
     }
 }
 

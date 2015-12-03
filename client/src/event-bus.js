@@ -21,6 +21,8 @@ class EventBus {
         }
 
         handlers.push(handler);
+
+        // TODO: It would be better if this returned a function that could be called to unregister it.
     }
 
     unregister(name, handler) {
