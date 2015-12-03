@@ -79,7 +79,7 @@ function determineSpawnPointViability(ghosts, idealx, idealy) {
         { x: 21,  y: 5,     ghostCount: 0 },
         { x: 6,   y: 14,    ghostCount: 0 },
         { x: 21,  y: 14,    ghostCount: 0 },
-        { x: 21,  y: 20,    ghostCount: 0 },
+        { x: 6,   y: 20,    ghostCount: 0 },
         { x: 21,  y: 20,    ghostCount: 0 }
     ];
 
