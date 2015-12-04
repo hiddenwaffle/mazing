@@ -140,6 +140,10 @@ class Level {
             this._frightTimeLeft = this._lvlSpec.frightTime;
             eventBus.fire({ name: 'event.action.energizer' });
         }
+
+        if (result.dot) {
+            eventBus.fire({ name: 'event.action.eatdot' });
+        }
     }
 
     _determineRequestedDirection() {

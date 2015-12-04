@@ -99,6 +99,7 @@ class Game {
                 break;
         }
 
+        this._sound.step(elapsed);
         this._resortStageChildren();
     }
 

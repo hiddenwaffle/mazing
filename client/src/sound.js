@@ -8,7 +8,8 @@ const
 
 const
     ICON_TRANSPARENCY = 0.70,
-    MUTE_KEY = '183461283-sound-mute';
+    MUTE_KEY = '183461283-sound-mute',
+    CRACKLE_TIME = 200;
 
 class Sound {
 
@@ -90,7 +91,24 @@ class Sound {
             loop: true
         });
 
+        this._crackles = new Howl({
+            urls: ['assets/crackles.m4a'],
+            volume: 0.75,
+            loop: true
+        });
+        this._cracklesTimeLeft = 0;
+
         Howler.volume(0.9);
+    }
+
+    step(elapsed) {
+        if (this._cracklesTimeLeft > 0) {
+            this._cracklesTimeLeft -= elapsed;
+            if (this._cracklesTimeLeft <= 0) {
+                this._cracklesTimeLeft = 0;
+                this._crackles.pause();
+            }
+        }
     }
 
     start() {
@@ -136,6 +154,16 @@ class Sound {
         };
         eventBus.register('event.action.energizer', this._playEnergizer);
 
+        this._ensureCrackles = () => {
+            if (this._cracklesTimeLeft > 0) {
+                this._cracklesTimeLeft = CRACKLE_TIME;
+            } else {
+                this._cracklesTimeLeft = CRACKLE_TIME;
+                this._crackles.play();
+            }
+        };
+        eventBus.register('event.action.eatdot', this._ensureCrackles);
+
         // Determine if the user had muted during this session
         let mute = sessionStorage.getItem(MUTE_KEY);
         if (mute === 'on') {
@@ -151,6 +179,7 @@ class Sound {
         eventBus.unregister('event.action.death.ghost', this._playWham);
         eventBus.unregister('event.action.death.ghost', this._playPunch);
         eventBus.unregister('event.action.energizer', this._playEnergizer);
+        // TODO: unregister the other stuff
     }
 
     _stopAllMusic() {

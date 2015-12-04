@@ -135,6 +135,7 @@ class Characters {
     }
 
     checkCollisions() {
+        let dot = false;
         let collision = false;
         let energizer = false;
 
@@ -145,6 +146,7 @@ class Characters {
                     this._pacman.width,
                     this._pacman.height)) {
                 collision = true;
+                dot = true;
             }
 
             if (this._board.handleEnergizerCollision(
@@ -162,6 +164,7 @@ class Characters {
         }
 
         return {
+            dot: dot,
             collision: collision,
             energizer: energizer
         };
