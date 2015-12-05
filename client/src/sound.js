@@ -4,7 +4,8 @@ const
     Util = require('./util');
 
 const
-    eventBus = require('./event-bus');
+    eventBus    = require('./event-bus'),
+    soundLoader = require('./sound-loader');
 
 const
     ICON_TRANSPARENCY = 0.70,
@@ -61,7 +62,7 @@ class Sound {
         this._soundOffIcon.visible = false;
         this._gfx.addChild(this._soundOffIcon);
 
-        // Load sound files
+        // Configure sound files
 
         this._punch = new Howl({
             urls: ['assets/punch.m4a'],

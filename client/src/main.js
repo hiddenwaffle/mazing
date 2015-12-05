@@ -1,8 +1,6 @@
 'use strict';
 
-PIXI.loader.add('./assets/pac-test.json').load(afterLoadComplete);
-
-function afterLoadComplete() {
+require('./preload').start(() => {
     const Game = require('./game');
 
     let stage = new PIXI.Container();
@@ -22,4 +20,4 @@ function afterLoadComplete() {
         requestAnimationFrame(animate);
         game.draw();
     }
-}
+});
