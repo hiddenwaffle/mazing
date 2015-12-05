@@ -65,14 +65,14 @@ class Sound {
         // Configure sound files
 
         this._punch = soundLoader.get('assets/punch.m4a');
-        this._punch.volume(0.5);
+        this._punch.volume(0.4);
 
         let wham1 = soundLoader.get('assets/wham1.m4a');
         let wham2 = soundLoader.get('assets/wham2.m4a');
         let wham3 = soundLoader.get('assets/wham3.m4a');
         this._whams = [ wham1, wham2, wham3 ];
         for (let wham of this._whams) {
-            wham.volume(0.25);
+            wham.volume(0.20);
         }
 
         this._energizer = soundLoader.get('assets/energizer.m4a');
@@ -89,11 +89,11 @@ class Sound {
         this._currentBackground = 0;
 
         this._levelEnd = soundLoader.get('assets/atari-st-beat-11.m4a');
-        this._levelEnd.volume(0.4);
+        this._levelEnd.volume(0.35);
         this._levelEnd.loop(true);
 
         this._crackles = soundLoader.get('assets/crackles.m4a');
-        this._crackles.volume(0.2);
+        this._crackles.volume(0.3);
         this._crackles.loop(true);
 
         this._cracklesTimeLeft = 0;
