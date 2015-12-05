@@ -93,7 +93,7 @@ class Sound {
 
         this._crackles = new Howl({
             urls: ['assets/crackles.m4a'],
-            volume: 0.75,
+            volume: 0.2,
             loop: true
         });
         this._cracklesTimeLeft = 0;
