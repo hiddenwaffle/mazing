@@ -64,39 +64,38 @@ class Sound {
 
         // Configure sound files
 
-        this._punch = new Howl({
-            urls: ['assets/punch.m4a'],
-            volume: 0.5
-        });
+        this._punch = soundLoader.get('assets/punch.m4a');
+        this._punch.volume(0.5);
 
-        this._whams = [
-            new Howl({ urls: ['assets/wham1.m4a'], volume: 0.25 }),
-            new Howl({ urls: ['assets/wham2.m4a'], volume: 0.25 }),
-            new Howl({ urls: ['assets/wham3.m4a'], volume: 0.25 })
-        ];
+        let wham1 = soundLoader.get('assets/wham1.m4a');
+        let wham2 = soundLoader.get('assets/wham2.m4a');
+        let wham3 = soundLoader.get('assets/wham3.m4a');
+        this._whams = [ wham1, wham2, wham3 ];
+        for (let wham of this._whams) {
+            wham.volume(0.25);
+        }
 
-        this._energizer = new Howl({
-            urls: ['assets/energizer.m4a'],
-            volume: 0.5
-        });
+        this._energizer = soundLoader.get('assets/energizer.m4a');
+        this._energizer.volume(0.5);
 
-        this._levelBackgrounds = [
-            new Howl({ urls: ['assets/cool-journey.m4a'], volume: 0.9, loop: true }),
-            new Howl({ urls: ['assets/happy-energy.m4a'], volume: 0.9, loop: true })
-        ];
+        let levelBackground1 = soundLoader.get('assets/cool-journey.m4a');
+        let levelBackground2 = soundLoader.get('assets/happy-energy.m4a');
+        this._levelBackgrounds = [ levelBackground1, levelBackground2 ];
+        for (let levelBackground of this._levelBackgrounds) {
+            levelBackground.volume(0.9);
+            levelBackground.loop(true);
+        }
+
         this._currentBackground = 0;
 
-        this._levelEnd = new Howl({
-            urls: ['assets/atari-st-beat-11.m4a'],
-            volume: 0.4,
-            loop: true
-        });
+        this._levelEnd = soundLoader.get('assets/atari-st-beat-11.m4a');
+        this._levelEnd.volume(0.4);
+        this._levelEnd.loop(true);
 
-        this._crackles = new Howl({
-            urls: ['assets/crackles.m4a'],
-            volume: 0.2,
-            loop: true
-        });
+        this._crackles = soundLoader.get('assets/crackles.m4a');
+        this._crackles.volume(0.2);
+        this._crackles.loop(true);
+
         this._cracklesTimeLeft = 0;
 
         Howler.volume(0.9);

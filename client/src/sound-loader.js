@@ -23,6 +23,10 @@ class SoundLoader {
         }
     }
 
+    get(path) {
+        return this._cache.get(path);
+    }
+
     _onloadEach(success, path) {
         this._loadedcount += 1;
 
