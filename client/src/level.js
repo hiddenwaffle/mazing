@@ -1,12 +1,13 @@
 'use strict';
 
 const
-    Board       = require('./board'),
-    config      = require('./config'),
-    Characters  = require('./characters'),
-    LongTasks   = require('./long-tasks'),
-    Pause       = require('./pause'),
-    Scoreboard  = require('./scoreboard');
+    Board           = require('./board'),
+    config          = require('./config'),
+    Characters      = require('./characters'),
+    LongTasks       = require('./long-tasks'),
+    Pause           = require('./pause'),
+    Scoreboard      = require('./scoreboard'),
+    ParticleEmitter = require('./particle-emitter');
 
 const
     eventBus    = require('./event-bus'),
@@ -44,6 +45,8 @@ class Level {
         this._pause = new Pause(stage, input);
         this._scoreboard = new Scoreboard(stage);
         levelEnding.scoreboard = this._scoreboard;
+
+        this._particleEmitter = new ParticleEmitter(this._gfx);
     }
 
     start() {
@@ -51,6 +54,7 @@ class Level {
         this._characters.start(this._lvlSpec);
         this._pause.start();
         this._scoreboard.start();
+        this._particleEmitter.start();
         screenShake.start(this._gfx);
 
         eventBus.fire({ name: 'event.level.start', args: { levelNumber: this.number } });
@@ -60,6 +64,7 @@ class Level {
         this._characters.stop();
         this._pause.stop();
         this._scoreboard.stop();
+        this._particleEmitter.stop();
         screenShake.stop();
 
         // TODO: In next game, make this more encapsulated
@@ -77,6 +82,7 @@ class Level {
             this._handleSubMode(elapsed);
             this._handleCollisionsAndSteps(elapsed);
             screenShake.step(elapsed);
+            this._particleEmitter.step(elapsed);
         }
 
         this._stepPaused(elapsed);
@@ -142,7 +148,7 @@ class Level {
         }
 
         if (result.dot) {
-            eventBus.fire({ name: 'event.action.eatdot' });
+            eventBus.fire({ name: 'event.action.eatdot', args: { x: result.x, y: result.y } });
         }
     }
 

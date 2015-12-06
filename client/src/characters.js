@@ -164,6 +164,8 @@ class Characters {
         }
 
         return {
+            x: this._pacman.x,
+            y: this._pacman.y,
             dot: dot,
             collision: collision,
             energizer: energizer
