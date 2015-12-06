@@ -33,7 +33,7 @@ class EntityStats {
 
             let deaths;
             if (round.deaths === 0) {
-                deaths = 0.00001; // meh good enough
+                deaths = 1; // TODO: not really sure of a good way to do it otherwise
             } else {
                 deaths = round.deaths;
             }
