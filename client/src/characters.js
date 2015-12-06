@@ -210,6 +210,10 @@ class Characters {
         }
     }
 
+    determineCurrentDirection() {
+        return this._pacman.currentDirection;
+    }
+
     _handleGhostCollision() {
         for (let ghost of this._ghosts) {
             if (ghost.solid === false) {

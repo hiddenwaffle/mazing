@@ -148,7 +148,14 @@ class Level {
         }
 
         if (result.dot) {
-            eventBus.fire({ name: 'event.action.eatdot', args: { x: result.x, y: result.y } });
+            eventBus.fire({
+                name: 'event.action.eatdot',
+                args: {
+                    x: result.x,
+                    y: result.y,
+                    direction: this._determineCurrentDirection()
+                }
+            });
         }
     }
 
@@ -169,6 +176,10 @@ class Level {
             // null means no new requested direction; stay the course
             return null;
         }
+    }
+
+    _determineCurrentDirection() {
+        return this._characters.determineCurrentDirection();
     }
 }
 
