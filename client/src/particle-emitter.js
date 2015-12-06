@@ -92,7 +92,6 @@ class ParticleEmitter {
                 -2, 2,
                 -2, 2
             );
-            console.log('test: ' + x + ' ' + y + ' ' + ttl + ' ' + xenergy + ' ' + yenergy);
             this._particles.push(
                 new Particle(
                     this._gfx,
