@@ -26,15 +26,24 @@ class EntityStats {
         this._rounds[roundNumber].deaths += 1;
     }
 
-    calculateTotalRatio() {
-        let totalKills = this.calculateTotalKills();
-        let totalDeaths = this.calculateTotalDeaths();
+    calculateAverageRatio() {
+        let acc = 0;
+        for (let round of this._rounds) {
+            let kills = round.kills;
 
-        if (totalDeaths === 0) {
-            totalDeaths = 0.00001; // good enough
+            let deaths;
+            if (round.deaths === 0) {
+                deaths = 0.00001; // meh good enough
+            } else {
+                deaths = round.deaths;
+            }
+
+            acc += kills / deaths;
         }
 
-        return totalKills / totalDeaths;
+        let averageRatio = acc / this._rounds.length;
+
+        return averageRatio;
     }
 
     calculateTotalKills() {
@@ -88,10 +97,10 @@ class Stats {
         // TODO: unregister events listeners
     }
 
-    calculateHighestRatio() {
+    calculateHighestAverageRatio() {
         let stats = this._entityStatsToArray();
         let highest = stats.reduce((prev, curr) => {
-            if (prev.calculateTotalRatio() > curr.calculateTotalRatio()) {
+            if (prev.calculateAverageRatio() > curr.calculateAverageRatio()) {
                 return prev;
             } else {
                 return curr;
@@ -100,7 +109,7 @@ class Stats {
 
         return {
             name: highest.name,
-            ratio: highest.calculateTotalRatio()
+            ratio: highest.calculateAverageRatio()
         };
     }
 

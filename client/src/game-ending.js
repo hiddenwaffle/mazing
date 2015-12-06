@@ -45,9 +45,9 @@ class GameEnding {
     }
 
     start() {
-        let survivalist = stats.calculateHighestRatio();
+        let survivalist = stats.calculateHighestAverageRatio();
         this._survivalistRow.awardIcon(survivalist.name);
-        this._survivalistRow.notes = survivalist.ratio.toFixed(2) + ' Ratio';
+        this._survivalistRow.notes = survivalist.ratio.toFixed(2) + ' Avg Ratio';
 
         let hotDogChampion = stats.calculateHighestKills();
         this._hotDogChampionRow.awardIcon(hotDogChampion.name);
