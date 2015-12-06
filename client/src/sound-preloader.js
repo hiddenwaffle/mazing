@@ -1,6 +1,6 @@
 'use strict';
 
-class SoundLoader {
+class SoundPreloader {
 
     constructor() {
         this._cache = new Map();
@@ -33,7 +33,7 @@ class SoundLoader {
         if (success) {
             console.log(`Loaded sound (${this._loadedcount}/${this._totalcount})`);
         } else {
-            console.log(`Unable to load sound: ${path}`);
+            console.error(`Unable to load sound: ${path}`);
         }
 
         if (this._loadedcount >= this._totalcount) {
@@ -42,5 +42,5 @@ class SoundLoader {
     }
 }
 
-let soundLoader = new SoundLoader();
-module.exports = soundLoader;
+let soundPreloader = new SoundPreloader();
+module.exports = soundPreloader;

@@ -1,7 +1,7 @@
 'use strict';
 
 const
-    soundLoader = require('./sound-loader');
+    soundPreloader = require('./sound-preloader');
 
 class Preload {
 
@@ -19,15 +19,13 @@ class Preload {
             this._handleIfFinished();
         });
 
-        soundLoader.load([
+        soundPreloader.load([
             'assets/punch.m4a',
             'assets/wham1.m4a',
             'assets/wham2.m4a',
             'assets/wham3.m4a',
             'assets/energizer.m4a',
-            'assets/happy-energy.m4a',
             'assets/crackles.m4a',
-            'assets/atari-st-beat-11.m4a',
             'assets/cool-journey.m4a'
         ], () => {
             this._sfxLoaded = true;
