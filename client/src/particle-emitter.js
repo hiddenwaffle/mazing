@@ -57,7 +57,7 @@ class ParticleEmitter {
         parentGfx.addChild(this._gfx);
 
         let dot = new PIXI.Graphics();
-        dot.beginFill(0xffffff, 0.75);
+        dot.beginFill(0xffffff, 1);
         dot.drawRect(0, 0, 2, 2);
         dot.endFill();
         this._sharedTexture = dot.generateTexture();
@@ -73,7 +73,7 @@ class ParticleEmitter {
     }
 
     step(elapsed) {
-        this._particles.filter((particle) => {
+        this._particles = this._particles.filter((particle) => {
             return particle.step(elapsed);
         });
     }
@@ -83,12 +83,51 @@ class ParticleEmitter {
         // TODO: Remove and destroy graphics?
     }
 
-    _emitDotCrumbs(x, y) {
-        this._particles.push(new Particle(this._gfx, this._sharedTexture, x-3, y,   500,  2,   -0.5));
-        this._particles.push(new Particle(this._gfx, this._sharedTexture, x+3, y,   400, -1.5,  1.0));
-        this._particles.push(new Particle(this._gfx, this._sharedTexture, x,   y-3, 300,  1.0, -1.5));
-        this._particles.push(new Particle(this._gfx, this._sharedTexture, x,   y+3, 200,  0.5,   2));
+    _emitDotCrumbs(xorig, yorig) {
+        for (let count = 0; count < 4; count++) {
+            let {x, y, ttl, xenergy, yenergy} = generateRandomValues(
+                xorig-4, xorig+4,
+                yorig-4, yorig+4,
+                500,
+                -2, 2,
+                -2, 2
+            );
+            console.log('test: ' + x + ' ' + y + ' ' + ttl + ' ' + xenergy + ' ' + yenergy);
+            this._particles.push(
+                new Particle(
+                    this._gfx,
+                    this._sharedTexture,
+                    x,
+                    y,
+                    ttl,
+                    xenergy,
+                    yenergy
+                )
+            );
+        }
     }
 }
 
 module.exports = ParticleEmitter;
+
+function generateRandomValues(
+    xmin, xmax,
+    ymin, ymax,
+    ttlmax,
+    xminenergy, xmaxenergy,
+    yminenergy, ymaxenergy
+) {
+    let x = (Math.random() * (xmax - xmin)) + xmin;
+    let y = (Math.random() * (ymax - ymin)) + ymin;
+    let ttl = Math.random() * ttlmax;
+    let xenergy = (Math.random() * (xmaxenergy - xminenergy)) + xminenergy;
+    let yenergy = (Math.random() * (ymaxenergy - yminenergy)) + yminenergy;
+
+    return {
+        x: x,
+        y: y,
+        ttl: ttl,
+        xenergy: xenergy,
+        yenergy: yenergy
+    }
+}
