@@ -85,7 +85,7 @@ class ParticleEmitter {
     }
 
     _emitDotCrumbs(xorig, yorig, xenergy, yenergy) {
-        for (let count = 0; count < 4; count++) {
+        for (let count = 0; count < 8; count++) {
             let { x, y, ttl } = generateRandomValues(
                 xorig-4, xorig+4,
                 yorig-4, yorig+4,
