@@ -60,8 +60,13 @@ class ParticleEmitter {
 
     start() {
         this._eatdotHandler = (args) => {
-            let { xenergy, yenergy } = determineEnergy(args.direction);
-            this._emitDotCrumbs(args.x, args.y, xenergy, yenergy);
+            let { xenergy, yenergy, xoffset, yoffset } = determineEnergy(args.direction);
+            this._emitDotCrumbs(
+                args.x + xoffset,
+                args.y + yoffset,
+                xenergy,
+                yenergy
+            );
         };
         eventBus.register('event.action.eatdot', this._eatdotHandler);
     }
@@ -109,22 +114,31 @@ function determineEnergy(characterDirection) {
     let yminenergy = -1;
     let ymaxenergy = 1;
 
+    // offset towards the front of pacman's mouth
+    const OFFSET = 12;
+    let xoffset = 0;
+    let yoffset = 0;
+
     switch (characterDirection) {
         case 'up':
             yminenergy -= 1;
             ymaxenergy -= 1;
+            yoffset = -OFFSET;
             break;
         case 'down':
             yminenergy += 1;
             ymaxenergy += 1;
+            yoffset = OFFSET;
             break;
         case 'left':
             xminenergy -= 1;
             xmaxenergy -= 1;
+            xoffset = -OFFSET;
             break;
         case 'right':
             xminenergy += 1;
             xmaxenergy += 1;
+            xoffset = OFFSET;
             break;
         default:
             break;
@@ -135,7 +149,9 @@ function determineEnergy(characterDirection) {
 
     return {
         xenergy: xenergy,
-        yenergy: yenergy
+        yenergy: yenergy,
+        xoffset: xoffset,
+        yoffset: yoffset
     }
 }
 
