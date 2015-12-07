@@ -70,21 +70,26 @@ class Input {
         switch (e.keyCode) {
             case 37: // left
                 this._setState('left', state);
+                e.preventDefault();
                 break;
             case 38: // up
                 this._setState('up', state);
+                e.preventDefault();
                 break;
             case 39: // right
                 this._setState('right', state);
+                e.preventDefault();
                 break;
             case 40: // down
                 this._setState('down', state);
+                e.preventDefault();
                 break;
             case 32: // space   (reroutes to enter)
             case 80: // 'p'     (reroutes to enter)
             case 27: // esc     (reroutes to enter)
             case 13: // enter key
                 this._setState('enter', state);
+                e.preventDefault();
                 break;
 
             // ignore certain keys
