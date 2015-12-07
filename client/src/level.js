@@ -1,13 +1,14 @@
 'use strict';
 
 const
-    Board           = require('./board'),
-    config          = require('./config'),
-    Characters      = require('./characters'),
-    LongTasks       = require('./long-tasks'),
-    Pause           = require('./pause'),
-    Scoreboard      = require('./scoreboard'),
-    ParticleEmitter = require('./particle-emitter');
+    Board                       = require('./board'),
+    config                      = require('./config'),
+    Characters                  = require('./characters'),
+    LongTasks                   = require('./long-tasks'),
+    Pause                       = require('./pause'),
+    Scoreboard                  = require('./scoreboard'),
+    ParticleEmitter             = require('./particle-emitter'),
+    CharacterParticleEmitter    = require('./character-particle-emitter');
 
 const
     eventBus    = require('./event-bus'),
@@ -47,6 +48,7 @@ class Level {
         levelEnding.scoreboard = this._scoreboard;
 
         this._particleEmitter = new ParticleEmitter(this._gfx);
+        this._characterParticleEmitter = new CharacterParticleEmitter(this._gfx);
     }
 
     start() {
@@ -55,6 +57,7 @@ class Level {
         this._pause.start();
         this._scoreboard.start();
         this._particleEmitter.start();
+        this._characterParticleEmitter.start();
         screenShake.start(this._gfx);
 
         eventBus.fire({ name: 'event.level.start', args: { levelNumber: this.number } });
@@ -65,6 +68,7 @@ class Level {
         this._pause.stop();
         this._scoreboard.stop();
         this._particleEmitter.stop();
+        this._characterParticleEmitter.stop();
         screenShake.stop();
 
         // TODO: In next game, make this more encapsulated
@@ -83,6 +87,7 @@ class Level {
             this._handleCollisionsAndSteps(elapsed);
             screenShake.step(elapsed);
             this._particleEmitter.step(elapsed);
+            this._characterParticleEmitter.step(elapsed);
         }
 
         this._stepPaused(elapsed);

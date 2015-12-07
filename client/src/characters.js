@@ -248,7 +248,16 @@ class Characters {
             death.respawn();
         }));
 
-        eventBus.fire({ name: 'event.action.death.ghost', args: { ghostName: ghost.name } });
+        eventBus.fire({
+            name: 'event.action.death.ghost',
+            args: {
+                x: ghost.x,
+                y: ghost.y,
+                ghostName: ghost.name,
+                ghostDirection: ghost.currentDirection,
+                pacmanDirection: this._pacman.currentDirection
+            }
+        });
         eventBus.fire({ name: 'event.screenshake.start' });
     }
 
@@ -260,7 +269,16 @@ class Characters {
             death.respawn();
         }));
 
-        eventBus.fire({ name: 'event.action.death.pacman', args: { ghostName: ghost.name } });
+        eventBus.fire({
+            name: 'event.action.death.pacman',
+            args: {
+                x: this._pacman.x,
+                y: this._pacman.y,
+                ghostName: ghost.name,
+                ghostDirection: ghost.currentDirection,
+                pacmanDirection: this._pacman.currentDirection
+            }
+        });
         eventBus.fire({ name: 'event.screenshake.start' });
     }
 }

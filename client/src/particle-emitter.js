@@ -3,9 +3,6 @@
 const
     eventBus = require('./event-bus');
 
-const
-    ENTROPY = 0.15;
-
 class Particle {
 
     constructor(parentGfx, texture, x, y, ttl, xenergy, yenergy) {
@@ -21,7 +18,7 @@ class Particle {
     }
 
     /**
-     * Return false if life <= 0
+     * Return false if ttl <= 0
      */
     step(elapsed) {
         this._ttl -= elapsed;
@@ -33,10 +30,6 @@ class Particle {
             this._update();
             return true;
         }
-    }
-
-    get gfx() {
-        return this._gfx;
     }
 
     _remove() {
@@ -81,7 +74,8 @@ class ParticleEmitter {
 
     stop() {
         eventBus.unregister('event.action.eatdot', this._eatdotHandler);
-        // TODO: Remove and destroy graphics?
+        this._parentGfx.removeChild(this._gfx);
+        // TODO: destroy graphics? (textures?)
     }
 
     _emitDotCrumbs(xorig, yorig, xenergy, yenergy) {
