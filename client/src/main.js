@@ -1,5 +1,7 @@
 'use strict';
 
+require('./safari-audio-bandaid').check();
+
 require('./preload').start(() => {
     const Game = require('./game');
 
