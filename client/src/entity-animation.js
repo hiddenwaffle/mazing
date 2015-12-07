@@ -163,6 +163,10 @@ class EntityAnimation {
     set y(value) {
         this._gfx.y = value;
     }
+
+    set alpha(value) {
+        this._gfx.alpha = value;
+    }
 }
 
 module.exports = EntityAnimation;

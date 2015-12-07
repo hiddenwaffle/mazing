@@ -266,7 +266,29 @@ class Characters {
         death.start();
 
         this._longTasksManager.addTask(new LongTasks.TimeoutTask(1000, () => {
+            // First do the respawn
             death.respawn();
+
+            // Kick off the temporary flashing effect
+            let flashCount = 0;
+            let alpha = 0;
+            let outerthis = this;
+            let flashCallback = function () {
+                flashCount += 1;
+                if (flashCount < 9) {
+                    if (alpha === 0) {
+                        alpha = 1;
+                    } else {
+                        alpha = 0;
+                    }
+                    outerthis._pacman.alpha = alpha;
+                    return true;
+                } else {
+                    outerthis._pacman.alpha = 1; // reset back to normal, which should be 1
+                    return false;
+                }
+            };
+            this._longTasksManager.addTask(new LongTasks.IntervalTask(50, flashCallback));
         }));
 
         eventBus.fire({

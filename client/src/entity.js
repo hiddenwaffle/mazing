@@ -147,6 +147,10 @@ class Entity {
         return this._name;
     }
 
+    set alpha(value) {
+        this._animation.alpha = value;
+    }
+
     _milliStep(speed) {
         this._moveInCurrentDirection(speed);
         this._runAI();
