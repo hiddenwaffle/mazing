@@ -69,8 +69,7 @@ class CharacterAnimations {
             left,
             right,
             frightened,
-            flashing,
-            true
+            flashing
         );
 
         this._animations.push(animation);

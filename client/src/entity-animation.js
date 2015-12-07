@@ -5,7 +5,7 @@
 
 class EntityAnimation {
 
-    constructor(parentGfx, up, down, left, right, frightened, flashing, neverShowFright=false) {
+    constructor(parentGfx, up, down, left, right, frightened, flashing) {
         this._parentGfx = parentGfx;
         this._gfx = new PIXI.Container();
         parentGfx.addChild(this._gfx);
@@ -31,7 +31,6 @@ class EntityAnimation {
         this._directionals  = [up, down, left, right];
         this._allclips      = [up, down, left, right, frightened, flashing];
 
-        this._neverShowFright = neverShowFright;
         this._frightTime = 0;
         this._frightFlashes = 0;
         this._frightTimeLeft = 0;
@@ -117,35 +116,30 @@ class EntityAnimation {
 
         // Otherwise start the correct clip.
         } else {
-            if (this._frightTimeLeft != 0 && this._neverShowFright === false) {
-                // Do not show a directional animation if frightened/flashing unless this is pacman
+            for (let directional of this._directionals) {
+                directional.visible = false;
+                directional.stop();
+            }
 
-            } else {
-                for (let directional of this._directionals) {
-                    directional.visible = false;
-                    directional.stop();
-                }
-
-                switch (direction) {
-                    case 'up':
-                        this._up.visible = true;
-                        this._up.play();
-                        break;
-                    case 'down':
-                        this._down.visible = true;
-                        this._down.play();
-                        break;
-                    case 'left':
-                        this._left.visible = true;
-                        this._left.play();
-                        break;
-                    case 'right':
-                        this._right.visible = true;
-                        this._right.play();
-                        break;
-                    default:
-                        break;
-                }
+            switch (direction) {
+                case 'up':
+                    this._up.visible = true;
+                    this._up.play();
+                    break;
+                case 'down':
+                    this._down.visible = true;
+                    this._down.play();
+                    break;
+                case 'left':
+                    this._left.visible = true;
+                    this._left.play();
+                    break;
+                case 'right':
+                    this._right.visible = true;
+                    this._right.play();
+                    break;
+                default:
+                    break;
             }
         }
     }
