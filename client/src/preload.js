@@ -1,6 +1,9 @@
 'use strict';
 
 const
+    LoadingScreen = require('./loading-screen');
+
+const
     soundPreloader = require('./sound-preloader');
 
 class Preload {
@@ -9,6 +12,8 @@ class Preload {
         this._sfxLoaded = false;
         this._gfxLoaded = false;
         this._afterFinished = null;
+
+        this._loadingScreen = new LoadingScreen();
     }
 
     start(afterFinished) {
@@ -16,10 +21,11 @@ class Preload {
 
         PIXI.loader.add('assets/pac-test.json').load(() => {
             this._gfxLoaded = true;
+            this._loadingScreen.signalLoaded('Sprites loaded');
             this._handleIfFinished();
         });
 
-        soundPreloader.load([
+        soundPreloader.load(this._loadingScreen, [
             'assets/punch.m4a',
             'assets/wham1.m4a',
             'assets/wham2.m4a',

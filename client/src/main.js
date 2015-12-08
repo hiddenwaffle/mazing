@@ -6,7 +6,7 @@ require('./preload').start(() => {
     const Game = require('./game');
 
     let stage = new PIXI.Container();
-    let renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0x333333});
+    let renderer = PIXI.autoDetectRenderer(800, 600, { backgroundColor: 0x333333 });
 
     let game = new Game(stage, renderer);
     game.start();
