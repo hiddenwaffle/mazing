@@ -9,7 +9,8 @@ class Board {
     constructor(stage) {
         this._gfx = new PIXI.Container();
 
-        this._grid = this._initGrid();
+        let { grid, color } = this._initGrid();
+        this._grid = grid;
 
         this._wallImgs = new PIXI.Container();
         for (let y = 0; y < this._grid.length; y++) {
@@ -19,7 +20,7 @@ class Board {
 
                 if (wall === 1) {
                     let wallImg = new PIXI.Graphics();
-                    wallImg.beginFill(0x0055dd);
+                    wallImg.beginFill(color);
                     wallImg.drawRect(
                         x * config.wallSize,
                         y * config.wallSize,
@@ -218,7 +219,9 @@ class Board {
         const p = 2;
         const d = 3;
         const E = 4;
-        return [
+
+        let color = 0x0055dd; // original blue
+        let grid = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, d, d, d, d, d, d, d, d, d, d, d, d, 1, 1, d, d, d, d, d, d, d, d, d, d, d, d, 1],
             [1, d, 1, 1, 1, 1, d, 1, 1, 1, 1, 1, d, 1, 1, d, 1, 1, 1, 1, 1, d, 1, 1, 1, 1, d, 1],
@@ -251,6 +254,11 @@ class Board {
             [1, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         ];
+
+        return {
+            color: color,
+            grid: grid
+        };
     }
 }
 
