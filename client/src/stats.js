@@ -1,7 +1,8 @@
 'use strict';
 
 const
-    eventBus = require('./event-bus');
+    config      = require('./config'),
+    eventBus    = require('./event-bus');
 
 class EntityStats {
 
@@ -9,7 +10,7 @@ class EntityStats {
         this._name = name;
         this._rounds = [];
 
-        for (let idx = 0; idx < 5; idx++) { // TODO: Magic number 5
+        for (let idx = 0; idx < config.levelSpecifications.length; idx++) {
             let stats = {
                 kills: 0,
                 deaths: 0
