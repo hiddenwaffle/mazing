@@ -21,7 +21,7 @@ class Level {
      * @param input
      * @param stage
      */
-    constructor(number, input, stage, levelEnding) {
+    constructor(number, input, stage, levelEnding, mazeNumber) {
         this.number = number;
         this._input = input;
         this._stage = stage;
@@ -32,7 +32,7 @@ class Level {
         this._gfx.y = 32;
         this._stage.addChild(this._gfx);
 
-        this._board = new Board(this._gfx);
+        this._board = new Board(this._gfx, mazeNumber);
         this._longTasksManager = new LongTasks.Manager();
         this._characters = new Characters(this._board, this._gfx, this._longTasksManager);
 

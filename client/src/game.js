@@ -27,6 +27,7 @@ class Game {
 
         this._level = null;
         this._levelNumber = 0;
+        this._mazeOrder = [];
 
         this._lastStep = Date.now();
 
@@ -40,6 +41,7 @@ class Game {
         stats.start();
         this._sound.start();
         this._fpsCounter.start();
+        this._fillMazeOrder();
 
         eventBus.register('event.startscreen.end', () => {
             this._switchState('level-starting');
@@ -108,6 +110,16 @@ class Game {
         this._resortStageChildren();
     }
 
+    _fillMazeOrder() {
+        // TODO: Use this:
+        //for (let num = 0; num < config.mazes.length; num++) {
+        //    this._levelOrder.push[num];
+        //}
+        // TODO: Shuffle the array
+
+        this._mazeOrder = [1, 0, 1, 0, 1];
+    }
+
     _switchState(state) {
         this._state = state;
 
@@ -128,7 +140,13 @@ class Game {
                 } else {
                     this._levelNumber = 0;
                 }
-                this._level = new Level(this._levelNumber, this._input, this._stage, this._levelEnding);
+                this._level = new Level(
+                    this._levelNumber,
+                    this._input,
+                    this._stage,
+                    this._levelEnding,
+                    this._mazeOrder[this._levelNumber]
+                );
                 this._level.start();
                 break;
 
