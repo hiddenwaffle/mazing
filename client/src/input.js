@@ -115,6 +115,9 @@ class Input {
             // prevent some unwanted behaviors
             case 191:   // forward slash (page find)
             case 9:     // tab (can lose focus)
+            case 219:   // left brackets
+            case 221:   // right brackets
+            case 16:    // shift
                 e.preventDefault();
                 break;
 
