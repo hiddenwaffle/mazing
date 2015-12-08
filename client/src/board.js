@@ -130,7 +130,7 @@ class Board {
                 if (destx < srcx) {
                     // movement is to the left
 
-                    if (desttilex === -1 && desttiley === 14) {
+                    if (desttilex === -1) {
                         finalx = (config.wallSize * 27) - 1; // handle wraparound
                     } else {
                         finalx = desttilex2 * config.wallSize; // get right edge of boundary of the blocking tile
@@ -140,7 +140,7 @@ class Board {
                 } else {
                     // movement is to the right
 
-                    if (desttilex2 === 28 && desttiley === 14) {
+                    if (desttilex2 === 28) {
                         finalx = 1; // handle wraparound
                     } else {
                         finalx = desttilex * config.wallSize; // get left edge of boundary of the blocking tile
