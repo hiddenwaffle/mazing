@@ -17,8 +17,6 @@ class Config {
         this.pacmanTurnSpeedIncrease = 2;   // double speed
         this.pacmanTurnSpeedLength = 50;    // ms; this is about 3 frames
 
-        this.flashSpeed = 250; // ms wait for each frame
-
         this.ghostModes = [
             // first configuration (first level)
             [
