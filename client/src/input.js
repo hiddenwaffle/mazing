@@ -112,8 +112,9 @@ class Input {
             case 93:    // apple command, right (safari/chrome)
                 break;
 
-            // prevent losing focus via tab
-            case 9:
+            // prevent some unwanted behaviors
+            case 191:   // forward slash (page find)
+            case 9:     // tab (can lose focus)
                 e.preventDefault();
                 break;
 

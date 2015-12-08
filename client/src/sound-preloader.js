@@ -32,9 +32,9 @@ class SoundPreloader {
         this._loadedcount += 1;
 
         if (success) {
-            this._loadingScreen.signalLoaded(`Loaded sound (${this._loadedcount}/${this._totalcount})`);
+            this._loadingScreen.signalLoaded(true, `Loaded sound (${this._loadedcount}/${this._totalcount})`);
         } else {
-            this._loadingScreen.signalLoaded(`Unable to load sound: ${path}`);
+            this._loadingScreen.signalLoaded(false, `Unable to load sound: ${path}`);
         }
 
         if (this._loadedcount >= this._totalcount) {

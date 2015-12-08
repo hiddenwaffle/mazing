@@ -10,18 +10,25 @@
             background: #222;
         }
         #loading {
-            margin-top: 96px;
+            margin-top: 256px;
             color: #eee;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
-        #loading > div {
+        #loading div {
             margin: 6px;
+        }
+        #loadingError {
+            color: #f00;
         }
     </style>
 </head>
 <body>
 
-<div id="loading"></div>
+<div id="loading">
+    <div id="loadingMessage"></div>
+    <div id="loadingError"></div>
+    <progress id="loadingBar"></progress>
+</div>
 
 <script src="pixi.js"></script> <!-- 3.0.8 -->
 <script src="howler.js"></script> <!-- 1.1.28 -->
