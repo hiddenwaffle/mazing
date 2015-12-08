@@ -21,6 +21,8 @@ class LoadingScreen {
 
     signalLoaded(success, message) {
         if (this._container !== undefined) {
+            this._container.style.visibility = 'visible';
+
             this._loadedCount += 1;
             this._progress.setAttribute('value', this._loadedCount);
 
