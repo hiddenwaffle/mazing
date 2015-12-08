@@ -98,9 +98,9 @@ function determineSpawnPointViability(ghosts, idealx, idealy, respawnPoints) {
 
     // Sort spawn points by location to where pacman was
     spawnPoints.sort((a, b) => {
-        let dista = Util.qs(idealx - a.x, idealy - a.y);
-        let distb = Util.qs(idealx - b.x, idealy - b.y);
-        return distb - dista;
+        let dista = Util.qs(idealx - (a.x * config.wallSize), idealy - (a.y * config.wallSize));
+        let distb = Util.qs(idealx - (b.x * config.wallSize), idealy - (b.y * config.wallSize));
+        return dista - distb;
     });
 
     // Pick nearest one with no ghosts
