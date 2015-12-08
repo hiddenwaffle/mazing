@@ -29,15 +29,25 @@ class LevelEnding {
         background.drawRect(0, 0, 390, 320);
         this._gfx.addChild(background);
 
-        let style = {
+        let titleStyle = {
             font: '36px Arial',
             fill: '#eeeeee',
             align: 'center' // TODO: doesn't work?
         };
-        this._title = new PIXI.Text('', style);
+        this._title = new PIXI.Text('', titleStyle);
         this._title.x = 36;
-        this._title.y = 48;
+        this._title.y = 44;
         this._gfx.addChild(this._title);
+
+        let footerStyle = {
+            font: '16px Arial',
+            fill: '#e0e0e0',
+            align: 'center' // TODO: doesn't work?
+        };
+        this._footer = new PIXI.Text('', footerStyle);
+        this._footer.x = 114;
+        this._footer.y = 275;
+        this._gfx.addChild(this._footer);
 
         this._scoreboard = null;
     }
@@ -45,6 +55,8 @@ class LevelEnding {
     start(levelNumber) {
         this._levelNumber = levelNumber;
         this._title.text = 'Level ' + (levelNumber+1) + ' Final Score';
+
+        this._updateFooter(levelNumber);
 
         // The last frame of the level should still be visible
         let snapshotTexture = new PIXI.RenderTexture(this._renderer, this._renderer.width, this._renderer.height);
@@ -63,7 +75,7 @@ class LevelEnding {
         scoreboardTexture.render(this._scoreboard.gfx);
         this._scoreboardSnapshot = new PIXI.Sprite(scoreboardTexture);
         this._scoreboardSnapshot.x = 90;
-        this._scoreboardSnapshot.y = 110;
+        this._scoreboardSnapshot.y = 100;
         this._gfx.addChild(this._scoreboardSnapshot);
     }
 
@@ -120,6 +132,23 @@ class LevelEnding {
 
     _isFinalLevel() {
         return this._levelNumber === config.lastLevelIndex();
+    }
+
+    _updateFooter(levelNumber) {
+        let value;
+
+        if (this._isFinalLevel()) {
+            value = '';
+        } else {
+            let remaining = config.levelSpecifications.length - (levelNumber+1);
+            if (remaining === 1) {
+                value = 'The final level remains...';
+            } else {
+                value = (config.levelSpecifications.length - (levelNumber+1)) + ' more levels remain...';
+            }
+        }
+
+        this._footer.text = value;
     }
 }
 
