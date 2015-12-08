@@ -105,6 +105,7 @@ class Input {
                 break;
 
             // ignore certain keys
+            case 82:    // 'r'
             case 18:    // alt
             case 224:   // apple command (firefox)
             case 17:    // apple command (opera)
