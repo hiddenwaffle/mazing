@@ -51,7 +51,8 @@ class PacmanDeath {
         let spawnPoint = determineSpawnPointViability(
             this._ghosts,
             this._deathx,
-            this._deathy
+            this._deathy,
+            this._board.respawnPoints
         );
 
         this._pacman.x = spawnPoint.x * config.wallSize;
@@ -72,16 +73,17 @@ exports.Pacman = PacmanDeath;
  * @param idealy real coordinate
  * @returns {*} a spawn point in tile space
  */
-function determineSpawnPointViability(ghosts, idealx, idealy) {
+function determineSpawnPointViability(ghosts, idealx, idealy, respawnPoints) {
 
-    let spawnPoints = [
-        { x: 6,   y: 5,     ghostCount: 0 },
-        { x: 21,  y: 5,     ghostCount: 0 },
-        { x: 6,   y: 14,    ghostCount: 0 },
-        { x: 21,  y: 14,    ghostCount: 0 },
-        { x: 6,   y: 20,    ghostCount: 0 },
-        { x: 21,  y: 20,    ghostCount: 0 }
-    ];
+    let spawnPoints = [];
+    for (let respawnPoint of respawnPoints) {
+        let spawnPoint = {
+            x: respawnPoint.x,
+            y: respawnPoint.y,
+            ghostCount: 0
+        };
+        spawnPoints.push(spawnPoint);
+    }
 
     let sweepBoxRadius = 7; // means +/- these tiles in each direction
 

@@ -9,8 +9,10 @@ class Board {
     constructor(stage, mazeNumber) {
         this._gfx = new PIXI.Container();
 
-        let color = config.mazes[mazeNumber].color;
-        this._grid = config.mazes[mazeNumber].grid;
+        // Configure this board by using maze data.
+        let color           = config.mazes[mazeNumber].color;
+        this._grid          = config.mazes[mazeNumber].grid;
+        this._respawnPoints = config.mazes[mazeNumber].respawnPoints;
 
         this._wallImgs = new PIXI.Container();
         for (let y = 0; y < this._grid.length; y++) {
@@ -197,6 +199,10 @@ class Board {
 
     dotsLeft() {
         return (this._dotImgs.children.length > 0) || (this._energizerClips.children.length > 0)
+    }
+
+    get respawnPoints() {
+        return this._respawnPoints;
     }
 
     _handleCollision(x, y, width, height, imgs) {

@@ -163,6 +163,14 @@ class Config {
 
         let blueMaze = {
             color: 0x0055dd, // original blue
+            respawnPoints: [
+                { x: 6,   y: 5 },
+                { x: 21,  y: 5 },
+                { x: 6,   y: 14 },
+                { x: 21,  y: 14 },
+                { x: 6,   y: 20 },
+                { x: 21,  y: 20 }
+            ],
             grid: [
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [1, d, d, d, d, d, d, d, d, d, d, d, d, 1, 1, d, d, d, d, d, d, d, d, d, d, d, d, 1],
@@ -201,6 +209,12 @@ class Config {
 
         let salmonMaze = {
             color: 0xfcb4a8, // "salmon"
+            respawnPoints: [
+                { x: 6,   y: 4 },
+                { x: 21,  y: 4 },
+                { x: 3,   y: 17 },
+                { x: 24,  y: 17 }
+            ],
             grid: [
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [1, d, d, d, d, d, d, 1, 1, d, d, d, d, d, d, d, d, d, d, 1, 1, d, d, d, d, d, d, 1],
