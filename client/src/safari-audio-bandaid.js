@@ -7,6 +7,8 @@ const
 /**
  * Safari desktop audio is being dumb and won't play until a second page loads an audio file within a session.
  * Uses browser detection: http://stackoverflow.com/a/23522755
+ *
+ * This still, doesn't always work.
  */
 exports.check = function () {
     let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -14,12 +16,16 @@ exports.check = function () {
         if (navigator.cookieEnabled === false) {
             showError(1);
         } else {
-            if (sessionStorage !== undefined && sessionStorage.getItem(RELOAD_KEY) !== 'y') {
-                sessionStorage.setItem(RELOAD_KEY, 'y');
-                if (sessionStorage.getItem(RELOAD_KEY) === 'y') {
-                    setTimeout(() => { document.location.reload(false); }, WAIT_TIME);
+            if (sessionStorage !== undefined) {
+                if (sessionStorage.getItem(RELOAD_KEY) !== 'y') {
+                    sessionStorage.setItem(RELOAD_KEY, 'y');
+                    if (sessionStorage.getItem(RELOAD_KEY) === 'y') {
+                        setTimeout(() => { document.location.reload(false); }, WAIT_TIME);
+                    } else {
+                        showError(2);
+                    }
                 } else {
-                    showError(2);
+                    // Was already set, so do nothing.
                 }
             } else {
                 showError(3);
