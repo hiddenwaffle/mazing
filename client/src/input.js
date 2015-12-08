@@ -1,5 +1,8 @@
 'use strict';
 
+const
+    eventBus = require('./event-bus');
+
 class Input {
 
     constructor() {
@@ -68,6 +71,8 @@ class Input {
 
     _eventToState(e, state) {
         switch (e.keyCode) {
+
+            // directionals
             case 37: // left
                 this._setState('left', state);
                 e.preventDefault();
@@ -84,11 +89,18 @@ class Input {
                 this._setState('down', state);
                 e.preventDefault();
                 break;
+
             case 32: // space   (reroutes to enter)
             case 80: // 'p'     (reroutes to enter)
             case 27: // esc     (reroutes to enter)
             case 13: // enter key
                 this._setState('enter', state);
+                e.preventDefault();
+                break;
+
+            // debug
+            case 70: // 'f'
+                this._setState('f', state);
                 e.preventDefault();
                 break;
 

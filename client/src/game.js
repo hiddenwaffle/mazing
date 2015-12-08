@@ -6,16 +6,12 @@ const
     StartScreen = require('./start-screen'),
     LevelEnding = require('./level-ending'),
     GameEnding  = require('./game-ending'),
-    Sound       = require('./sound');
+    Sound       = require('./sound'),
+    FpsCounter  = require('./fps-counter');
 
 const
     stats       = require('./stats'),
     eventBus    = require('./event-bus');
-
-Window.meow = () => {
-    eventBus.fire({ name: 'event.level.end' });
-    eventBus.fire({ name: 'event.level.ending.lastlevel' });
-};
 
 class Game {
 
@@ -27,6 +23,7 @@ class Game {
         this._levelEnding = new LevelEnding(stage, renderer, this._input);
         this._gameEnding = new GameEnding(stage);
         this._sound = new Sound(this._stage);
+        this._fpsCounter = new FpsCounter(this._stage, this._input);
 
         this._level = null;
         this._levelNumber = 0;
@@ -42,6 +39,7 @@ class Game {
         this._input.start();
         stats.start();
         this._sound.start();
+        this._fpsCounter.start();
 
         eventBus.register('event.startscreen.end', () => {
             this._switchState('level-starting');
@@ -62,14 +60,19 @@ class Game {
         this._switchState('startscreen-active');
     }
 
+    /**
+     * Not sure if this will ever be called.
+     */
     stop() {
         this._level.stop();
         stats.stop();
         this._sound.stop();
+        this._fpsCounter.stop();
     }
 
     draw() {
         this._renderer.render(this._stage);
+        this._fpsCounter.stepRender();
     }
 
     step() {
@@ -100,6 +103,8 @@ class Game {
         }
 
         this._sound.step(elapsed);
+        this._fpsCounter.step(elapsed);
+
         this._resortStageChildren();
     }
 
