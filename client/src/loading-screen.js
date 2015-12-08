@@ -16,6 +16,7 @@ class LoadingScreen {
         }
 
         this._loadedCount = 0;
+        this._success = true;
     }
 
     signalLoaded(success, message) {
@@ -26,15 +27,17 @@ class LoadingScreen {
             if (success) {
                 this._message.textContent = message;
             } else {
+                this._success = false;
                 let div = document.createElement('div');
                 div.textContent = message; // OK to only have one visible error - console logs all of them.
+                this._error.appendChild(div);
                 console.error(message);
             }
         }
     }
 
     signalPreloadComplete() {
-        if (this._container !== undefined) {
+        if (this._container !== undefined && this._success) {
             this._container.outerHTML = "";
             delete this._container;
         }

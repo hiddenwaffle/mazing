@@ -7,6 +7,7 @@ class SoundPreloader {
         this._totalcount = 0;
         this._loadedcount = 0;
         this._afterFinished = null;
+        this._success = true;
     }
 
     load(loadingScreen, paths, afterFinished) {
@@ -35,11 +36,12 @@ class SoundPreloader {
             this._loadingScreen.signalLoaded(true, `Loaded sound (${this._loadedcount}/${this._totalcount})`);
         } else {
             this._loadingScreen.signalLoaded(false, `Unable to load sound: ${path}`);
+            this._success = false;
         }
 
         if (this._loadedcount >= this._totalcount) {
             this._loadingScreen.signalPreloadComplete();
-            this._afterFinished();
+            this._afterFinished(this._success);
         }
     }
 }
