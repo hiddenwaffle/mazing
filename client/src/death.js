@@ -98,7 +98,7 @@ function determineSpawnPointViability(ghosts, idealx, idealy) {
     spawnPoints.sort((a, b) => {
         let dista = Util.qs(idealx - a.x, idealy - a.y);
         let distb = Util.qs(idealx - b.x, idealy - b.y);
-        return dista - distb;
+        return distb - dista;
     });
 
     // Pick nearest one with no ghosts
