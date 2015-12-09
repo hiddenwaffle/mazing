@@ -300,7 +300,7 @@ class Config {
             respawnPoints: [
                 { x:  4, y:  9 },
                 { x: 23, y:  9 },
-                { x:  8, y: 17 },
+                { x:  6, y: 17 },
                 { x: 21, y: 17 },
                 { x:  6, y: 23 },
                 { x: 21, y: 23 }
