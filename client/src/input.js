@@ -73,18 +73,22 @@ class Input {
         switch (e.keyCode) {
 
             // directionals
+            case 65: // 'a'
             case 37: // left
                 this._setState('left', state);
                 e.preventDefault();
                 break;
+            case 87: // 'w'
             case 38: // up
                 this._setState('up', state);
                 e.preventDefault();
                 break;
+            case 68: // 'd'
             case 39: // right
                 this._setState('right', state);
                 e.preventDefault();
                 break;
+            case 83: // 's'
             case 40: // down
                 this._setState('down', state);
                 e.preventDefault();
