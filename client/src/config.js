@@ -342,7 +342,7 @@ class Config {
         this.mazes.push(orangeMaze);
 
         let newBlueMaze = {
-            color: 0x2724fb,
+            color: 0x87b05a, // This is actually green. The original is 0x2724fb
             respawnPoints: [
                 { x:  6, y:  5 },
                 { x: 21, y:  5 },
