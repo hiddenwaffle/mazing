@@ -73,7 +73,7 @@ function generateColorMatrixValue(input) {
             0, 0,    0, 0.5, 0
         ];
 
-    } else { // lower only the alpha
+    } else { // lower only the alpha when given unknown input
         return [
             1, 0, 0, 0,   0,
             0, 1, 0, 0,   0,

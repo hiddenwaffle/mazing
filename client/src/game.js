@@ -14,6 +14,10 @@ const
     stats       = require('./stats'),
     eventBus    = require('./event-bus');
 
+Window.meow = () => {
+    eventBus.fire({ name: 'event.level.end'});
+};
+
 class Game {
 
     constructor(stage, renderer) {

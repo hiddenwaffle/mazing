@@ -34,28 +34,27 @@ class GameEnding {
         title.y = 28;
         this._gfx.addChild(title);
 
-        this._survivalistRow = new Row(this._gfx, 'Survivalist');
-        this._survivalistRow.y = 108;
+        this._playerRow = new Row(this._gfx, "Player Avg Ratio");
+        this._playerRow.y = 108;
 
-        this._hotDogChampionRow = new Row(this._gfx, 'Hot Dog Champion');
-        this._hotDogChampionRow.y = 108 + 42;
+        this._ghostsRow = new Row(this._gfx, 'Top Ghost Avg Ratio');
+        this._ghostsRow.y = 108 + 42;
 
-        this._flavorOfTheWeakRow = new Row(this._gfx, 'Flavor of the Weak');
-        this._flavorOfTheWeakRow.y = 108 + 42 + 42;
+        this._developerRow = new Row(this._gfx, "Developer Best");
+        this._developerRow.y = 108 + 42 + 42;
     }
 
     start() {
-        let survivalist = stats.calculateHighestAverageRatio();
-        this._survivalistRow.awardIcon(survivalist.name);
-        this._survivalistRow.notes = survivalist.ratio.toFixed(2) + ' Avg Ratio';
+        let player = stats.calculateTopGhostAverageRatio();
+        this._playerRow.awardIcon('pacman');
+        this._playerRow.notes = player.ratio.toFixed(2);
 
-        let hotDogChampion = stats.calculateHighestKills();
-        this._hotDogChampionRow.awardIcon(hotDogChampion.name);
-        this._hotDogChampionRow.notes = 'Ate ' + hotDogChampion.kills + ' Snacks';
+        let ghost = stats.calculateTopGhostAverageRatio();
+        this._ghostsRow.awardIcon(ghost.name);
+        this._ghostsRow.notes = ghost.ratio.toFixed(2);
 
-        let flavorOfTheWeak = stats.calculateHighestDeaths();
-        this._flavorOfTheWeakRow.awardIcon(flavorOfTheWeak.name);
-        this._flavorOfTheWeakRow.notes = 'Eaten ' + flavorOfTheWeak.deaths + ' Times';
+        this._developerRow.awardIcon('reptile');
+        this._developerRow.notes = '1.99     2015-12-5';
 
         this._gfx.visible = true;
     }
@@ -117,6 +116,8 @@ class Row {
             case 'clyde':
                 icon = Util.createGhostIcon('orange', 1);
                 break;
+            case 'reptile':
+                icon = Util.createGhostIcon('green', 1);
         }
 
         this._gfx.addChild(icon);

@@ -42,21 +42,7 @@ class EntityStats {
             acc += kills / deaths;
         }
 
-        let averageRatio = acc / this._rounds.length;
-
-        return averageRatio;
-    }
-
-    calculateTotalKills() {
-        return this._rounds.reduce((acc, stats) => {
-            return acc + stats.kills;
-        }, 0);
-    }
-
-    calculateTotalDeaths() {
-        return this._rounds.reduce((acc, stats) => {
-            return acc + stats.deaths;
-        }, 0);
+        return acc / this._rounds.length;
     }
 
     get name() {
@@ -98,10 +84,21 @@ class Stats {
         // TODO: unregister events listeners
     }
 
-    calculateHighestAverageRatio() {
-        let stats = this._entityStatsToArray();
+    calculatePlayerAverageRatio() {
+        let pacmanStats = this.entityStats.get('pacman');
+        return pacmanStats.calculateAverageRatio();
+    }
+
+    calculateTopGhostAverageRatio() {
+        let stats = [
+            this.entityStats.get('blinky'),
+            this.entityStats.get('pinky'),
+            this.entityStats.get('inky'),
+            this.entityStats.get('clyde')
+        ];
+
         let highest = stats.reduce((prev, curr) => {
-            if (prev.calculateAverageRatio() > curr.calculateAverageRatio()) {
+            if (prev.calculateAverageRatio() > curr.calculateAverageRatio()) { // TODO: optimize
                 return prev;
             } else {
                 return curr;
@@ -112,46 +109,6 @@ class Stats {
             name: highest.name,
             ratio: highest.calculateAverageRatio()
         };
-    }
-
-    calculateHighestKills() {
-        let stats = this._entityStatsToArray();
-        let highest = stats.reduce((prev, curr) => {
-            if (prev.calculateTotalKills() > curr.calculateTotalKills()) {
-                return prev;
-            } else {
-                return curr;
-            }
-        }, stats[0]);
-
-        return {
-            name: highest.name,
-            kills: highest.calculateTotalKills()
-        };
-    }
-
-    calculateHighestDeaths() {
-        let stats = this._entityStatsToArray();
-        let highest = stats.reduce((prev, curr) => {
-            if (prev.calculateTotalDeaths() > curr.calculateTotalDeaths()) {
-                return prev;
-            } else {
-                return curr;
-            }
-        }, stats[0]);
-
-        return {
-            name: highest.name,
-            deaths: highest.calculateTotalDeaths()
-        }
-    }
-
-    _entityStatsToArray() {
-        let values = [];
-        for (let value of this.entityStats.values()) {
-            values.push(value);
-        }
-        return values;
     }
 
     _handlePacmanDeath(ghostName) {
