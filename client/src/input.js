@@ -123,6 +123,8 @@ class Input {
             case 219:   // left brackets
             case 221:   // right brackets
             case 16:    // shift
+            case 84:    // 't' (i.e., open a new tab)
+            case 78:    // 'n' (i.e., open a new window)
                 e.preventDefault();
                 break;
 
