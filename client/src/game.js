@@ -117,7 +117,7 @@ class Game {
         //}
         // TODO: Shuffle the array
 
-        this._mazeOrder = [2, 0, 1, 2, 1];
+        this._mazeOrder = [3, 0, 1, 2, 3];
     }
 
     _switchState(state) {
