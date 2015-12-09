@@ -56,16 +56,16 @@ class Config {
         this.speedGroups = [
             // first configuration (first level)
             {
-                pacmanNormal:       0.9,    // original value: 0.8
-                pacmanFright:       0.95,   // original value: 0.9
+                pacmanNormal:       0.8
+                pacmanFright:       0.9,
                 ghostNormal:        0.75,
                 ghostFright:        0.5,
                 ghostTunnel:        0.4
             },
             // second configuration (levels 2-4)
             {
-                pacmanNormal:       0.95,   // original value: 0.9
-                pacmanFright:       0.975,  // original value: 0.95
+                pacmanNormal:       0.9,
+                pacmanFright:       0.95,
                 ghostNormal:        0.85,
                 ghostFright:        0.55,
                 ghostTunnel:        0.45
