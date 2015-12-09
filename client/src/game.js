@@ -10,6 +10,7 @@ const
     FpsCounter  = require('./fps-counter');
 
 const
+    config      = require('./config'),
     stats       = require('./stats'),
     eventBus    = require('./event-bus');
 
@@ -111,13 +112,11 @@ class Game {
     }
 
     _fillMazeOrder() {
-        // TODO: Use this:
-        //for (let num = 0; num < config.mazes.length; num++) {
-        //    this._levelOrder.push[num];
-        //}
-        // TODO: Shuffle the array
+        for (let num = 0; num < config.mazes.length; num++) {
+            this._mazeOrder.push(num);
+        }
 
-        this._mazeOrder = [4, 3, 2, 1, 0];
+        shuffleArray(this._mazeOrder);
     }
 
     _switchState(state) {
@@ -191,3 +190,27 @@ class Game {
 }
 
 module.exports = Game;
+
+/**
+ * Fischer-Yates Algorithm
+ * http://stackoverflow.com/a/6274398/738081
+ */
+function shuffleArray(arr) {
+    var counter = arr.length, temp, index;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        temp = arr[counter];
+        arr[counter] = arr[index];
+        arr[index] = temp;
+    }
+
+    return arr;
+}
