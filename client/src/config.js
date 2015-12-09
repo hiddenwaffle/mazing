@@ -56,7 +56,7 @@ class Config {
         this.speedGroups = [
             // first configuration (first level)
             {
-                pacmanNormal:       0.8
+                pacmanNormal:       0.8,
                 pacmanFright:       0.9,
                 ghostNormal:        0.75,
                 ghostFright:        0.5,
