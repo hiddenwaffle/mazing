@@ -45,9 +45,9 @@ class GameEnding {
     }
 
     start() {
-        let player = stats.calculateTopGhostAverageRatio();
+        let playerRatio = stats.calculatePlayerAverageRatio();
         this._playerRow.awardIcon('pacman');
-        this._playerRow.notes = player.ratio.toFixed(2);
+        this._playerRow.notes = playerRatio.toFixed(2);
 
         let ghost = stats.calculateTopGhostAverageRatio();
         this._ghostsRow.awardIcon(ghost.name);
