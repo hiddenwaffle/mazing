@@ -81,7 +81,7 @@ class CharacterAnimations {
         colorMatrix.matrix = Util.generateColorMatrixValue(color);
 
         let upFrames = [];
-        for (let filename of ['ghost-green-up1.png', 'ghost-green-up2.png', 'ghost-green-up3.png']) {
+        for (let filename of ['shade-green-up1.png', 'shade-green-up2.png', 'shade-green-up3.png']) {
             upFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
         }
 
@@ -90,7 +90,7 @@ class CharacterAnimations {
         centerClip(up);
 
         let downFrames = [];
-        for (let filename of ['ghost-green-down1.png', 'ghost-green-down2.png', 'ghost-green-down3.png']) {
+        for (let filename of ['shade-green-down1.png', 'shade-green-down2.png', 'shade-green-down3.png']) {
             downFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
         }
 
@@ -99,7 +99,7 @@ class CharacterAnimations {
         centerClip(down);
 
         let rightFrames = [];
-        for (let filename of ['ghost-green-right1.png', 'ghost-green-right2.png', 'ghost-green-right3.png']) {
+        for (let filename of ['shade-green-right1.png', 'shade-green-right2.png', 'shade-green-right3.png']) {
             rightFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
         }
 
@@ -113,7 +113,7 @@ class CharacterAnimations {
         centerClip(right);
 
         let frightenedFrames = [];
-        for (let filename of ['ghost-frightened1.png', 'ghost-frightened2.png', 'ghost-frightened3.png']) {
+        for (let filename of ['shade-frightened1.png', 'shade-frightened2.png', 'shade-frightened3.png']) {
             frightenedFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
         }
 
@@ -122,12 +122,12 @@ class CharacterAnimations {
 
         let flashingFrames = [];
         for (let filename of [
-            'ghost-frightened1.png',
-            'ghost-frightened2.png',
-            'ghost-frightened3.png',
-            'ghost-flash1.png',
-            'ghost-flash2.png',
-            'ghost-flash3.png']) {
+            'shade-frightened1.png',
+            'shade-frightened2.png',
+            'shade-frightened3.png',
+            'shade-flash1.png',
+            'shade-flash2.png',
+            'shade-flash3.png']) {
             flashingFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 83.34 });
         }
 

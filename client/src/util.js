@@ -93,7 +93,7 @@ exports.createPacmanIcon = function (scale) {
 };
 
 exports.createGhostIcon = function (color, scale) {
-    let texture = PIXI.Texture.fromFrame('ghost-green-right1.png');
+    let texture = PIXI.Texture.fromFrame('shade-green-right1.png');
     let ghostIcon = new PIXI.Sprite(texture);
     ghostIcon.scale.x = ghostIcon.scale.y = scale;
 
