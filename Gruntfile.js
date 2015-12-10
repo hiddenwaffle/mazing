@@ -33,7 +33,9 @@ module.exports = function(grunt) {
                 dest: 'dist/index.html'
             },
             media: {
-                src: 'media/assets/*',
+                expand: true,           // I wonder what this does?
+                cwd: 'media/assets/',
+                src: '**/*',
                 dest: 'dist/assets/'
             }
         },
