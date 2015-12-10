@@ -1,0 +1,1 @@
+Grunt copies assets/* to ../dist/assets/ on full build and while watching.
