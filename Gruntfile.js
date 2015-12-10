@@ -67,7 +67,8 @@ module.exports = function(grunt) {
                     'dist/client.min.js': ['dist/client.js']
                 }
             }
-        }
+        },
+        clean: ['dist']
     });
 
     grunt.loadNpmTasks('grunt-browserify');
@@ -76,6 +77,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('default', ['browserify', 'bowercopy', 'copy', 'connect', 'watch']);
     grunt.registerTask('min', ['browserify', 'uglify']);
