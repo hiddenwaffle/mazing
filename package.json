@@ -1,5 +1,5 @@
 {
-  "name": "maze-planet",
+  "name": "mazing",
   "version": "1.0.0",
   "description": "A maze of planets",
   "main": "client/src/main.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hiddenwaffle/pac-test.git"
+    "url": "git+https://github.com/hiddenwaffle/mazing.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hiddenwaffle/pac-test/issues"
+    "url": "https://github.com/hiddenwaffle/mazing/issues"
   },
-  "homepage": "https://github.com/hiddenwaffle/pac-test#readme",
+  "homepage": "https://github.com/hiddenwaffle/mazing#readme",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",

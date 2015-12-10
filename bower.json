@@ -1,12 +1,12 @@
 {
-  "name": "maze-planet",
+  "name": "mazing",
   "description": "A maze of planets",
   "main": "client/src/main.js",
   "authors": [
     "hiddenwaffle <hiddenwaffle@users.noreply.github.com>"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/hiddenwaffle/pac-test",
+  "homepage": "https://github.com/hiddenwaffle/mazing",
   "moduleType": [],
   "private": true,
   "ignore": [
