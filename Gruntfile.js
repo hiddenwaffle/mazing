@@ -47,6 +47,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-bowercopy');
     grunt.loadNpmTasks('grunt-contrib-connect');
-    
+
     grunt.registerTask('default', ['browserify', 'bowercopy', 'connect', 'watch']);
 };
