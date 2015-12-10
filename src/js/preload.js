@@ -24,7 +24,7 @@ class Preload {
             this._loadingScreen.signalLoaded(false, 'Could not load sprites');
             this._success = false;
         });
-        PIXI.loader.add('assets/mazing.json').load(() => {
+        PIXI.loader.add('assets/mazing-v1.json').load(() => {
             this._gfxLoaded = true;
             this._loadingScreen.signalLoaded('Sprites loaded');
             this._handleIfFinished();
@@ -32,13 +32,13 @@ class Preload {
 
         // NOTE: The rest of the sounds are loaded later on. These are needed in the beginning.
         soundPreloader.load(this._loadingScreen, [
-            'assets/punch.m4a',
-            'assets/wham1.m4a',
-            'assets/wham2.m4a',
-            'assets/wham3.m4a',
-            'assets/energizer.m4a',
-            'assets/crackles.m4a',
-            'assets/cool-journey.m4a'
+            'assets/punch-v1.m4a',
+            'assets/wham1-v1.m4a',
+            'assets/wham2-v1.m4a',
+            'assets/wham3-v1.m4a',
+            'assets/energizer-v1.m4a',
+            'assets/crackles-v1.m4a',
+            'assets/cool-journey-v1.m4a'
         ], (success) => {
             this._sfxLoaded = true;
             this._handleIfFinished(success);

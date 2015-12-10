@@ -65,7 +65,7 @@ class Sound {
         // Load some sound files that were not preloaded
 
         this._levelEnd = new Howl({
-            urls: ['assets/atari-st-beat-11.m4a'],
+            urls: ['assets/atari-st-beat-11-v1.m4a'],
             volume: 0.35,
             loop: true,
             onload:      () => { console.log('Loaded sound (level end)'); },
@@ -73,28 +73,28 @@ class Sound {
         });
 
         let levelBackground2 = new Howl({ // This gets configured more later in this method.
-            urls: ['assets/happy-energy.m4a'],
+            urls: ['assets/happy-energy-v1.m4a'],
             onload:      () => { console.log('Loaded sound (happy-energy)'); },
             onloaderror: () => { console.error('Unable to load sound (happy-energy'); }
         });
 
         // Configure sound files
 
-        this._punch = soundPreloader.get('assets/punch.m4a');
+        this._punch = soundPreloader.get('assets/punch-v1.m4a');
         this._punch.volume(0.4);
 
-        let wham1 = soundPreloader.get('assets/wham1.m4a');
-        let wham2 = soundPreloader.get('assets/wham2.m4a');
-        let wham3 = soundPreloader.get('assets/wham3.m4a');
+        let wham1 = soundPreloader.get('assets/wham1-v1.m4a');
+        let wham2 = soundPreloader.get('assets/wham2-v1.m4a');
+        let wham3 = soundPreloader.get('assets/wham3-v1.m4a');
         this._whams = [ wham1, wham2, wham3 ];
         for (let wham of this._whams) {
             wham.volume(0.20);
         }
 
-        this._energizer = soundPreloader.get('assets/energizer.m4a');
+        this._energizer = soundPreloader.get('assets/energizer-v1.m4a');
         this._energizer.volume(0.5);
 
-        let levelBackground1 = soundPreloader.get('assets/cool-journey.m4a');
+        let levelBackground1 = soundPreloader.get('assets/cool-journey-v1.m4a');
         this._levelBackgrounds = [ levelBackground1, levelBackground2 ];
         for (let levelBackground of this._levelBackgrounds) {
             levelBackground.volume(0.9);
@@ -103,7 +103,7 @@ class Sound {
 
         this._currentBackground = 0;
 
-        this._crackles = soundPreloader.get('assets/crackles.m4a');
+        this._crackles = soundPreloader.get('assets/crackles-v1.m4a');
         this._crackles.volume(0.3);
         this._crackles.loop(true);
 

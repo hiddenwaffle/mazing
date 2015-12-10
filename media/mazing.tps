@@ -38,7 +38,7 @@
         <key>dataFormat</key>
         <string>json</string>
         <key>textureFileName</key>
-        <filename>assets/mazing.png</filename>
+        <filename>assets/mazing-v1.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -147,7 +147,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>assets/mazing.json</filename>
+                <filename>assets/mazing-v1.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
