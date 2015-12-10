@@ -1,6 +1,7 @@
 .DS_Store
 .idea
 *.swp
+*.tps
 
 client/pixi.js
 client/pixi.min.js
