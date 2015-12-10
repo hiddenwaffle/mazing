@@ -1,7 +1,7 @@
 {
   "name": "mazing",
-  "description": "A maze of planets",
-  "main": "client/src/main.js",
+  "description": "Some inconspicuous mazes",
+  "main": "src/js/main.js",
   "authors": [
     "hiddenwaffle <hiddenwaffle@users.noreply.github.com>"
   ],

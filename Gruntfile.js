@@ -9,7 +9,7 @@ module.exports = function(grunt) {
                     ]
                 },
                 files: {
-                    'client/client.js': ['client/src/main.js']
+                    'dist/client.js': ['src/js/main.js']
                 }
             }
         },
@@ -17,7 +17,7 @@ module.exports = function(grunt) {
             dist: {
                 options: {
                     srcPrefix: 'bower_components',
-                    destPrefix: 'client'
+                    destPrefix: 'dist'
                 },
                 files: {
                     'pixi.js':          'pixi.js/bin/pixi.js',
@@ -27,17 +27,27 @@ module.exports = function(grunt) {
                 }
             }
         },
+        copy: {
+            index: {
+                src: 'src/index.html',
+                dest: 'dist/index.html'
+            }
+        },
         watch: {
             js: {
-                files: ['client/src/**/*.js'],
+                files: ['src/js/**/*.js'],
                 tasks: ['browserify']
+            },
+            index: {
+                files: ['src/index.html'],
+                tasks: ['copy:index']
             }
         },
         connect: {
             server: {
                 options: {
                     port: 8080,
-                    base: 'client'
+                    base: 'dist'
                 }
             }
         }
@@ -47,6 +57,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-bowercopy');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', ['browserify', 'bowercopy', 'connect', 'watch']);
+    grunt.registerTask('default', ['browserify', 'bowercopy', 'copy', 'connect', 'watch']);
 };

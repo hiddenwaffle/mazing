@@ -2,12 +2,6 @@
 .idea
 *.swp
 
-dist/pixi.js
-dist/pixi.min.js
-dist/howler.js
-dist/howler.min.js
-dist/client.js
-dist/assets/
-
+dist/
 node_modules/
 bower_components/
