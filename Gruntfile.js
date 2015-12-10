@@ -31,6 +31,10 @@ module.exports = function(grunt) {
             index: {
                 src: 'src/index.html',
                 dest: 'dist/index.html'
+            },
+            media: {
+                src: 'media/assets/*',
+                dest: 'dist/assets/'
             }
         },
         watch: {
@@ -41,6 +45,10 @@ module.exports = function(grunt) {
             index: {
                 files: ['src/index.html'],
                 tasks: ['copy:index']
+            },
+            media: {
+                files: ['media/assets/*'],
+                tasks: ['copy:media'] // TODO: This could be modified to copy only the modified file(s)
             }
         },
         connect: {
