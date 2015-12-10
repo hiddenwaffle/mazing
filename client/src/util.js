@@ -85,7 +85,7 @@ function generateColorMatrixValue(input) {
 exports.generateColorMatrixValue = generateColorMatrixValue;
 
 exports.createPacmanIcon = function (scale) {
-    let texture = PIXI.Texture.fromFrame('pacman2.png');
+    let texture = PIXI.Texture.fromFrame('player2.png');
     let pacmanIcon = new PIXI.Sprite(texture);
     pacmanIcon.scale.x = pacmanIcon.scale.y = scale;
 

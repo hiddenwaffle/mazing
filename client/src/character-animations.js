@@ -40,7 +40,7 @@ class CharacterAnimations {
 
     createPacManAnimations() {
         let frames = [];
-        for (let filename of ['pacman1.png', 'pacman2.png', 'pacman3.png', 'pacman2.png']) {
+        for (let filename of ['player1.png', 'player2.png', 'player3.png', 'player2.png']) {
             frames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
         }
 
