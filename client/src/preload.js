@@ -24,7 +24,7 @@ class Preload {
             this._loadingScreen.signalLoaded(false, 'Could not load sprites');
             this._success = false;
         });
-        PIXI.loader.add('assets/pac-test.json').load(() => {
+        PIXI.loader.add('assets/mazing.json').load(() => {
             this._gfxLoaded = true;
             this._loadingScreen.signalLoaded('Sprites loaded');
             this._handleIfFinished();
