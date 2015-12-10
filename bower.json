@@ -1,0 +1,23 @@
+{
+  "name": "maze-planet",
+  "description": "A maze of planets",
+  "main": "client/src/main.js",
+  "authors": [
+    "hiddenwaffle <hiddenwaffle@users.noreply.github.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/hiddenwaffle/pac-test",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "howler.js": "~1.1.28",
+    "pixi.js": "~3.0.8"
+  }
+}

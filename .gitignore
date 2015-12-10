@@ -3,8 +3,11 @@
 *.swp
 
 client/pixi.js
+client/pixi.min.js
 client/howler.js
+client/howler.min.js
 client/client.js
 client/assets/
 
 node_modules/
+bower_components/
