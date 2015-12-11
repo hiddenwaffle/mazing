@@ -8,12 +8,21 @@
             text-align: center;
             margin-top: 32px;
             background: #222;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        #source {
+            position: fixed;
+            bottom: 8px;
+            right: 12px;
+        }
+        #source a {
+            text-decoration: none;
+            color: #111;
         }
         #loading {
             visibility: hidden;
             margin-top: 256px;
             color: #eee;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
         #loading div {
             margin: 6px;
@@ -29,6 +38,12 @@
     <div id="loadingMessage"></div>
     <div id="loadingError"></div>
     <progress id="loadingBar"></progress>
+</div>
+
+<div id="source">
+    <a href="https://github.com/hiddenwaffle/mazing" target="_blank">
+        <img src="assets/GitHub-Mark-32px.png"/>
+    </a>
 </div>
 
 <script src="pixi-3.0.8.js"></script>
