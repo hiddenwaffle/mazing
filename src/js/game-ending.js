@@ -54,7 +54,7 @@ class GameEnding {
         this._ghostsRow.notes = ghost.ratio.toFixed(2);
 
         this._developerRow.awardIcon('reptile');
-        this._developerRow.notes = '2.83     2015-12-6';
+        this._developerRow.notes = '6.11     2015-12-10';
 
         this._gfx.visible = true;
     }
