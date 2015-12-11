@@ -1,29 +1,48 @@
+'use strict';
+
 module.exports = function(grunt) {
+
+    const clientFile = 'dist/client-1.0.0.js'; // Should match index.html's reference
+
+    const intermediateBrowserifyFile = 'dist/tmp-browserified.js'; // Used by Uglify
+
+    const browserifyOptions = {
+        transform: [
+            ['babelify', { presets: 'es2015' } ]
+        ]
+    };
+
+    const bowerOptions = {
+        srcPrefix: 'bower_components',
+        destPrefix: 'dist'
+    };
 
     grunt.initConfig({
         browserify: {
-            dist: {
-                options: {
-                    transform: [
-                        ['babelify', { presets: 'es2015' } ]
-                    ]
-                },
-                files: {
-                    'dist/client.js': ['src/js/main.js']
-                }
+            dev: {
+                options: browserifyOptions,
+                src: ['src/js/main.js'],
+                dest: clientFile
+            },
+            prod: {
+                options: browserifyOptions,
+                src: ['src/js/main.js'],
+                dest: intermediateBrowserifyFile
             }
         },
         bowercopy: {
-            dist: {
-                options: {
-                    srcPrefix: 'bower_components',
-                    destPrefix: 'dist'
-                },
+            dev: {
+                options: bowerOptions,
                 files: {
-                    'pixi.js':          'pixi.js/bin/pixi.js',
-                    'pixi.min.js':      'pixi.js/bin/pixi.min.js',
-                    'howler.js':        'howler.js/howler.js',
-                    'howler.min.js':    'howler.js/howler.min.js'
+                    'pixi-3.0.8.js':    'pixi.js/bin/pixi.js',
+                    'howler-1.1.28.js': 'howler.js/howler.js'
+                }
+            },
+            prod: {
+                options: bowerOptions,
+                files: {
+                    'pixi-3.0.8.js':    'pixi.js/bin/pixi.min.js',
+                    'howler-1.1.28.js': 'howler.js/howler.min.js'
                 }
             }
         },
@@ -42,7 +61,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/js/**/*.js'],
-                tasks: ['browserify']
+                tasks: ['browserify:dev']
             },
             index: {
                 files: ['src/index.html'],
@@ -63,12 +82,14 @@ module.exports = function(grunt) {
         },
         uglify: {
             client: {
-                files: {
-                    'dist/client.min.js': ['dist/client.js']
-                }
+                src: [intermediateBrowserifyFile],
+                dest: clientFile
             }
         },
-        clean: ['dist']
+        clean: {
+            all: ['dist'],
+            'after-uglify': [intermediateBrowserifyFile]
+        }
     });
 
     grunt.loadNpmTasks('grunt-browserify');
@@ -79,6 +100,22 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['browserify', 'bowercopy', 'copy', 'connect', 'watch']);
-    grunt.registerTask('min', ['browserify', 'uglify']);
+    // Standard dev workflow
+    grunt.registerTask('default', [
+        'browserify:dev',
+        'bowercopy:dev',
+        'copy',
+        'connect',
+        'watch'
+    ]);
+
+    // Prepare for production
+    grunt.registerTask('finalize', [
+        'clean:all',
+        'browserify:prod',
+        'uglify',
+        'clean:after-uglify',
+        'bowercopy:prod',
+        'copy'
+    ]);
 };
