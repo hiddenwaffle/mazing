@@ -45,7 +45,7 @@ grunt clean  # remove the dist directory
 
 ## Credits
 
-Sound and music are public domain and were acquired from freesound.org.
+Sound and music are CC0 and were acquired from freesound.org.
 * [Punch] (http://www.freesound.org/people/Ekokubza123/sounds/104183/)
 * [60s-style punches] (http://www.freesound.org/people/karjo238/sounds/278210/)
 * [Bass Drop] (http://www.freesound.org/people/Stereo%20Surgeon/sounds/261205/)
