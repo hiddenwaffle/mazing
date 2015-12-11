@@ -100,7 +100,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    // Standard dev workflow
+    // Standard dev workflow.
     grunt.registerTask('default', [
         'browserify:dev',
         'bowercopy:dev',
@@ -109,7 +109,7 @@ module.exports = function(grunt) {
         'watch'
     ]);
 
-    // Prepare for production
+    // Prepare for production.
     grunt.registerTask('finalize', [
         'clean:all',
         'browserify:prod',
@@ -117,5 +117,11 @@ module.exports = function(grunt) {
         'clean:after-uglify',
         'bowercopy:prod',
         'copy'
+    ]);
+
+    // Start a server quickly without building anything.
+    grunt.registerTask('server', [
+        'connect',
+        'watch'
     ]);
 };
