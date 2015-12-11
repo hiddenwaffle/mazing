@@ -67,7 +67,6 @@ class Sound {
         this._levelEnd = new Howl({
             urls: ['assets/atari-st-beat-11-v1.m4a'],
             volume: 0.35,
-            loop: true,
             onload:      () => { console.log('Loaded sound (level end)'); },
             onloaderror: () => { console.error('Unable to load sound (level end'); }
         });
