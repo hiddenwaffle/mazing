@@ -81,7 +81,7 @@ class Input {
             case 87: // 'w'
             case 38: // up
                 this._setState('up', state);
-                e.preventDefault();
+                //e.preventDefault(); // do not prevent default in case user wants to cmd+w or ctrl+w
                 break;
             case 68: // 'd'
             case 39: // right
