@@ -2,7 +2,7 @@
 
 module.exports = function(grunt) {
 
-    const clientFile = 'dist/client-1.0.0.js'; // Should match index.html's reference
+    const clientFile = 'dist/client-1.0.1.js'; // Should match index.html's reference
 
     const intermediateBrowserifyFile = 'dist/tmp-browserified.js'; // Used by Uglify
 
