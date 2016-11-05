@@ -1,6 +1,6 @@
 # Mazing
 
-**Play Here: [https://villena.io/mazing] (https://villena.io/mazing)**
+**Play Here: [https://hiddenwaffle.github.io/mazing] (https://hiddenwaffle.github.io/mazing)**
 
 The purpose of this project was to reinterpret a retro game, and to learn several tools:
 * ES6 a.k.a. ES2015 via [Babel] (https://babeljs.io/)
