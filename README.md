@@ -22,7 +22,7 @@ npm install -g bower
 
 Clone and prepare
 <pre>
-git clone https://github.com/hiddenwaffle/mazing.git
+git clone https://github.com/unremarkableSCM/mazing.git
 npm install
 bower install
 </pre>
