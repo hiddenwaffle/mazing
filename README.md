@@ -1,6 +1,6 @@
 # Mazing
 
-**Play Here: [https://unremarkableSCM.github.io/mazing](https://hiddenwaffle.github.io/mazing)**
+**Play Here: [https://unremarkable.app/mazing](https://unremarkable.app/mazing)**
 
 The purpose of this project was to reinterpret a retro game, and to learn several tools:
 * ES6 a.k.a. ES2015 via [Babel](https://babeljs.io/)
@@ -22,7 +22,7 @@ npm install -g bower
 
 Clone and prepare
 <pre>
-git clone https://github.com/unremarkableSCM/mazing.git
+git clone https://github.com/hiddenwaffle/mazing.git
 npm install
 bower install
 </pre>
