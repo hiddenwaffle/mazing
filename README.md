@@ -1,7 +1,5 @@
 # Mazing
 
-**Play Here: [https://unremarkable.app/mazing](https://unremarkable.app/mazing)**
-
 The purpose of this project was to reinterpret a retro game, and to learn several tools:
 * ES6 a.k.a. ES2015 via [Babel](https://babeljs.io/)
 * [Pixi.js](http://www.pixijs.com/) for WebGL rendering
