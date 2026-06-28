@@ -1,14 +1,32 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>mazing</title>
     <style>
+        html, body {
+            height: 100%;
+        }
         body {
-            text-align: center;
-            margin-top: 32px;
+            margin: 0;
             background: #222;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* Center the game canvas both axes. When the canvas is scaled to the
+               window height, this produces an even ~1 tile margin top and bottom. */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        /* The game canvas is rendered at its native pixel resolution and then
+           scaled up by CSS. `pixelated` keeps the upscale crisp (nearest
+           neighbour) instead of blurry (bilinear). */
+        canvas {
+            display: block;
+            /* The canvas is rendered at full device resolution and displayed
+               1:1, so no CSS image scaling happens here. Pixel-art crispness is
+               handled in Pixi (nearest-neighbour sampling on the sprite atlas). */
         }
         #source {
             position: fixed;
@@ -20,8 +38,12 @@
             color: #111;
         }
         #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             visibility: hidden;
-            margin-top: 256px;
+            text-align: center;
             color: #eee;
         }
         #loading div {
@@ -31,6 +53,12 @@
             color: #f00;
         }
     </style>
+  <script type="module" crossorigin src="./assets/index-sDFgFtuK.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/Geometry-DxRSYlAe.js">
+  <link rel="modulepreload" crossorigin href="./assets/Filter-oM2GCY0n.js">
+  <link rel="modulepreload" crossorigin href="./assets/canvasUtils-BobTNIDZ.js">
+  <link rel="modulepreload" crossorigin href="./assets/GCManagedHash-CBAduZo2.js">
+  <link rel="modulepreload" crossorigin href="./assets/RenderTargetSystem-BUlKmNru.js">
 </head>
 <body>
 
@@ -41,14 +69,11 @@
 </div>
 
 <div id="source">
-    <a href="https://github.com/hiddenwaffle/mazing" target="_blank">
-        <img src="assets/GitHub-Mark-32px.png"/>
+    <a href="https://github.com/hiddenwaffle/mazing" target="_blank" rel="noopener">
+        <img src="assets/GitHub-Mark-32px.png" alt="Source on GitHub"/>
     </a>
 </div>
 
-<script src="pixi-3.0.8.js"></script>
-<script src="howler-1.1.28.js"></script>
-<script src="client-1.0.1.js"></script>
 
 </body>
 </html>

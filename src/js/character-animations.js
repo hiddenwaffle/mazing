@@ -1,4 +1,4 @@
-import { AnimatedSprite, Texture, ColorMatrixFilter } from 'pixi.js';
+import { AnimatedSprite, Texture } from 'pixi.js';
 import EntityAnimation from './entity-animation';
 import eventBus from './event-bus';
 import config from './config';
@@ -73,8 +73,7 @@ class CharacterAnimations {
     }
 
     createGhostAnimations(color) {
-        let colorMatrix = new ColorMatrixFilter();
-        colorMatrix.matrix = Util.generateColorMatrixValue(color);
+        let colorMatrix = Util.createGhostColorMatrix(color);
 
         let upFrames = [];
         for (let filename of ['shade-green-up1.png', 'shade-green-up2.png', 'shade-green-up3.png']) {
