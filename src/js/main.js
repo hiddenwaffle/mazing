@@ -16,8 +16,10 @@ preload.start(async () => {
         width: NATIVE_WIDTH,
         height: NATIVE_HEIGHT,
         background: 0x333333,
-        resolution: 1,
-        autoDensity: false,
+        // Render at the device's real pixel density so the vector maze and the
+        // text are crisp; the scaling module resizes the renderer to fit.
+        resolution: window.devicePixelRatio || 1,
+        autoDensity: true,
         antialias: false,
     });
     setRenderer(renderer);
@@ -26,7 +28,7 @@ preload.start(async () => {
     stage.sortableChildren = true; // honour each layer's `zIndex`
 
     document.body.appendChild(renderer.canvas);
-    applyScaling(renderer.canvas, NATIVE_WIDTH, NATIVE_HEIGHT);
+    applyScaling(renderer, stage, NATIVE_WIDTH, NATIVE_HEIGHT);
 
     const game = new Game(stage, renderer);
     game.start();

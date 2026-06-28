@@ -24,12 +24,9 @@
            neighbour) instead of blurry (bilinear). */
         canvas {
             display: block;
-            /* Order matters: a browser uses the last value it understands.
-               `crisp-edges` is the fallback for engines that lack `pixelated`
-               (older Firefox); `pixelated` wins everywhere it is supported
-               (Chromium, modern Firefox) and gives true nearest-neighbour. */
-            image-rendering: crisp-edges;
-            image-rendering: pixelated;
+            /* The canvas is rendered at full device resolution and displayed
+               1:1, so no CSS image scaling happens here. Pixel-art crispness is
+               handled in Pixi (nearest-neighbour sampling on the sprite atlas). */
         }
         #source {
             position: fixed;
