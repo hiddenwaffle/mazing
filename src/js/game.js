@@ -133,6 +133,7 @@ class Game {
                 let currentLevel = this._level;
                 if (currentLevel !== null && currentLevel !== undefined) {
                     this._levelNumber = currentLevel.number + 1;
+                    currentLevel.stop(); // tear down the just-finished level
                 } else {
                     this._levelNumber = 0;
                 }
@@ -147,11 +148,15 @@ class Game {
                 break;
 
             case 'level-ending':
-                this._levelEnding.start(this._levelNumber);
-                this._level.stop();
+                // Keep the level alive (frozen) so the ending screen can blur it;
+                // it is torn down when the next state starts.
+                this._levelEnding.start(this._levelNumber, this._level);
                 break;
 
             case 'game-ending':
+                if (this._level !== null && this._level !== undefined) {
+                    this._level.stop();
+                }
                 this._gameEnding.start();
                 break;
         }

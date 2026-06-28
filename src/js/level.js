@@ -93,6 +93,14 @@ class Level {
         return this._board.dotsLeft() == false;
     }
 
+    /**
+     * The level's visual container (maze, characters, particles). Exposed so the
+     * level-ending screen can blur the frozen level behind its dialog.
+     */
+    get gfx() {
+        return this._gfx;
+    }
+
     _stepPaused(elapsed) {
         this._pause.step(elapsed);
     }

@@ -1,9 +1,10 @@
-import { Container, Graphics, Text } from 'pixi.js';
+import { Container, Graphics, Text, BlurFilter } from 'pixi.js';
 import eventBus from './event-bus';
 import config from './config';
 import * as Util from './util';
 
-const FADE_TIME = 500; // ms for the dialog to fade in
+const FADE_TIME = 700; // ms for the dialog to fade in / the level to blur out
+const MAX_BLUR = 14;   // peak blur strength applied to the frozen level
 
 const PANEL_W = 390;
 const PANEL_H = 320;
@@ -26,9 +27,13 @@ class LevelEnding {
         this._fadeTimeLeft = 0;
         this._ready = false;
         this._standingNodes = [];
+        this._endingLevel = null;
 
-        // Full-screen dim behind the dialog (a real modal backdrop instead of a
-        // blurred render-texture snapshot).
+        // Blur applied to the frozen level behind the dialog (the "defocus"
+        // transition). Applied live to the level container, not a snapshot.
+        this._blurFilter = new BlurFilter({ strength: 0 });
+
+        // Full-screen dim behind the dialog.
         this._backdrop = new Graphics();
         this._backdrop.rect(0, 0, 800, 600).fill({ color: 0x000000, alpha: 1 });
         this._backdrop.zIndex = 9;
@@ -71,14 +76,24 @@ class LevelEnding {
         this._scoreboard = null;
     }
 
-    start(levelNumber) {
+    start(levelNumber, level) {
         this._levelNumber = levelNumber;
+        this._endingLevel = level;
         this._title.text = 'Level ' + (levelNumber + 1) + ' Final Score';
         this._updateFooter(levelNumber);
 
-        // Render this level's standings fresh (the live scoreboard is still
-        // alive at this point; the game tears the level down right after).
+        // Render this level's standings fresh, then hide the live scoreboard so
+        // only the crisp dialog copy shows.
         this._renderStandings();
+        if (this._scoreboard) {
+            this._scoreboard.gfx.visible = false;
+        }
+
+        // Defocus the frozen level behind the dialog.
+        this._blurFilter.strength = 0;
+        if (this._endingLevel) {
+            this._endingLevel.gfx.filters = [this._blurFilter];
+        }
 
         this._backdrop.alpha = 0;
         this._backdrop.visible = true;
@@ -93,12 +108,14 @@ class LevelEnding {
             this._fadeTimeLeft -= elapsed;
             let progress = Math.min(1, 1 - (this._fadeTimeLeft / FADE_TIME));
             this._gfx.alpha = progress;
-            this._backdrop.alpha = progress * 0.55;
+            this._backdrop.alpha = progress * 0.45;
+            this._blurFilter.strength = progress * MAX_BLUR;
 
             if (this._fadeTimeLeft <= 0) {
                 this._fadeTimeLeft = 0;
                 this._gfx.alpha = 1;
-                this._backdrop.alpha = 0.55;
+                this._backdrop.alpha = 0.45;
+                this._blurFilter.strength = MAX_BLUR;
                 this._ready = true;
             }
         }
@@ -152,6 +169,12 @@ class LevelEnding {
         this._gfx.visible = false;
         this._backdrop.visible = false;
         this._ready = false;
+
+        // Remove the blur before the level is torn down by the next state.
+        if (this._endingLevel) {
+            this._endingLevel.gfx.filters = [];
+            this._endingLevel = null;
+        }
 
         for (let node of this._standingNodes) {
             this._gfx.removeChild(node);
