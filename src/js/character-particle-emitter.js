@@ -82,6 +82,7 @@ class CharacterParticleEmitter {
             .fill({ color: 0x4444ff, alpha: 1 })
             .stroke({ width: 1, color: 0x1600de, alpha: 1 });
         this._blueTexture = renderer.generateTexture(blueDot);
+        blueDot.destroy();
 
         this._yellowParticles = [];
         this._yellowGfx = new Container();
@@ -93,6 +94,7 @@ class CharacterParticleEmitter {
             .fill({ color: 0xcbcb00, alpha: 1 })
             .stroke({ width: 1, color: 0xfcf400, alpha: 1 });
         this._yellowTexture = renderer.generateTexture(yellowDot);
+        yellowDot.destroy();
     }
 
     start() {
@@ -137,7 +139,9 @@ class CharacterParticleEmitter {
         eventBus.unregister('event.action.death.ghost', this._handleDeathGhost);
         eventBus.unregister('event.action.death.pacman', this._handleDeathPacman);
         this._parentGfx.removeChild(this._gfx);
-        // TODO: destroy graphics? (textures?)
+        this._gfx.destroy({ children: true });
+        this._blueTexture.destroy(true); // free the baked GPU textures
+        this._yellowTexture.destroy(true);
     }
 
     _emitExplosion(particles, gfx, texture, xorig, yorig, ghostDirection, pacmanDirection) {

@@ -51,6 +51,7 @@ class ParticleEmitter {
         let dot = new Graphics();
         dot.rect(0, 0, 2, 2).fill({ color: 0xffffff, alpha: 1 });
         this._sharedTexture = getRenderer().generateTexture(dot);
+        dot.destroy(); // the Graphics is only needed to bake the texture
 
         this._particles = [];
     }
@@ -77,7 +78,8 @@ class ParticleEmitter {
     stop() {
         eventBus.unregister('event.action.eatdot', this._eatdotHandler);
         this._parentGfx.removeChild(this._gfx);
-        // TODO: destroy graphics? (textures?)
+        this._gfx.destroy({ children: true });
+        this._sharedTexture.destroy(true); // free the baked GPU texture
     }
 
     _emitDotCrumbs(xorig, yorig, xenergy, yenergy) {

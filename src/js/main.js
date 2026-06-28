@@ -12,38 +12,43 @@ const NATIVE_HEIGHT = 600;
 TextureSource.defaultOptions.scaleMode = 'nearest';
 
 preload.start(async () => {
-    const renderer = await autoDetectRenderer({
-        width: NATIVE_WIDTH,
-        height: NATIVE_HEIGHT,
-        background: 0x333333,
-        // Render at the device's real pixel density so the vector maze and the
-        // text are crisp; the scaling module resizes the renderer to fit.
-        resolution: window.devicePixelRatio || 1,
-        autoDensity: true,
-        antialias: false,
-    });
-    setRenderer(renderer);
+    try {
+        const renderer = await autoDetectRenderer({
+            width: NATIVE_WIDTH,
+            height: NATIVE_HEIGHT,
+            background: 0x333333,
+            // Render at the device's real pixel density so the vector maze and
+            // the text are crisp; the scaling module resizes the renderer to fit.
+            resolution: window.devicePixelRatio || 1,
+            autoDensity: true,
+            antialias: false,
+        });
+        setRenderer(renderer);
 
-    const stage = new Container();
-    stage.sortableChildren = true; // honour each layer's `zIndex`
+        const stage = new Container();
+        stage.sortableChildren = true; // honour each layer's `zIndex`
 
-    document.body.appendChild(renderer.canvas);
-    applyScaling(renderer, stage, NATIVE_WIDTH, NATIVE_HEIGHT);
+        document.body.appendChild(renderer.canvas);
+        applyScaling(renderer, stage, NATIVE_WIDTH, NATIVE_HEIGHT);
 
-    const game = new Game(stage, renderer);
-    game.start();
+        const game = new Game(stage, renderer);
+        game.start();
 
-    // Fixed-step logic loop (~60 Hz). The game measures real elapsed time itself.
-    function loop() {
-        setTimeout(loop, 16.66);
-        game.step();
+        // Fixed-step logic loop (~60 Hz). The game measures real elapsed time itself.
+        function loop() {
+            setTimeout(loop, 16.66);
+            game.step();
+        }
+        loop();
+
+        // Render whenever the browser is ready to paint.
+        function animate() {
+            requestAnimationFrame(animate);
+            game.draw();
+        }
+        animate();
+    } catch (err) {
+        // Without a renderer there's no game; surface it instead of failing silently.
+        console.error('Failed to initialize the game:', err);
     }
-    loop();
-
-    // Render whenever the browser is ready to paint.
-    function animate() {
-        requestAnimationFrame(animate);
-        game.draw();
-    }
-    animate();
 });
