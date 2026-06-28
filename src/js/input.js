@@ -1,8 +1,3 @@
-'use strict';
-
-const
-    eventBus = require('./event-bus');
-
 class Input {
 
     constructor() {
@@ -21,7 +16,7 @@ class Input {
 
         window.addEventListener('keyup', (e) => {
             this._eventToState(e, 'up');
-        })
+        });
     }
 
     // TODO: Maybe a reset() method?
@@ -133,7 +128,7 @@ class Input {
                 this._setState('other', state);
                 break;
         }
-    };
+    }
 
     _setState(key, state) {
         // always set 'up'
@@ -149,4 +144,4 @@ class Input {
     }
 }
 
-module.exports = Input;
+export default Input;

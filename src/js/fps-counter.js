@@ -1,7 +1,4 @@
-'use strict';
-
-const
-    eventBus = require('./event-bus');
+import { Container, Text } from 'pixi.js';
 
 class FpsCounter {
 
@@ -9,21 +6,22 @@ class FpsCounter {
         this._stage = stage;
         this._input = input;
 
-        this._gfx = new PIXI.Container();
+        this._gfx = new Container();
         this._gfx.x = 8;
         this._gfx.y = 8;
         this._stage.addChild(this._gfx);
 
         let style = {
-            font: '16px Arial',
+            fontFamily: 'Arial',
+            fontSize: 16,
             fill: '#eeeeee'
         };
 
-        this._text = new PIXI.Text('logic:', style);
+        this._text = new Text({ text: 'logic:', style });
         this._text.visible = false;
         this._gfx.addChild(this._text);
 
-        this._gfxText = new PIXI.Text('draw:', style);
+        this._gfxText = new Text({ text: 'draw:', style });
         this._gfxText.x = 96;
         this._gfxText.visible = false;
         this._gfx.addChild(this._gfxText);
@@ -81,4 +79,4 @@ class FpsCounter {
     }
 }
 
-module.exports = FpsCounter;
+export default FpsCounter;

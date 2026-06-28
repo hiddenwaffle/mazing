@@ -1,7 +1,4 @@
-'use strict';
-
-const
-    config = require('./config');
+import config from './config';
 
 class Entity {
 
@@ -26,6 +23,10 @@ class Entity {
 
         this._movementStrategy = movementStrategy;
         this._reverseNeeded = false;
+
+        // Empty string means "not moving yet". Initialized so the first call to
+        // _switchCurrentDirection() at level start is not mistaken for a turn.
+        this._currentDirection = '';
 
         // Helps the AI know which tile the entity just came from.
         this.lastTileAIx = -1;
@@ -245,7 +246,9 @@ class Entity {
     _switchCurrentDirection(direction) {
 
         let previousDirection = this._currentDirection;
-        if (this._turnAcceleration && isTurn(previousDirection, direction)) {
+        // `previousDirection &&` suppresses the boost when first starting to move
+        // (previousDirection is '') — only real turns should accelerate.
+        if (this._turnAcceleration && previousDirection && isTurn(previousDirection, direction)) {
             this._turnAccelerationTimeLeft = config.pacmanTurnSpeedLength;
         }
 
@@ -254,7 +257,7 @@ class Entity {
     }
 }
 
-module.exports = Entity;
+export default Entity;
 
 function oppositeOfDirection(direction) {
     switch (direction) {

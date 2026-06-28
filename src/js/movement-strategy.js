@@ -1,7 +1,4 @@
-'use strict';
-
-const
-    Util = require('./util');
+import * as Util from './util';
 
 /**
  * All movement methods should have the same signature so that execute() can call them.
@@ -17,7 +14,7 @@ class MovementStrategy {
      * @param pacman (optional)
      * @param blinky (optional)
      */
-    constructor(board, methodName, frightMethodName, scatterx= null, scattery=null, pacman=null, blinky=null) {
+    constructor(board, methodName, frightMethodName, scatterx = null, scattery = null, pacman = null, blinky = null) {
         this._board = board;
         this._method = this[methodName];
         this._frightMethod = this[frightMethodName];
@@ -159,7 +156,7 @@ class MovementStrategy {
     }
 }
 
-module.exports = MovementStrategy;
+export default MovementStrategy;
 
 /**
  * Run the given function IF the entity has arrived at an intersection.
@@ -235,19 +232,19 @@ function aimTowardsTargetTile(entity, targetx, targety, directions) {
 function determinePossibleDirections(tilex, tiley, currentDirection, board) {
     let directions = [];
 
-    if (currentDirection !== 'up' && board.isWallOpen(tilex, tiley+1)) {
+    if (currentDirection !== 'up' && board.isWallOpen(tilex, tiley + 1)) {
         directions.push('down');
     }
 
-    if (currentDirection !== 'down' && board.isWallOpen(tilex, tiley-1)) {
+    if (currentDirection !== 'down' && board.isWallOpen(tilex, tiley - 1)) {
         directions.push('up');
     }
 
-    if (currentDirection !== 'left' && board.isWallOpen(tilex+1, tiley)) {
+    if (currentDirection !== 'left' && board.isWallOpen(tilex + 1, tiley)) {
         directions.push('right');
     }
 
-    if (currentDirection !== 'right' && board.isWallOpen(tilex-1, tiley)) {
+    if (currentDirection !== 'right' && board.isWallOpen(tilex - 1, tiley)) {
         directions.push('left');
     }
 

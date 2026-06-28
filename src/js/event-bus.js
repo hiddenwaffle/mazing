@@ -1,5 +1,3 @@
-'use strict';
-
 class EventBus {
 
     constructor() {
@@ -21,8 +19,6 @@ class EventBus {
         }
 
         handlers.push(handler);
-
-        // TODO: It would be better if this returned a function that could be called to unregister it.
     }
 
     unregister(name, handler) {
@@ -40,7 +36,7 @@ class EventBus {
     }
 
     /**
-     * @param event an object with structure: { name: 'eventname', args: [1,2,3,4] }
+     * @param event an object with structure: { name: 'eventname', args: {...} }
      */
     fire(event) {
         let { name, args } = event;
@@ -57,4 +53,4 @@ class EventBus {
 }
 
 const eventBus = new EventBus();
-module.exports = eventBus;
+export default eventBus;

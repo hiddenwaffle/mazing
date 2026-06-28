@@ -1,8 +1,6 @@
-'use strict';
-
-const
-    eventBus    = require('./event-bus'),
-    config      = require('./config');
+import { Container, Graphics, Text, Sprite, RenderTexture, BlurFilter } from 'pixi.js';
+import eventBus from './event-bus';
+import config from './config';
 
 const
     TOTAL_BLUR_TRANSITION_TIME = 1000, // ms
@@ -17,34 +15,35 @@ class LevelEnding {
 
         this._blurTransitionTimeLeft = 0;
 
-        this._gfx = new PIXI.Container();
-        this._gfx.z = 10; // custom property
+        this._gfx = new Container();
+        this._gfx.zIndex = 10;
         this._gfx.x = 220;
         this._gfx.y = 96;
         this._gfx.visible = false;
         this._stage.addChild(this._gfx);
 
-        let background = new PIXI.Graphics();
-        background.beginFill(0x333333, 0.95);
-        background.drawRect(0, 0, 390, 320);
+        let background = new Graphics();
+        background.rect(0, 0, 390, 320).fill({ color: 0x333333, alpha: 0.95 });
         this._gfx.addChild(background);
 
         let titleStyle = {
-            font: '36px Arial',
+            fontFamily: 'Arial',
+            fontSize: 36,
             fill: '#eeeeee',
-            align: 'center' // TODO: doesn't work?
+            align: 'center'
         };
-        this._title = new PIXI.Text('', titleStyle);
+        this._title = new Text({ text: '', style: titleStyle });
         this._title.x = 36;
         this._title.y = 44;
         this._gfx.addChild(this._title);
 
         let footerStyle = {
-            font: '16px Arial',
+            fontFamily: 'Arial',
+            fontSize: 16,
             fill: '#e0e0e0',
-            align: 'center' // TODO: doesn't work?
+            align: 'center'
         };
-        this._footer = new PIXI.Text('', footerStyle);
+        this._footer = new Text({ text: '', style: footerStyle });
         this._footer.x = 114;
         this._footer.y = 275;
         this._gfx.addChild(this._footer);
@@ -58,22 +57,25 @@ class LevelEnding {
 
         this._updateFooter(levelNumber);
 
-        // The last frame of the level should still be visible
-        let snapshotTexture = new PIXI.RenderTexture(this._renderer, this._renderer.width, this._renderer.height);
-        snapshotTexture.render(this._stage);
-        this._snapshotSprite = new PIXI.Sprite(snapshotTexture);
+        // The last frame of the level should still be visible: snapshot the
+        // whole stage into a texture and blur it as the dialog fades in.
+        let snapshotTexture = RenderTexture.create({
+            width: this._renderer.canvas.width,
+            height: this._renderer.canvas.height
+        });
+        this._renderer.render({ container: this._stage, target: snapshotTexture });
+        this._snapshotSprite = new Sprite(snapshotTexture);
         this._stage.addChild(this._snapshotSprite);
 
-        this._blurFilter = new PIXI.filters.BlurFilter();
+        this._blurFilter = new BlurFilter();
         this._blurFilter.blur = 0;
         this._snapshotSprite.filters = [ this._blurFilter ];
 
         this._blurTransitionTimeLeft = TOTAL_BLUR_TRANSITION_TIME;
 
-        // The last frame of the scoreboard should still be visible
-        let scoreboardTexture = new PIXI.RenderTexture(this._renderer, this._renderer.width, this._renderer.height);
-        scoreboardTexture.render(this._scoreboard.gfx);
-        this._scoreboardSnapshot = new PIXI.Sprite(scoreboardTexture);
+        // The last frame of the scoreboard should still be visible inside the dialog.
+        let scoreboardTexture = this._renderer.generateTexture(this._scoreboard.gfx);
+        this._scoreboardSnapshot = new Sprite(scoreboardTexture);
         this._scoreboardSnapshot.x = 90;
         this._scoreboardSnapshot.y = 100;
         this._gfx.addChild(this._scoreboardSnapshot);
@@ -102,7 +104,7 @@ class LevelEnding {
         }
     }
 
-    _stepStatsWindow(elapsed) {
+    _stepStatsWindow() {
         if (this._gfx.visible) {
             if (this._input.isAnyKeyDownAndUnhandled()) {
                 this._stop();
@@ -152,4 +154,4 @@ class LevelEnding {
     }
 }
 
-module.exports = LevelEnding;
+export default LevelEnding;

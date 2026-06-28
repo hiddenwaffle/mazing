@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mazing</title>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            background: #222;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* Center the game canvas both axes. When the canvas is scaled to the
+               window height, this produces an even ~1 tile margin top and bottom. */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        /* The game canvas is rendered at its native pixel resolution and then
+           scaled up by CSS. `pixelated` keeps the upscale crisp (nearest
+           neighbour) instead of blurry (bilinear). */
+        canvas {
+            display: block;
+            /* Order matters: a browser uses the last value it understands.
+               `crisp-edges` is the fallback for engines that lack `pixelated`
+               (older Firefox); `pixelated` wins everywhere it is supported
+               (Chromium, modern Firefox) and gives true nearest-neighbour. */
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+        }
+        #source {
+            position: fixed;
+            bottom: 8px;
+            right: 12px;
+        }
+        #source a {
+            text-decoration: none;
+            color: #111;
+        }
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            visibility: hidden;
+            text-align: center;
+            color: #eee;
+        }
+        #loading div {
+            margin: 6px;
+        }
+        #loadingError {
+            color: #f00;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading">
+    <div id="loadingMessage"></div>
+    <div id="loadingError"></div>
+    <progress id="loadingBar"></progress>
+</div>
+
+<div id="source">
+    <a href="https://github.com/hiddenwaffle/mazing" target="_blank" rel="noopener">
+        <img src="assets/GitHub-Mark-32px.png" alt="Source on GitHub"/>
+    </a>
+</div>
+
+<script type="module" src="/src/js/main.js"></script>
+
+</body>
+</html>

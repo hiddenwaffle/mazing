@@ -1,13 +1,10 @@
-'use strict';
-
-//const
-    //config = require('./config');
+import { Container } from 'pixi.js';
 
 class EntityAnimation {
 
     constructor(parentGfx, up, down, left, right, frightened, flashing) {
         this._parentGfx = parentGfx;
-        this._gfx = new PIXI.Container();
+        this._gfx = new Container();
         parentGfx.addChild(this._gfx);
 
         this._up = up;
@@ -169,4 +166,4 @@ class EntityAnimation {
     }
 }
 
-module.exports = EntityAnimation;
+export default EntityAnimation;

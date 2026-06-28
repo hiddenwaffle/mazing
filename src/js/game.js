@@ -1,22 +1,14 @@
-'use strict';
+import Input from './input';
+import Level from './level';
+import StartScreen from './start-screen';
+import LevelEnding from './level-ending';
+import GameEnding from './game-ending';
+import Sound from './sound';
+import FpsCounter from './fps-counter';
 
-const
-    Input       = require('./input'),
-    Level       = require('./level'),
-    StartScreen = require('./start-screen'),
-    LevelEnding = require('./level-ending'),
-    GameEnding  = require('./game-ending'),
-    Sound       = require('./sound'),
-    FpsCounter  = require('./fps-counter');
-
-const
-    config      = require('./config'),
-    stats       = require('./stats'),
-    eventBus    = require('./event-bus');
-
-Window.meow = () => {
-    eventBus.fire({ name: 'event.level.end'});
-};
+import config from './config';
+import stats from './stats';
+import eventBus from './event-bus';
 
 class Game {
 
@@ -40,8 +32,6 @@ class Game {
     }
 
     start() {
-        document.body.appendChild(this._renderer.view);
-
         this._input.start();
         stats.start();
         this._sound.start();
@@ -111,8 +101,6 @@ class Game {
 
         this._sound.step(elapsed);
         this._fpsCounter.step(elapsed);
-
-        this._resortStageChildren();
     }
 
     _fillMazeOrder() {
@@ -173,27 +161,9 @@ class Game {
         this._lastStep = Date.now();
         return elapsed;
     }
-
-    /**
-     * Re-sort the stage children to their z-order, if any.
-     * @private
-     */
-    _resortStageChildren() {
-        this._stage.children.sort((a, b) => {
-            if (a.z === undefined || a.z === null) {
-                return -1;
-
-            } else if (b.z === undefined || b.z === null) {
-                return 1;
-
-            } else {
-                return b.z - a.z;
-            }
-        });
-    }
 }
 
-module.exports = Game;
+export default Game;
 
 /**
  * Fischer-Yates Algorithm

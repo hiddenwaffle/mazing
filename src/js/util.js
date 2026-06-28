@@ -1,9 +1,10 @@
-const
-    config = require('./config');
+import { Sprite, ColorMatrixFilter } from 'pixi.js';
+import config from './config';
+import { getTexture } from './assets';
 
-exports.convertToTileSpace = function(v) {
+export function convertToTileSpace(v) {
     return Math.floor(v / config.wallSize);
-};
+}
 
 /**
  * @param ax1 first rectangle, upper left x-coordinate
@@ -17,29 +18,29 @@ exports.convertToTileSpace = function(v) {
  *
  * @returns {boolean}
  */
-exports.overlap = function(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2) {
+export function overlap(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2) {
     return (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1);
-};
+}
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
  */
-exports.getRandomIntInclusive = function (min, max) {
+export function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}
 
 /**
  * Distance formula without the square root.
  * Intended for finding the order of distances without needing the actual distance of each.
  */
-exports.qs = function (a, b) {
+export function qs(a, b) {
     return (a * a) + (b * b);
-};
+}
 
 /**
  * Matrices are keyed off of the pure green of the green ghost.
  */
-function generateColorMatrixValue(input) {
+export function generateColorMatrixValue(input) {
 
     if (input === 'red') {
         return [
@@ -63,7 +64,7 @@ function generateColorMatrixValue(input) {
             0, 1, 0, 0,   0,
             0, 1, 1, 0,   0,
             0, 0, 0, 0.5, 0
-        ]
+        ];
 
     } else if (input === 'orange') {
         return [
@@ -82,24 +83,21 @@ function generateColorMatrixValue(input) {
         ];
     }
 }
-exports.generateColorMatrixValue = generateColorMatrixValue;
 
-exports.createPacmanIcon = function (scale) {
-    let texture = PIXI.Texture.fromFrame('player2.png');
-    let pacmanIcon = new PIXI.Sprite(texture);
-    pacmanIcon.scale.x = pacmanIcon.scale.y = scale;
+export function createPacmanIcon(scale) {
+    let pacmanIcon = new Sprite(getTexture('player2.png'));
+    pacmanIcon.scale.set(scale);
 
     return pacmanIcon;
-};
+}
 
-exports.createGhostIcon = function (color, scale) {
-    let texture = PIXI.Texture.fromFrame('shade-green-right1.png');
-    let ghostIcon = new PIXI.Sprite(texture);
-    ghostIcon.scale.x = ghostIcon.scale.y = scale;
+export function createGhostIcon(color, scale) {
+    let ghostIcon = new Sprite(getTexture('shade-green-right1.png'));
+    ghostIcon.scale.set(scale);
 
-    let colorMatrix = new PIXI.filters.ColorMatrixFilter();
+    let colorMatrix = new ColorMatrixFilter();
     colorMatrix.matrix = generateColorMatrixValue(color);
     ghostIcon.filters = [colorMatrix];
 
     return ghostIcon;
-};
+}

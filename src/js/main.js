@@ -1,25 +1,47 @@
-'use strict';
+import { autoDetectRenderer, Container, TextureSource } from 'pixi.js';
+import preload from './preload';
+import Game from './game';
+import { setRenderer } from './renderer';
+import { applyScaling } from './scaling';
 
-require('./safari-audio-bandaid').check();
+const NATIVE_WIDTH = 800;
+const NATIVE_HEIGHT = 600;
 
-require('./preload').start(() => {
-    const Game = require('./game');
+// Retro pixel art: always sample textures with nearest-neighbour so nothing
+// is blurred, neither inside the canvas nor when the canvas is scaled up.
+TextureSource.defaultOptions.scaleMode = 'nearest';
 
-    let stage = new PIXI.Container();
-    let renderer = PIXI.autoDetectRenderer(800, 600, { backgroundColor: 0x333333 });
+preload.start(async () => {
+    const renderer = await autoDetectRenderer({
+        width: NATIVE_WIDTH,
+        height: NATIVE_HEIGHT,
+        background: 0x333333,
+        resolution: 1,
+        autoDensity: false,
+        antialias: false,
+    });
+    setRenderer(renderer);
 
-    let game = new Game(stage, renderer);
+    const stage = new Container();
+    stage.sortableChildren = true; // honour each layer's `zIndex`
+
+    document.body.appendChild(renderer.canvas);
+    applyScaling(renderer.canvas, NATIVE_WIDTH, NATIVE_HEIGHT);
+
+    const game = new Game(stage, renderer);
     game.start();
 
-    loop();
+    // Fixed-step logic loop (~60 Hz). The game measures real elapsed time itself.
     function loop() {
         setTimeout(loop, 16.66);
         game.step();
     }
+    loop();
 
-    animate();
+    // Render whenever the browser is ready to paint.
     function animate() {
         requestAnimationFrame(animate);
         game.draw();
     }
+    animate();
 });

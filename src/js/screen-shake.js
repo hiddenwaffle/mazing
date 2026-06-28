@@ -1,10 +1,5 @@
-'use strict';
-
-const
-    Util = require('./util');
-
-const
-    eventBus = require('./event-bus');
+import * as Util from './util';
+import eventBus from './event-bus';
 
 const
     START_TIME_LEFT = 200,
@@ -42,7 +37,9 @@ class ScreenShake {
                 this._resetPosition();
 
             } else {
-                let pct = 1 - (this._shakeTimeLeft / START_TIME_LEFT);
+                // Amplitude is strongest at impact and decays to ~0, so the
+                // shake fades out instead of growing into a hard snap-back.
+                let pct = this._shakeTimeLeft / START_TIME_LEFT;
                 let { x, y } = calculateNextPosition(pct, this._intensity, this._originalx, this._originaly);
                 this._gfx.x = x;
                 this._gfx.y = y;
@@ -66,8 +63,8 @@ class ScreenShake {
     }
 }
 
-let screenShake = new ScreenShake();
-module.exports = screenShake;
+const screenShake = new ScreenShake();
+export default screenShake;
 
 /**
  * Pick a random point near the given point

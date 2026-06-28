@@ -1,11 +1,9 @@
-'use strict';
-
-const
-    Util = require('./util');
-
-const
-    eventBus        = require('./event-bus'),
-    soundPreloader  = require('./sound-preloader');
+import { Howl, Howler } from 'howler';
+import { Container, Sprite } from 'pixi.js';
+import * as Util from './util';
+import eventBus from './event-bus';
+import soundPreloader from './sound-preloader';
+import { getTexture } from './assets';
 
 const
     ICON_TRANSPARENCY = 0.70,
@@ -19,43 +17,43 @@ class Sound {
      */
     constructor(parentGfx) {
         this.parentGfx = parentGfx;
-        this._gfx = new PIXI.Container();
+        this._gfx = new Container();
         this._gfx.x = 750;
         this._gfx.y = 550;
         this.parentGfx.addChild(this._gfx);
 
-        let soundOnTexture = PIXI.Texture.fromFrame('sound-on.png');
-        this._soundOnIcon = new PIXI.Sprite(soundOnTexture);
+        this._soundOnIcon = new Sprite(getTexture('sound-on.png'));
         this._soundOnIcon.alpha = ICON_TRANSPARENCY;
-        this._soundOnIcon.interactive = true;
-        this._soundOnIcon.on('mouseover', () => {
+        this._soundOnIcon.eventMode = 'static';
+        this._soundOnIcon.cursor = 'pointer';
+        this._soundOnIcon.on('pointerover', () => {
             this._soundOnIcon.alpha = 1.0;
         });
-        this._soundOnIcon.on('mouseout', () => {
+        this._soundOnIcon.on('pointerout', () => {
             this._soundOnIcon.alpha = ICON_TRANSPARENCY;
         });
-        this._soundOnIcon.on('mousedown', () => {
+        this._soundOnIcon.on('pointerdown', () => {
             this._soundOnIcon.visible = false;
             this._soundOffIcon.visible = true;
-            Howler.mute();
+            Howler.mute(true);
             sessionStorage.setItem(MUTE_KEY, 'on');
         });
         this._soundOnIcon.visible = false;
         this._gfx.addChild(this._soundOnIcon);
 
-        let soundOffTexture = PIXI.Texture.fromFrame('sound-off.png');
-        this._soundOffIcon = new PIXI.Sprite(soundOffTexture);
-        this._soundOffIcon.interactive = true;
-        this._soundOffIcon.on('mouseover', () => {
+        this._soundOffIcon = new Sprite(getTexture('sound-off.png'));
+        this._soundOffIcon.eventMode = 'static';
+        this._soundOffIcon.cursor = 'pointer';
+        this._soundOffIcon.on('pointerover', () => {
             this._soundOffIcon.alpha = 1.0;
         });
-        this._soundOffIcon.on('mouseout', () => {
+        this._soundOffIcon.on('pointerout', () => {
             this._soundOffIcon.alpha = ICON_TRANSPARENCY;
         });
-        this._soundOffIcon.on('mousedown', () => {
+        this._soundOffIcon.on('pointerdown', () => {
             this._soundOffIcon.visible = false;
             this._soundOnIcon.visible = true;
-            Howler.unmute();
+            Howler.mute(false);
             sessionStorage.setItem(MUTE_KEY, 'off');
         });
         this._soundOffIcon.alpha = ICON_TRANSPARENCY;
@@ -65,14 +63,14 @@ class Sound {
         // Load some sound files that were not preloaded
 
         this._levelEnd = new Howl({
-            urls: ['assets/atari-st-beat-11-v1.m4a'],
+            src: ['assets/atari-st-beat-11-v1.m4a'],
             volume: 0.35,
             onload:      () => { console.log('Loaded sound (level end)'); },
             onloaderror: () => { console.error('Unable to load sound (level end'); }
         });
 
         let levelBackground2 = new Howl({ // This gets configured more later in this method.
-            urls: ['assets/happy-energy-v1.m4a'],
+            src: ['assets/happy-energy-v1.m4a'],
             onload:      () => { console.log('Loaded sound (happy-energy)'); },
             onloaderror: () => { console.error('Unable to load sound (happy-energy'); }
         });
@@ -178,15 +176,15 @@ class Sound {
         let mute = sessionStorage.getItem(MUTE_KEY);
         if (mute === 'on') {
             this._soundOffIcon.visible = true;
-            Howler.mute();
+            Howler.mute(true);
         } else {
             this._soundOnIcon.visible = true;
-            Howler.unmute();
+            Howler.mute(false);
         }
     }
 
     stop() {
-        eventBus.unregister('event.action.death.ghost', this._playWham);
+        eventBus.unregister('event.action.death.pacman', this._playWham);
         eventBus.unregister('event.action.death.ghost', this._playPunch);
         eventBus.unregister('event.action.energizer', this._playEnergizer);
         // TODO: unregister the other stuff
@@ -201,4 +199,4 @@ class Sound {
     }
 }
 
-module.exports = Sound;
+export default Sound;

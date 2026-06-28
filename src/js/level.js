@@ -1,18 +1,14 @@
-'use strict';
-
-const
-    Board                       = require('./board'),
-    config                      = require('./config'),
-    Characters                  = require('./characters'),
-    LongTasks                   = require('./long-tasks'),
-    Pause                       = require('./pause'),
-    Scoreboard                  = require('./scoreboard'),
-    ParticleEmitter             = require('./particle-emitter'),
-    CharacterParticleEmitter    = require('./character-particle-emitter');
-
-const
-    eventBus    = require('./event-bus'),
-    screenShake = require('./screen-shake');
+import { Container } from 'pixi.js';
+import Board from './board';
+import config from './config';
+import Characters from './characters';
+import * as LongTasks from './long-tasks';
+import Pause from './pause';
+import Scoreboard from './scoreboard';
+import ParticleEmitter from './particle-emitter';
+import CharacterParticleEmitter from './character-particle-emitter';
+import eventBus from './event-bus';
+import screenShake from './screen-shake';
 
 class Level {
 
@@ -26,8 +22,8 @@ class Level {
         this._input = input;
         this._stage = stage;
 
-        this._gfx = new PIXI.Container();
-        this._gfx.z = 1; // custom property
+        this._gfx = new Container();
+        this._gfx.zIndex = 1;
         this._gfx.x = 32;
         this._gfx.y = 32;
         this._stage.addChild(this._gfx);
@@ -74,7 +70,7 @@ class Level {
         // TODO: In next game, make this more encapsulated
         let idx = this._stage.getChildIndex(this._gfx);
         this._stage.removeChildAt(idx);
-        this._gfx.destroy(true);
+        this._gfx.destroy({ children: true });
     }
 
     step(elapsed) {
@@ -188,4 +184,4 @@ class Level {
     }
 }
 
-module.exports = Level;
+export default Level;

@@ -1,9 +1,7 @@
-'use strict';
-
 /**
  * This replaces setTimeout() so the callback can get an elapsed time from the main loop.
  */
-class TimeoutTask {
+export class TimeoutTask {
 
     /**
      * @param time milliseconds to wait before running cb()
@@ -31,7 +29,7 @@ class TimeoutTask {
 /**
  * This replaces setInterval() so the callback can get an elapsed time from the main loop.
  */
-class IntervalTask {
+export class IntervalTask {
 
     /**
      * @param time milliseconds to wait before running cb()
@@ -43,7 +41,7 @@ class IntervalTask {
 
         this._totalElapsed = 0;
 
-        this.completed = false
+        this.completed = false;
     }
 
     step(elapsed) {
@@ -59,7 +57,7 @@ class IntervalTask {
     }
 }
 
-class Manager {
+export class Manager {
 
     constructor() {
         this._tasks = [];
@@ -81,7 +79,3 @@ class Manager {
         }
     }
 }
-
-exports.TimeoutTask = TimeoutTask;
-exports.IntervalTask = IntervalTask;
-exports.Manager = Manager;

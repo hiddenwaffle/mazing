@@ -1,10 +1,6 @@
-'use strict';
-
-const
-    LoadingScreen = require('./loading-screen');
-
-const
-    soundPreloader = require('./sound-preloader');
+import LoadingScreen from './loading-screen';
+import soundPreloader from './sound-preloader';
+import { loadGraphics } from './assets';
 
 class Preload {
 
@@ -20,15 +16,18 @@ class Preload {
     start(afterFinished) {
         this._afterFinished = afterFinished;
 
-        PIXI.loader.on('error', () => {
-            this._loadingScreen.signalLoaded(false, 'Could not load sprites');
-            this._success = false;
-        });
-        PIXI.loader.add('assets/mazing-v1.json').load(() => {
-            this._gfxLoaded = true;
-            this._loadingScreen.signalLoaded('Sprites loaded');
-            this._handleIfFinished();
-        });
+        loadGraphics()
+            .then(() => {
+                this._gfxLoaded = true;
+                this._loadingScreen.signalLoaded(true, 'Sprites loaded');
+                this._handleIfFinished(true);
+            })
+            .catch((err) => {
+                console.error(err);
+                this._loadingScreen.signalLoaded(false, 'Could not load sprites');
+                this._success = false;
+                this._handleIfFinished(false);
+            });
 
         // NOTE: The rest of the sounds are loaded later on. These are needed in the beginning.
         soundPreloader.load(this._loadingScreen, [
@@ -56,5 +55,5 @@ class Preload {
     }
 }
 
-let preload = new Preload();
-module.exports = preload;
+const preload = new Preload();
+export default preload;

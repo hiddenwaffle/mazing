@@ -1,7 +1,5 @@
-'use strict';
-
-const
-    eventBus = require('./event-bus');
+import { Text, ColorMatrixFilter } from 'pixi.js';
+import eventBus from './event-bus';
 
 const
     TRANSITION_TIME = 500, // ms, must be > 0
@@ -16,19 +14,24 @@ class Pause {
         this.active = false;
 
         let style = {
-            font: '36px Arial',
+            fontFamily: 'Arial',
+            fontSize: 36,
             fill: '#eeeeee',
             align: 'center',
             wordWrap: true,
             wordWrapWidth: 250
         };
-        this._instructions = new PIXI.Text('Paused\n\nPress any key to continue', style);
+        this._instructions = new Text({ text: 'Paused\n\nPress any key to continue', style });
         this._instructions.x = 520;
         this._instructions.y = 100;
         this._instructions.visible = false;
 
-        this.filter = new PIXI.filters.SepiaFilter();
-        this.filter.sepia = INTENSITY; // initially at full value
+        // The old SepiaFilter was removed from Pixi core; a ColorMatrixFilter
+        // loaded with the sepia matrix and blended via `alpha` produces the same
+        // tint and can be eased the same way.
+        this.filter = new ColorMatrixFilter();
+        this.filter.sepia(false);
+        this.filter.alpha = INTENSITY; // initially at full value
 
         this._transitionTimeLeft = 0;
     }
@@ -103,9 +106,9 @@ class Pause {
             let pct = (this._transitionTimeLeft / TRANSITION_TIME) * INTENSITY;
 
             if (this.active) {
-                this.filter.sepia = INTENSITY - pct;
+                this.filter.alpha = INTENSITY - pct;
             } else {
-                this.filter.sepia = pct;
+                this.filter.alpha = pct;
             }
 
             this._transitionTimeLeft -= elapsed;
@@ -118,13 +121,13 @@ class Pause {
 
     _completeTransition() {
         if (this.active) {
-            this.filter.sepia = 0.75;
+            this.filter.alpha = INTENSITY;
             this._instructions.visible = true;
         } else {
-            this.filter.sepia = 0;
+            this.filter.alpha = 0;
             this._stage.filters = null;
         }
     }
 }
 
-module.exports = Pause;
+export default Pause;

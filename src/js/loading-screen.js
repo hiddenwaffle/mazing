@@ -1,5 +1,3 @@
-'use strict';
-
 const
     EXPECTED_NUMBER_OF_CALLS = 8;
 
@@ -11,7 +9,7 @@ class LoadingScreen {
         this._error = document.getElementById('loadingError');
 
         this._progress = document.getElementById('loadingBar');
-        if (this._progress !== undefined) {
+        if (this._progress) {
             this._progress.setAttribute('max', EXPECTED_NUMBER_OF_CALLS);
         }
 
@@ -20,7 +18,7 @@ class LoadingScreen {
     }
 
     signalLoaded(success, message) {
-        if (this._container !== undefined) {
+        if (this._container) {
             this._container.style.visibility = 'visible';
 
             this._loadedCount += 1;
@@ -39,11 +37,11 @@ class LoadingScreen {
     }
 
     signalPreloadComplete() {
-        if (this._container !== undefined && this._success) {
-            this._container.outerHTML = "";
-            delete this._container;
+        if (this._container && this._success) {
+            this._container.outerHTML = '';
+            this._container = null;
         }
     }
 }
 
-module.exports = LoadingScreen;
+export default LoadingScreen;

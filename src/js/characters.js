@@ -1,14 +1,12 @@
-'use strict';
-
-const
-    Entity              = require('./entity'),
-    CharacterAnimations = require('./character-animations'),
-    MovementStrategy    = require('./movement-strategy'),
-    Death               = require('./death'),
-    config              = require('./config'),
-    Util                = require('./util'),
-    LongTasks           = require('./long-tasks'),
-    eventBus            = require('./event-bus');
+import { Container } from 'pixi.js';
+import Entity from './entity';
+import CharacterAnimations from './character-animations';
+import MovementStrategy from './movement-strategy';
+import * as Death from './death';
+import config from './config';
+import * as Util from './util';
+import * as LongTasks from './long-tasks';
+import eventBus from './event-bus';
 
 class Characters {
 
@@ -16,7 +14,7 @@ class Characters {
         this._board = board;
         this._longTasksManager = longTasksManager;
 
-        this._gfx = new PIXI.Container();
+        this._gfx = new Container();
         parentGfx.addChild(this._gfx);
 
         this._characterAnimations = new CharacterAnimations(this._gfx);
@@ -198,7 +196,7 @@ class Characters {
 
         for (let ghost of this._ghosts) {
             ghost.signalFrightened();
-            ghost._reverseNeeded = true;
+            ghost.reverseNeeded = true;
         }
     }
 
@@ -305,7 +303,7 @@ class Characters {
     }
 }
 
-module.exports = Characters;
+export default Characters;
 
 function randomStartDirection() {
     let directions = ['left', 'right'];

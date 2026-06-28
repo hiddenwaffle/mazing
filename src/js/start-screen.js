@@ -1,7 +1,5 @@
-'use strict';
-
-const
-    eventBus = require('./event-bus');
+import { Container, Text } from 'pixi.js';
+import eventBus from './event-bus';
 
 const
     totalTime = 2500;
@@ -14,15 +12,16 @@ class StartScreen {
 
         this._pixelateTransitionTimeLeft = 0;
 
-        this._logo = new PIXI.Container();
+        this._logo = new Container();
         stage.addChild(this._logo);
 
         let style = {
-            font: '36px Arial',
+            fontFamily: 'Arial',
+            fontSize: 36,
             fill: '#eeeeee',
             align: 'center'
         };
-        let text = new PIXI.Text('Based on a true story', style);
+        let text = new Text({ text: 'Based on a true story', style });
         text.anchor.set(0.5, 0.5);
         text.x = 400;
         text.y = 300;
@@ -53,7 +52,7 @@ class StartScreen {
     }
 }
 
-module.exports = StartScreen;
+export default StartScreen;
 
 function calculateAlpha(timeLeft, totalTime) {
     let pct = 1 - (timeLeft / totalTime);

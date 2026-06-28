@@ -1,13 +1,12 @@
-'use strict';
-
-const
-    eventBus = require('./event-bus');
+import { Container, Graphics, Sprite } from 'pixi.js';
+import eventBus from './event-bus';
+import { getRenderer } from './renderer';
 
 class Particle {
 
     constructor(parentGfx, texture, x, y, ttl, xenergy, yenergy) {
         this._parentGfx = parentGfx;
-        this._gfx = new PIXI.Sprite(texture);
+        this._gfx = new Sprite(texture);
         parentGfx.addChild(this._gfx);
 
         this._gfx.x = x;
@@ -46,14 +45,12 @@ class ParticleEmitter {
 
     constructor(parentGfx) {
         this._parentGfx = parentGfx;
-        this._gfx = new PIXI.ParticleContainer();
+        this._gfx = new Container();
         parentGfx.addChild(this._gfx);
 
-        let dot = new PIXI.Graphics();
-        dot.beginFill(0xffffff, 1);
-        dot.drawRect(0, 0, 2, 2);
-        dot.endFill();
-        this._sharedTexture = dot.generateTexture();
+        let dot = new Graphics();
+        dot.rect(0, 0, 2, 2).fill({ color: 0xffffff, alpha: 1 });
+        this._sharedTexture = getRenderer().generateTexture(dot);
 
         this._particles = [];
     }
@@ -105,7 +102,7 @@ class ParticleEmitter {
     }
 }
 
-module.exports = ParticleEmitter;
+export default ParticleEmitter;
 
 function determineEnergy(characterDirection) {
     let xminenergy = -1;
@@ -152,7 +149,7 @@ function determineEnergy(characterDirection) {
         yenergy: yenergy,
         xoffset: xoffset,
         yoffset: yoffset
-    }
+    };
 }
 
 function generateRandomValues(
@@ -168,5 +165,5 @@ function generateRandomValues(
         x: x,
         y: y,
         ttl: ttl
-    }
+    };
 }

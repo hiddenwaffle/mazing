@@ -1,8 +1,5 @@
-'use strict';
-
-const
-    config      = require('./config'),
-    eventBus    = require('./event-bus');
+import config from './config';
+import eventBus from './event-bus';
 
 class EntityStats {
 
@@ -128,5 +125,5 @@ class Stats {
     }
 }
 
-let stats = new Stats();
-module.exports = stats;
+const stats = new Stats();
+export default stats;

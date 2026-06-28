@@ -389,5 +389,5 @@ class Config {
     }
 }
 
-let config = new Config();
-module.exports = config;
+const config = new Config();
+export default config;

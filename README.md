@@ -1,45 +1,49 @@
 # Mazing
 
-The purpose of this project was to reinterpret a retro game, and to learn several tools:
-* ES6 a.k.a. ES2015 via [Babel](https://babeljs.io/)
-* [Pixi.js](http://www.pixijs.com/) for WebGL rendering
-* [howler.js](https://github.com/goldfire/howler.js/) to interface with the Web Audio API
-* [Grunt](http://gruntjs.com/) to organize JavaScript tasks
-* [Bower](http://bower.io/) to organize front-end dependencies
-* [Aseprite](http://www.aseprite.org/) for pixel art and animation
-* [TexturePacker](https://www.codeandweb.com/texturepacker) for sprite management
-* [WebStorm](https://www.jetbrains.com/webstorm/) as a JavaScript IDE
+The purpose of this project was to reinterpret a retro game. It was originally
+written in 2015 and modernized in 2026.
 
-## Building
+The game renders with [Pixi.js](https://pixijs.com/) (WebGL/WebGPU), plays audio
+through [howler.js](https://github.com/goldfire/howler.js/), and is built with
+[Vite](https://vite.dev/). The pixel art and animation were made with
+[Aseprite](https://www.aseprite.org/) and packed with
+[TexturePacker](https://www.codeandweb.com/texturepacker); the packed atlas in
+`public/assets` is what the game loads at runtime, so neither art tool is needed
+to build or run.
 
-Install Bower and Grunt if not already installed.
+The game view scales to the height of the browser window (leaving about one tile
+of margin top and bottom) and is rendered with nearest-neighbour scaling, so the
+pixel art stays crisp at any size.
+
+## Running
+
+Requires [Node.js](https://nodejs.org/) (18+).
+
+Install dependencies:
 <pre>
-npm install -g grunt-cli
-npm install -g bower
-</pre>
-
-Clone and prepare
-<pre>
-git clone https://github.com/hiddenwaffle/mazing.git
 npm install
-bower install
 </pre>
 
-Build ./dist for development (unminified) and start local server and watcher
+Start the dev server (with hot reload) at http://localhost:5173:
 <pre>
-grunt
+npm run dev
 </pre>
 
-Clean and build ./dist for production (minified)
+Build the production bundle into `./dist`:
 <pre>
-grunt finalize
+npm run build
 </pre>
 
-Other tasks
+Preview the production build locally:
 <pre>
-grunt server # start server and watcher without building
-grunt clean  # remove the dist directory
+npm run preview
 </pre>
+
+## Controls
+
+* Arrow keys or `WASD` to move
+* `Enter` (or `Space` / `P` / `Esc`) to pause; any key to resume
+* `F` to toggle the FPS counter
 
 ## Credits
 

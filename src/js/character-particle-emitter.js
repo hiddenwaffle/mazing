@@ -1,7 +1,6 @@
-'use strict';
-
-const
-    eventBus = require('./event-bus');
+import { Container, Graphics, Sprite } from 'pixi.js';
+import eventBus from './event-bus';
+import { getRenderer } from './renderer';
 
 const
     PARTICLE_SIZE = 3,
@@ -15,7 +14,7 @@ class CharacterParticle {
 
     constructor(parentGfx, texture, x, y, ttl, xenergy, yenergy) {
         this._parentGfx = parentGfx;
-        this._gfx = new PIXI.Sprite(texture);
+        this._gfx = new Sprite(texture);
         parentGfx.addChild(this._gfx);
 
         this._gfx.x = x;
@@ -68,30 +67,32 @@ class CharacterParticleEmitter {
 
     constructor(parentGfx) {
         this._parentGfx = parentGfx;
-        this._gfx = new PIXI.Container();
+        this._gfx = new Container();
         parentGfx.addChild(this._gfx);
 
+        const renderer = getRenderer();
+
         this._blueParticles = [];
-        this._blueGfx = new PIXI.ParticleContainer();
+        this._blueGfx = new Container();
         this._gfx.addChild(this._blueGfx);
 
-        let blueDot = new PIXI.Graphics();
-        blueDot.lineStyle(1, 0x1600de, 1);
-        blueDot.beginFill(0x4444ff, 1);
-        blueDot.drawRect(0, 0, PARTICLE_SIZE, PARTICLE_SIZE);
-        blueDot.endFill();
-        this._blueTexture = blueDot.generateTexture();
+        let blueDot = new Graphics();
+        blueDot
+            .rect(0, 0, PARTICLE_SIZE, PARTICLE_SIZE)
+            .fill({ color: 0x4444ff, alpha: 1 })
+            .stroke({ width: 1, color: 0x1600de, alpha: 1 });
+        this._blueTexture = renderer.generateTexture(blueDot);
 
         this._yellowParticles = [];
-        this._yellowGfx = new PIXI.ParticleContainer();
+        this._yellowGfx = new Container();
         this._gfx.addChild(this._yellowGfx);
 
-        let yellowDot = new PIXI.Graphics();
-        yellowDot.lineStyle(1, 0xfcf400);
-        yellowDot.beginFill(0xcbcb00, 1);
-        yellowDot.drawRect(0, 0, PARTICLE_SIZE, PARTICLE_SIZE);
-        yellowDot.endFill();
-        this._yellowTexture = yellowDot.generateTexture();
+        let yellowDot = new Graphics();
+        yellowDot
+            .rect(0, 0, PARTICLE_SIZE, PARTICLE_SIZE)
+            .fill({ color: 0xcbcb00, alpha: 1 })
+            .stroke({ width: 1, color: 0xfcf400, alpha: 1 });
+        this._yellowTexture = renderer.generateTexture(yellowDot);
     }
 
     start() {
@@ -117,7 +118,7 @@ class CharacterParticleEmitter {
                 args.y,
                 args.ghostDirection,
                 args.pacmanDirection
-            )
+            );
         };
         eventBus.register('event.action.death.pacman', this._handleDeathPacman);
     }
@@ -158,7 +159,7 @@ class CharacterParticleEmitter {
     }
 }
 
-module.exports = CharacterParticleEmitter;
+export default CharacterParticleEmitter;
 
 function randomizeXY(x, y, max) {
     let targetx = (Math.random() * max) + (x - (max/2));
@@ -216,7 +217,7 @@ function determineEnergy(d1, d2) {
     return {
         xenergy: xenergy,
         yenergy: yenergy
-    }
+    };
 }
 
 function determineUnitEnergy(d) {
@@ -240,7 +241,7 @@ function determineUnitEnergy(d) {
     return {
         dx: dx,
         dy: dy
-    }
+    };
 }
 
 function randomNegativeOneOrOne() {

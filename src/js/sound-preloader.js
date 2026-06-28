@@ -1,4 +1,4 @@
-'use strict';
+import { Howl } from 'howler';
 
 class SoundPreloader {
 
@@ -17,7 +17,7 @@ class SoundPreloader {
 
         for (let path of paths) {
             let howl = new Howl({
-                urls: [path],
+                src: [path],
                 onload:         () => { this._onloadEach(true, path); },
                 onloaderror:    () => { this._onloadEach(false, path); }
             });
@@ -46,5 +46,5 @@ class SoundPreloader {
     }
 }
 
-let soundPreloader = new SoundPreloader();
-module.exports = soundPreloader;
+const soundPreloader = new SoundPreloader();
+export default soundPreloader;

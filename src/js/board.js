@@ -1,47 +1,46 @@
-'use strict';
-
-const
-    config  = require('./config'),
-    Util    = require('./util');
+import { Container, Graphics, AnimatedSprite } from 'pixi.js';
+import config from './config';
+import * as Util from './util';
+import { getTexture } from './assets';
 
 class Board {
 
     constructor(stage, mazeNumber) {
-        this._gfx = new PIXI.Container();
+        this._gfx = new Container();
 
         // Configure this board by using maze data.
         let color           = config.mazes[mazeNumber].color;
         this._grid          = config.mazes[mazeNumber].grid;
         this._respawnPoints = config.mazes[mazeNumber].respawnPoints;
 
-        this._wallImgs = new PIXI.Container();
+        this._wallImgs = new Container();
         for (let y = 0; y < this._grid.length; y++) {
             let line = this._grid[y];
             for (let x = 0; x < line.length; x++) {
                 let wall = this._grid[y][x];
 
                 if (wall === 1) {
-                    let wallImg = new PIXI.Graphics();
-                    wallImg.beginFill(color);
-                    wallImg.drawRect(
-                        x * config.wallSize,
-                        y * config.wallSize,
-                        config.wallSize,
-                        config.wallSize
-                    );
-                    wallImg.endFill();
+                    let wallImg = new Graphics();
+                    wallImg
+                        .rect(
+                            x * config.wallSize,
+                            y * config.wallSize,
+                            config.wallSize,
+                            config.wallSize
+                        )
+                        .fill({ color: color });
                     this._wallImgs.addChild(wallImg);
 
                 } else if (wall === 2) {
-                    let gateImg = new PIXI.Graphics();
-                    gateImg.beginFill(0xffaaff);
-                    gateImg.drawRect(
-                        x * config.wallSize,
-                        y * config.wallSize + (config.wallSize / 2),
-                        config.wallSize,
-                        config.dotSize
-                    );
-                    gateImg.endFill();
+                    let gateImg = new Graphics();
+                    gateImg
+                        .rect(
+                            x * config.wallSize,
+                            y * config.wallSize + (config.wallSize / 2),
+                            config.wallSize,
+                            config.dotSize
+                        )
+                        .fill({ color: 0xffaaff });
                     this._wallImgs.addChild(gateImg);
                 }
             }
@@ -51,27 +50,25 @@ class Board {
         let energizerFrames = [];
         for (let idx = 1; idx <= 5; idx++) {
             let filename = 'energizer' + idx + '.png';
-            energizerFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
+            energizerFrames.push({ texture: getTexture(filename), time: 50 });
         }
         for (let idx = 4; idx >= 2; idx--) {
             let filename = 'energizer' + idx + '.png';
-            energizerFrames.push({ texture: PIXI.Texture.fromFrame(filename), time: 50 });
+            energizerFrames.push({ texture: getTexture(filename), time: 50 });
         }
 
-        this._dotImgs = new PIXI.Container();
-        this._energizerClips = new PIXI.Container();
+        this._dotImgs = new Container();
+        this._energizerClips = new Container();
         for (let y = 0; y < this._grid.length; y++) {
             let line = this._grid[y];
             for (let x = 0; x < line.length; x++) {
                 let dot = this._grid[y][x];
                 switch (dot) {
                     case 3:
-                        let dotImg = new PIXI.Graphics();
-                        dotImg.beginFill(0xeeeeee);
-                        dotImg.drawRect(
-                            0, 0,
-                            config.dotSize, config.dotSize
-                        );
+                        let dotImg = new Graphics();
+                        dotImg
+                            .rect(0, 0, config.dotSize, config.dotSize)
+                            .fill({ color: 0xeeeeee });
                         {
                             let offset = (config.wallSize / 2) - (config.dotSize / 2);
                             dotImg.x = x * config.wallSize + offset;
@@ -81,7 +78,7 @@ class Board {
                         break;
 
                     case 4:
-                        let energizerClip = new PIXI.extras.MovieClip(energizerFrames);
+                        let energizerClip = new AnimatedSprite(energizerFrames);
                         let offset = 1;
                         energizerClip.x = x * config.wallSize + offset;
                         energizerClip.y = y * config.wallSize + offset;
@@ -175,7 +172,7 @@ class Board {
             finaly: finaly,
             doStop: doStop
         };
-    };
+    }
 
     isWallOpen(x, y) {
         let row = this._grid[y];
@@ -198,7 +195,7 @@ class Board {
     }
 
     dotsLeft() {
-        return (this._dotImgs.children.length > 0) || (this._energizerClips.children.length > 0)
+        return (this._dotImgs.children.length > 0) || (this._energizerClips.children.length > 0);
     }
 
     get respawnPoints() {
@@ -222,4 +219,4 @@ class Board {
     }
 }
 
-module.exports = Board;
+export default Board;

@@ -1,8 +1,5 @@
-'use strict';
-
-const
-    config = require('./config'),
-    Util = require('./util');
+import config from './config';
+import * as Util from './util';
 
 class GhostDeath {
 
@@ -62,8 +59,7 @@ class PacmanDeath {
     }
 }
 
-exports.Ghost = GhostDeath;
-exports.Pacman = PacmanDeath;
+export { GhostDeath as Ghost, PacmanDeath as Pacman };
 
 /**
  * Determine best spawn point based on the ghosts' proximities.
@@ -127,8 +123,8 @@ function ghostOverlap(spawnPoint, sweepBoxRadius, ghost) {
 
     let ax1 = x - (sweepBoxRadius       * config.wallSize);
     let ay1 = y - (sweepBoxRadius       * config.wallSize);
-    let ax2 = x + ((sweepBoxRadius+1)   * config.wallSize);
-    let ay2 = y + ((sweepBoxRadius+1)   * config.wallSize);
+    let ax2 = x + ((sweepBoxRadius + 1) * config.wallSize);
+    let ay2 = y + ((sweepBoxRadius + 1) * config.wallSize);
 
     let bx1 = ghost.x;
     let by1 = ghost.y;

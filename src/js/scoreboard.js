@@ -1,8 +1,6 @@
-'use strict';
-
-const
-    eventBus    = require('./event-bus'),
-    Util        = require('./util');
+import { Container, Text } from 'pixi.js';
+import eventBus from './event-bus';
+import * as Util from './util';
 
 const
     HEADER_Y = 10,
@@ -16,28 +14,29 @@ class Scoreboard {
     constructor(stage) {
         this._stage = stage;
 
-        this._gfx = new PIXI.Container();
+        this._gfx = new Container();
         this._gfx.x = 540;
         this._gfx.y = 390;
         stage.addChild(this._gfx);
 
         this._textStyle = {
-            font: '14px Arial',
+            fontFamily: 'Arial',
+            fontSize: 14,
             fill: '#eeeeee',
-            align: 'center' // TODO: Not working?
+            align: 'center'
         };
 
-        this._headerRatio = new PIXI.Text('Ratio', this._textStyle);
+        this._headerRatio = new Text({ text: 'Ratio', style: this._textStyle });
         this._headerRatio.x = RATIO_COLUMN_X;
         this._headerRatio.y = HEADER_Y;
         this._gfx.addChild(this._headerRatio);
 
-        this._headerKills = new PIXI.Text('Eater', this._textStyle);
+        this._headerKills = new Text({ text: 'Eater', style: this._textStyle });
         this._headerKills.x = KILLS_COLUMN_X;
         this._headerKills.y = HEADER_Y;
         this._gfx.addChild(this._headerKills);
 
-        this._headerDeaths= new PIXI.Text('Eaten', this._textStyle);
+        this._headerDeaths = new Text({ text: 'Eaten', style: this._textStyle });
         this._headerDeaths.x = DEATHS_COLUMN_X;
         this._headerDeaths.y = HEADER_Y;
         this._gfx.addChild(this._headerDeaths);
@@ -69,7 +68,7 @@ class Scoreboard {
         // Clean up after graphics
         let idx = this._stage.getChildIndex(this._gfx);
         this._stage.removeChildAt(idx);
-        this._gfx.destroy();
+        this._gfx.destroy({ children: true });
     }
 
     get gfx() {
@@ -120,7 +119,7 @@ class Scoreboard {
     }
 }
 
-module.exports = Scoreboard;
+export default Scoreboard;
 
 class Row {
 
@@ -128,20 +127,20 @@ class Row {
         this._name = name;
         this._parentGfx = parentGfx;
 
-        this._gfx = new PIXI.Container();
+        this._gfx = new Container();
         this._parentGfx.addChild(this._gfx);
 
-        this._ratioGfx = new PIXI.Text('', textStyle);
+        this._ratioGfx = new Text({ text: '', style: textStyle });
         this._ratioGfx.x = RATIO_COLUMN_X;
         this._gfx.addChild(this._ratioGfx);
 
         this._kills = 0;
-        this._killsGfx = new PIXI.Text('', textStyle);
+        this._killsGfx = new Text({ text: '', style: textStyle });
         this._killsGfx.x = KILLS_COLUMN_X;
         this._gfx.addChild(this._killsGfx);
 
         this._deaths = 0;
-        this._deathsGfx = new PIXI.Text('', textStyle);
+        this._deathsGfx = new Text({ text: '', style: textStyle });
         this._deathsGfx.x = DEATHS_COLUMN_X;
         this._gfx.addChild(this._deathsGfx);
 
@@ -150,13 +149,13 @@ class Row {
 
     incrementKills() {
         this._kills += 1;
-        this._killsGfx.text = this._kills;
+        this._killsGfx.text = String(this._kills);
         this._updateRatioGfx();
     }
 
     incrementDeaths() {
         this._deaths += 1;
-        this._deathsGfx.text = this._deaths;
+        this._deathsGfx.text = String(this._deaths);
         this._updateRatioGfx();
     }
 
@@ -200,22 +199,6 @@ class Row {
 function calculateRowY(idx) {
     return HEADER_Y + ((idx + 1) * ROW_Y_OFFSET);
 }
-
-//Window.testThing = function() {
-//    let array = [
-//        { name: 'pacman',  ratio:                       0, kills: 0, deaths:  1 },
-//        { name: 'blinky',  ratio: Number.MAX_SAFE_INTEGER, kills: 2, deaths:  0 },
-//        { name: 'inky  ',  ratio: Number.MAX_SAFE_INTEGER, kills: 0, deaths:  0 },
-//        { name: 'clyde ',  ratio: Number.MAX_SAFE_INTEGER, kills: 0, deaths:  0 },
-//        { name: 'pinky ',  ratio: Number.MAX_SAFE_INTEGER, kills: 1, deaths:  0 }
-//    ];
-//
-//    array.sort(sortByStanding);
-//
-//    for (let e of array) {
-//        console.log(e.name + ' ' + e.ratio + ' ' + e.kills + ' ' + e.deaths);
-//    }
-//};
 
 /**
  * Sort by highest ratio first, most kills second, fewest deaths last.
