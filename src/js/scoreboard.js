@@ -75,6 +75,22 @@ class Scoreboard {
         return this._gfx; // for level ending
     }
 
+    /**
+     * Snapshot of the current standings (sorted), for the level-ending screen
+     * to re-render as fresh, crisp display objects.
+     */
+    getStandings() {
+        return this._rows
+            .slice()
+            .sort(sortByStanding)
+            .map((row) => ({
+                name: row.name,
+                kills: row.kills,
+                deaths: row.deaths,
+                ratioText: row.ratioText
+            }));
+    }
+
     _createRow(idx, name, icon) {
         let row = new Row(name, this._gfx, this._textStyle, icon);
         row.y = calculateRowY(idx);
@@ -180,6 +196,10 @@ class Row {
 
     get deaths() {
         return this._deaths;
+    }
+
+    get ratioText() {
+        return this.ratio === Number.MAX_SAFE_INTEGER ? '*' : this.ratio.toFixed(2);
     }
 
     set y(value) {

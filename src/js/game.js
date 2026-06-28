@@ -10,6 +10,11 @@ import config from './config';
 import stats from './stats';
 import eventBus from './event-bus';
 
+// Debug helper: call meow() from the console to force-end the current level.
+window.meow = () => {
+    eventBus.fire({ name: 'event.level.end' });
+};
+
 class Game {
 
     constructor(stage, renderer) {
@@ -17,7 +22,7 @@ class Game {
         this._renderer = renderer;
         this._input = new Input();
         this._startScreen = new StartScreen(stage, this._input);
-        this._levelEnding = new LevelEnding(stage, renderer, this._input);
+        this._levelEnding = new LevelEnding(stage, this._input);
         this._gameEnding = new GameEnding(stage);
         this._sound = new Sound(this._stage);
         this._fpsCounter = new FpsCounter(this._stage, this._input);
